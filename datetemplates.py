@@ -24,18 +24,15 @@ IN THE SOFTWARE.
 """
 import pywikibot
 import awb_gen_fixes
-#import robot
 
 class DateBot():
     def __init__(self):
-        #robot.Robot.__init__(self, task=23)
         self.site = pywikibot.Site()
         self.AWB = awb_gen_fixes.AWBGenFixes(self.site)
         self.stop_page = pywikibot.Page(self.site, 'User:Cerabot/Run/Task 1')
         self.summary_end = '. ([[User:Cerabot/Run/Task 1|bot]])'
     def run(self):
         self.AWB.load()
-        #gen = pywikibot.pagegenerators.CategorizedPageGenerator(cat, content=True)
         self.do_page(pywikibot.Page(self.site, 'User:Cerabot/Sandbox'))
         for page in self.gen():
             self.do_page(page)
@@ -51,11 +48,23 @@ class DateBot():
             for page in subcat.articles(content=True, namespaces=[0]):
                 yield page
 
+    def is_dormant(self, page):
+        """
+        Checks if a page hasn't been
+        edited for the past 20 minutes
+        """
+        last = page.editTime()
+        dt = pywikibot.Timestamp.fromISOformat(last)
+        return datetime.datetime.now() - dt > datetime.timedelta(minutes=20)
+
     def do_page(self, page):
         print page
         text = page.get()
         if self.AWB.in_use(text):
             return
+        elif not self.is_dormant(page):
+            return
+        newtext, msg = self.AWB.do_page(text)
         newtext, msg = self.AWB.do_page(text)
         if not msg:
             return
@@ -66,8 +75,6 @@ class DateBot():
             pass
         except pywikibot.exceptions.LockedPage:
             pass
-
-
 
 if __name__ == "__main__":
     bot = DateBot()

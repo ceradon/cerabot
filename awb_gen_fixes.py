@@ -35,39 +35,10 @@ BROKENLINKS2=re.compile(re.escape('http://http://'), re.IGNORECASE)
 
 class AWBGenFixes():
     def __init__(self, site):
-        #robot.Robot.__init__(self, task=23)
         self.site = site
         self.date_these = []
         self.redirects = {}
         self.skip_list = []
-        self.year = datetime.datetime.today().strftime('%Y')
-        self.month = datetime.datetime.today().strftime('%B')
-        self.correct_dates = {
-            'january':'January',
-            'jan':'January',
-            'february':'February',
-            'feb':'February',
-            'march':'March',
-            'mar':'March',
-            'april':'April',
-            'apr':'April',
-            'may':'May',
-            'june':'June',
-            'jun':'June',
-            'july':'July',
-            'jul':'July',
-            'august':'August',
-            'aug':'August',
-            'september':'September',
-            'sep':'September',
-            'sept':'September',
-            'october':'October',
-            'oct':'October',
-            'november':'November',
-            'nov':'November',
-            'december':'December',
-            'dec':'December'
-        }
 
     def load(self, tr=None, dt=None, skip=None):
         self.load_templates(dt=dt)
@@ -86,7 +57,6 @@ class AWBGenFixes():
                 self.date_these.append(temp.get(1).value.lower())
 
     def load_skip_templates(self, templates=None):
-        #note, pywikipediabot automatically supports {{bots}}
         if not templates:
             templates = ['In use']
         for temp in templates:
@@ -138,33 +108,13 @@ class AWBGenFixes():
                 new_name = self.redirects[name]
                 if new_name.lower() != name: #prevents from capitalizing the first letter needlessly
                     temp.name = new_name
-                if temp.name.lower() in self.date_these:
-                    if not temp.has_param('date'):
-                        temp.add('date', datetime.datetime.today().strftime('%B %Y'))
-                        if temp.name.lower() in summary.keys():
-                            summary[temp.name.lower()] += 1
-                        else:
-                            summary[temp.name.lower()] = 1
+            if temp.name.lower() in self.date_these:
+                if not temp.has_param('date'):
+                    temp.add('date', datetime.datetime.today().strftime('%B %Y'))
+                    if temp.name.lower() in summary.keys():
+                        summary[temp.name.lower()] += 1
                     else:
-                        old_date = temp.get('date').value
-                        date = temp.get('date').value.lower()
-                        month = date.split()[0]
-                        year = date.split()[1]
-                        if month in self.correct_dates.keys():
-                            month = self.correct_dates[month]
-                        if 'currentmonthname' in month.lower():
-                            month = self.month
-                        if 'currentyear' in year.lower():
-                            year = self.year
-                        new_date = month+' '+year
-                        if old_date != new_date:
-                            temp.get('date').value = new_date
-                            if temp.name.lower() in summary.keys():
-                                summary[temp.name.lower()] += 1
-                            else:
-                                summary[temp.name.lower()] = 1
-                        else:
-                            continue
+                        summary[temp.name.lower()] = 1
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
 
