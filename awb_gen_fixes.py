@@ -2,25 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 """
-Copyright (C) 2012 Legoktm
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
+Based off Legoktm's code.
 """
 import re
 import datetime
@@ -39,6 +21,35 @@ class AWBGenFixes():
         self.date_these = []
         self.redirects = {}
         self.skip_list = []
+        self.bad_date = re.compile('[Dd]ate[^=](.*)')
+        self.year = datetime.datetime.today().strftime('%Y')
+        self.month = datetime.datetime.today().strftime('%B')
+        self.correct_dates = {
+            'january':'January',
+            'jan':'January',
+            'february':'February',
+            'feb':'February',
+            'march':'March',
+            'mar':'March',
+            'april':'April',
+            'apr':'April',
+            'may':'May',
+            'june':'June',
+            'jun':'June',
+            'july':'July',
+            'jul':'July',
+            'august':'August',
+            'aug':'August',
+            'september':'September',
+            'sep':'September',
+            'sept':'September',
+            'october':'October',
+            'oct':'October',
+            'november':'November',
+            'nov':'November',
+            'december':'December',
+            'dec':'December'
+        }
 
     def load(self, tr=None, dt=None, skip=None):
         self.load_templates(dt=dt)
@@ -71,7 +82,9 @@ class AWBGenFixes():
         else:
             page = pywikibot.Page(self.site, 'Wikipedia:AutoWikiBrowser/Template redirects')
         text = page.get()
-        for line in text.splitlines():
+        section = re.search('===Maintenance templates===\n?(.*)'+
+                        '===Navbox templates===', text, re.DOTALL)
+        for line in section.group(0).splitlines():
             if not '→' in line:
                 continue
             split = line.split('→')
@@ -108,13 +121,33 @@ class AWBGenFixes():
                 new_name = self.redirects[name]
                 if new_name.lower() != name: #prevents from capitalizing the first letter needlessly
                     temp.name = new_name
-            if temp.name.lower() in self.date_these:
-                if not temp.has_param('date'):
-                    temp.add('date', datetime.datetime.today().strftime('%B %Y'))
-                    if temp.name.lower() in summary.keys():
-                        summary[temp.name.lower()] += 1
+                if temp.name.lower() in self.date_these:
+                    if not temp.has_param('date'):
+                        temp.add('date', datetime.datetime.today().strftime('%B %Y'))
+                        if temp.name.lower() in summary.keys():
+                            summary[temp.name.lower()] += 1
+                        else:
+                            summary[temp.name.lower()] = 1
                     else:
-                        summary[temp.name.lower()] = 1
+                        old_date = temp.get('date').value
+                        date = temp.get('date').value.lower()
+                        month = date.split()[0]
+                        year = date.split()[1]
+                        if month in self.correct_dates.keys():
+                            month = self.correct_dates[month]
+                        if 'currentmonthname' in month.lower():
+                            month = self.month
+                        if 'currentyear' in year.lower():
+                            year = self.year
+                        new_date = month+' '+year
+                        if old_date != new_date:
+                            temp.get('date').value = new_date
+                            if temp.name.lower() in summary.keys():
+                                summary[temp.name.lower()] += 1
+                            else:
+                                summary[temp.name.lower()] = 1
+                        else:
+                            continue
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
 

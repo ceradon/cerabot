@@ -2,26 +2,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 """
-Copyright (C) 2012 Legoktm
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
+Based off Legoktm's code.
 """
+import datetime
 import pywikibot
 import awb_gen_fixes
 
@@ -33,7 +16,6 @@ class DateBot():
         self.summary_end = '. ([[User:Cerabot/Run/Task 1|bot]])'
     def run(self):
         self.AWB.load()
-        self.do_page(pywikibot.Page(self.site, 'User:Cerabot/Sandbox'))
         for page in self.gen():
             self.do_page(page)
 
@@ -51,20 +33,21 @@ class DateBot():
     def is_dormant(self, page):
         """
         Checks if a page hasn't been
-        edited for the past 20 minutes
+        edited for the past 30 minutes
         """
         last = page.editTime()
         dt = pywikibot.Timestamp.fromISOformat(last)
-        return datetime.datetime.now() - dt > datetime.timedelta(minutes=20)
+        return datetime.datetime.now() - dt < datetime.timedelta(minutes=30)
 
     def do_page(self, page):
         print page
+        if page.isRedirectPage():
+            return
         text = page.get()
         if self.AWB.in_use(text):
             return
         elif not self.is_dormant(page):
             return
-        newtext, msg = self.AWB.do_page(text)
         newtext, msg = self.AWB.do_page(text)
         if not msg:
             return
