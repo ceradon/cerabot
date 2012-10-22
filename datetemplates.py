@@ -37,7 +37,7 @@ class DateBot():
         """
         last = page.editTime()
         dt = pywikibot.Timestamp.fromISOformat(last)
-        return datetime.datetime.now() - dt > datetime.timedelta(minutes=30)
+        return datetime.datetime.now() - dt > datetime.timedelta(hours=1)
 
     def do_page(self, page):
         print page
