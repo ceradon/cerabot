@@ -139,6 +139,9 @@ class AWBGenFixes():
                             month = self.month
                         if 'currentyear' in year.lower():
                             year = self.year
+                        months = map(lambda x: x.lower(), self.correct_dates.values())
+                        if not month.lower() in months:
+                            month = self.month
                         new_date = month+' '+year
                         if old_date != new_date:
                             temp.get('date').value = new_date
