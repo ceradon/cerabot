@@ -110,7 +110,7 @@ class AWBGenFixes():
                 return True
         return False
 
-    def do_page(self, text, fixes=True):
+    def do_page(self, text, fixes=False):
         if fixes:
             text = self.all_fixes(text)
         code = mwparserfromhell.parse(text)
