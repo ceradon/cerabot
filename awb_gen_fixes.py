@@ -110,7 +110,11 @@ class AWBGenFixes():
                 return True
         return False
 
+<<<<<<< HEAD
     def do_page(self, text, fixes=False, date=True):
+=======
+    def do_page(self, text, fixes=False):
+>>>>>>> 755624d431332b3db22b6394a9e60676ccbf5481
         if fixes:
             text = self.all_fixes(text)
         code = mwparserfromhell.parse(text)
@@ -121,6 +125,7 @@ class AWBGenFixes():
                 new_name = self.redirects[name]
                 if new_name.lower() != name: #prevents from capitalizing the first letter needlessly
                     temp.name = new_name
+<<<<<<< HEAD
             if (temp.name.lower() in self.date_these) and date:
                 if not temp.has_param('date'):
                     temp.add('date', datetime.datetime.today().strftime('%B %Y'))
@@ -145,12 +150,42 @@ class AWBGenFixes():
                     new_date = month+' '+year
                     if old_date != new_date:
                         temp.get('date').value = new_date
+=======
+                if temp.name.lower() in self.date_these:
+                    if not temp.has_param('date'):
+                        temp.add('date', datetime.datetime.today().strftime('%B %Y'))
+>>>>>>> 755624d431332b3db22b6394a9e60676ccbf5481
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
                         else:
                             summary[temp.name.lower()] = 1
                     else:
+<<<<<<< HEAD
                         continue
+=======
+                        old_date = temp.get('date').value
+                        date = temp.get('date').value.lower()
+                        month = date.split()[0]
+                        year = date.split()[1]
+                        if month in self.correct_dates.keys():
+                            month = self.correct_dates[month]
+                        if 'currentmonthname' in month.lower():
+                            month = self.month
+                        if 'currentyear' in year.lower():
+                            year = self.year
+                        months = map(lambda x: x.lower(), self.correct_dates.values())
+                        if not month.lower() in months:
+                            month = self.month
+                        new_date = month+' '+year
+                        if old_date != new_date:
+                            temp.get('date').value = new_date
+                            if temp.name.lower() in summary.keys():
+                                summary[temp.name.lower()] += 1
+                            else:
+                                summary[temp.name.lower()] = 1
+                        else:
+                            continue
+>>>>>>> 755624d431332b3db22b6394a9e60676ccbf5481
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
 
