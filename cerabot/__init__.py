@@ -4,3 +4,6 @@ import wikitools.page as page
 import wikitools.user as user
 import wikitools.wikifile as file
 import wikitools.category as category
+
+import bot
+import settings
