@@ -1,4 +1,6 @@
-//Wikipedia settings
+"""
+Wikipedia settings
+"""
 user = "Cerabot"
 site = "http://en.wikipedia.org/w/api.php"
 passwd = ""
