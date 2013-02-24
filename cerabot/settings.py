@@ -2,7 +2,7 @@ import sys
 
 class Settings(object):
     def __init__(self):
-        #Initiate the settings dictionary]
+        """Initiate the `settings` dictionary"""
         self.settings = {}
 
         #Bot settings
