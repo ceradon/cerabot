@@ -1,1 +1,1 @@
-from wikitools import *
+from .. import cerabot
