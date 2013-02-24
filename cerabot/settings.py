@@ -13,7 +13,8 @@ class Settings(object):
 
         #Wikipedia settings
         self.settings['run_base'] = u"User:Cerabot/Run/Task {task}"
-        self.settings['summary_end'] = u". ([[User:Cerabot/Run/Task {task}|bot]])"
+        self.settings['summary_end'] = u". ([[User:Cerabot/Run/Task "+
+                                                    "{task}|bot]])"
 
     @property
     def settings(self):
