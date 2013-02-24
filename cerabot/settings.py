@@ -1,15 +1,21 @@
 import sys
 
 class Settings(object):
-    #Initiate the settings dictionary
-    settings = {}
+    def __init__(self):
+        #Initiate the settings dictionary]
+        self.settings = {}
 
-    #Bot settings
-    settings['user'] = u"Cerabot"
-    settings['site'] = {(wikipedia, en)}
-    settings['passwd'] = u""
-    settings['passwd_file'] = u".passwd"
-    
-    #Wikipedia settings
-    settings['run_base'] = u"User:Cerabot/Run/Task {task}"
-    settings['summary_end'] = u". ([[User:Cerabot/Run/Task {task}|bot]])"
+        #Bot settings
+        self.settings['user'] = u"Cerabot"
+        self.settings['site'] = {(wikipedia, en)}
+        self.settings['passwd'] = u""
+        self.settings['passwd_file'] = u".passwd"
+
+        #Wikipedia settings
+        self.settings['run_base'] = u"User:Cerabot/Run/Task {task}"
+        self.settings['summary_end'] = u". ([[User:Cerabot/Run/Task {task}|bot]])"
+
+    @property
+    def settings(self):
+        """Return the `settings` dictionary"""
+        return self.settings
