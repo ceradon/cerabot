@@ -1,1 +1,1 @@
-import wikitools.wikitools.wiki
+from wikitools import *
