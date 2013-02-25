@@ -7,7 +7,7 @@ class Settings(object):
 
         #Bot settings
         self.settings['user'] = u"Cerabot"
-        self.settings['site'] = {(wikipedia, en)}
+        self.settings['site'] = {(u"wikipedia", u"en")}
         self.settings['passwd'] = u""
         self.settings['passwd_file'] = u".passwd"
 
