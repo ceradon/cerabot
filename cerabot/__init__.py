@@ -7,3 +7,4 @@ import wikitools.category as category
 
 import bot
 import settings
+import exceptions
