@@ -82,9 +82,22 @@ class Bot(object):
             self.summary.format(task=unicode(self.task,
                                 comment=default)
         else:
-            self.summary.format(task=unicode(self.task,
+            self.summary.format(task=unicode(self.task),
                                 comment=comment)
         return self.summary
+
+    def normalize_string(self, string, **kwargs):
+        """Decodes a string to human-readable text.
+        For instance: Turns a string like 'Hello {task}'
+        to 'Hello task_number_here'.
+        """
+        string = unicode(string)
+        string.format(task=unicode(self.task),
+                name=self.name, user=self.user, 
+                site=self.site_api - "/w/api.php")
+        for key in kwargs:
+            string.format(key=kwargs[key])
+        return string
 
     def _build_site_api(self, args):
         """Builds the site's api URL
