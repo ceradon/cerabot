@@ -30,7 +30,7 @@ class Bot(object):
                 self.passwd = file.read()
                 file.close()
             else:
-                raise exceptions.NoPasswordFileError("`passwd`"+
+                raise exceptions.NoPasswordError("`passwd_file`"+
                         "does not exist")
         elif not self.settings['passwd'] and 
                 not self.settings['passwd_file']:
@@ -79,11 +79,9 @@ class Bot(object):
         """
         default = "Automated edit by [[User:Cerabot]]"
         if not comment:
-            self.summary.format(task=unicode(self.task,
-                                comment=default)
+            self.normalize_string(self.summary, comment=default)
         else:
-            self.summary.format(task=unicode(self.task),
-                                comment=comment)
+            self.normalize_string(self.summary, comment=comment)
         return self.summary
 
     def normalize_string(self, string, **kwargs):
@@ -95,15 +93,18 @@ class Bot(object):
         string.format(task=unicode(self.task),
                 name=self.name, user=self.user, 
                 site=self.site_api - "/w/api.php")
-        for key in kwargs:
-            string.format(key=kwargs[key])
+        try:
+            for key in kwargs.iterkeys():
+                string.format(key=kwargs[key])
+        except KeyError:
+            continue
         return string
 
     def _build_site_api(self, args):
         """Builds the site's api URL
 
         Param `args` must be a dictionary
-        In th format of `("{site}", "{wiki}")`
+        In the format of `("{site}", "{wiki}")`
         """
         template = "http://{lang}.{site}.org/w/api.php"
         if not type(args) == tuple:
