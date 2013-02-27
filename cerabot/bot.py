@@ -81,29 +81,12 @@ class Bot(object):
         """
         default = "Automated edit by [[User:Cerabot]]"
         if not comment:
-            self.summary.format(unicode(task), 
+            self.summary = self.summary.format(task=self.task,  
                     comment=default)
         else:
-            self.summary.format(unicode(task), 
+            self.summary = self.summary.format(task=self.task, 
                     comment=comment)
         return self.summary
-
-    def normalize_string(self, string, **kwargs):
-        """Decodes a string to human-readable text.
-        For instance: Turns a string like 'Hello {task}'
-        to 'Hello task_number_here'.
-        """
-        string = unicode(string)
-        string.format(task=unicode(self.task),
-                name=self.name, user=self.user, 
-                site=self.site_api.replace("/w/api.php", ""))
-        for key in kwargs.iterkeys():
-            try:
-                string = string.format(key=kwargs[key])
-            except KeyError as e:
-                print e
-                continue
-        return string
 
     def _build_site_api(self, args):
         """Builds the site's api URL
@@ -116,8 +99,8 @@ class Bot(object):
             print "Error: Variable `args` must be a tuple"
             return
         else:
-            template = template.format(site=args[0], lang=args[1])
-        return
+            res = template.format(site=args[0], lang=args[1])
+        return res
 
     def __repr__(self):
         """Return the canonical string representation of the Task."""
