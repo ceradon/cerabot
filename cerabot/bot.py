@@ -29,7 +29,7 @@ class Bot(object):
                 self.settings['passwd_file']:
             if path.isfile(self.settings['passwd_file']):
                 file = open(self.settings['passwd_file'], 'r')
-                self.passwd = file.read()
+                self.passwd = file.read().rstrip()
                 file.close()
             else:
                 raise exceptions.NoPasswordError("`passwd_file`"+
@@ -73,7 +73,7 @@ class Bot(object):
         else:
             return True
 
-    def build_summary(self, comment):
+    def build_summary(self, comment=None):
         """Builds the summary for every edit 
         the task will make. Param `comment` is
         an optional message. Defaults to 
@@ -81,9 +81,11 @@ class Bot(object):
         """
         default = "Automated edit by [[User:Cerabot]]"
         if not comment:
-            self.normalize_string(self.summary, comment=default)
+            self.summary.format(unicode(task), 
+                    comment=default)
         else:
-            self.normalize_string(self.summary, comment=comment)
+            self.summary.format(unicode(task), 
+                    comment=comment)
         return self.summary
 
     def normalize_string(self, string, **kwargs):
@@ -94,7 +96,7 @@ class Bot(object):
         string = unicode(string)
         string.format(task=unicode(self.task),
                 name=self.name, user=self.user, 
-                site=self.site_api - "/w/api.php")
+                site=self.site_api.replace("/w/api.php", ""))
         for key in kwargs.iterkeys():
             try:
                 string = string.format(key=kwargs[key])

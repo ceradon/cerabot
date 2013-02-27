@@ -8,8 +8,8 @@ class MissingSettingsError(CerabotError):
     Is empty.
     """
 
-class NoPasswordError(MissingSettingsError):
-    """The `passwd` variablewas not provided 
+class NoPasswordError(CerabotError):
+    """The `passwd` variable was not provided 
     and the `passwd_file` variable is empty.
     """
 
