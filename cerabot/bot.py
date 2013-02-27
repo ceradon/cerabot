@@ -1,6 +1,8 @@
 import sys
+import time
+import settings
+import exceptions
 import os.path as path
-from .. import cerabot
 
 class Bot(object):
     """Base class for a of Cerabot's tasks."""
@@ -23,7 +25,7 @@ class Bot(object):
         self.user = self.settings['user']
         if self.settings['passwd']:
             self.passwd = self.settings['passwd']
-        elif not self.settings['passwd'] and
+        elif not self.settings['passwd'] and \
                 self.settings['passwd_file']:
             if path.isfile(self.settings['passwd_file']):
                 file = open(self.settings['passwd_file'], 'r')
@@ -32,7 +34,7 @@ class Bot(object):
             else:
                 raise exceptions.NoPasswordError("`passwd_file`"+
                         "does not exist")
-        elif not self.settings['passwd'] and 
+        elif not self.settings['passwd'] and \
                 not self.settings['passwd_file']:
             raise exceptions.NoPasswordError("Variables `passwd` "+
                     "and `passwd_file` were not defined")
@@ -93,11 +95,12 @@ class Bot(object):
         string.format(task=unicode(self.task),
                 name=self.name, user=self.user, 
                 site=self.site_api - "/w/api.php")
-        try:
-            for key in kwargs.iterkeys():
-                string.format(key=kwargs[key])
-        except KeyError:
-            continue
+        for key in kwargs.iterkeys():
+            try:
+                string = string.format(key=kwargs[key])
+            except KeyError as e:
+                print e
+                continue
         return string
 
     def _build_site_api(self, args):
