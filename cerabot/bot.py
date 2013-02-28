@@ -5,7 +5,7 @@ import exceptions
 import os.path as path
 
 class Bot(object):
-    """Base class for a of Cerabot's tasks."""
+    """Base class for all of Cerabot's tasks."""
     name = None
     task = 0
 
