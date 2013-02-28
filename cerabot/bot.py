@@ -3,6 +3,8 @@ import time
 import settings
 import exceptions
 import os.path as path
+import wikitools.wiki as wiki
+import wikitools.page as page
 
 class Bot(object):
     """Base class for all of Cerabot's tasks."""
