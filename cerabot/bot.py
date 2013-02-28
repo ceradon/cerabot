@@ -34,7 +34,7 @@ class Bot(object):
                 self.passwd = file.read().rstrip()
                 file.close()
             else:
-                raise exceptions.NoPasswordError("`passwd_file`"+
+                raise exceptions.NoPasswordError("`passwd_file` "+
                         "does not exist")
         elif not self.settings['passwd'] and \
                 not self.settings['passwd_file']:
