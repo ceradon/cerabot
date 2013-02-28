@@ -83,12 +83,11 @@ class Bot(object):
         """
         default = "Automated edit by [[User:Cerabot]]"
         if not comment:
-            self.summary = self.summary.format(task=self.task,  
+            return self.summary.format(task=self.task,  
                     comment=default)
         else:
-            self.summary = self.summary.format(task=self.task, 
+            return self.summary.format(task=self.task, 
                     comment=comment)
-        return self.summary
 
     def _build_site_api(self, args):
         """Builds the site's api URL
