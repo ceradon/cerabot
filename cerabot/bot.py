@@ -70,7 +70,7 @@ class Bot(object):
         run_page = run_page.format(task=self.task)
         page_ = page.Page(self.wiki, run_page)
         text = page_.getWikiText()
-        if not text == 'yes':
+        if not text.lower() == 'yes':
             raise exceptions.RunPageDisabledError("Run page is disabled.")
         else:
             return True
