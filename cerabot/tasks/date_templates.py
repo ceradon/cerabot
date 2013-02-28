@@ -1,1 +1,1 @@
-from .. import cerabot
+from cerabot import *
