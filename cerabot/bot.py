@@ -19,7 +19,7 @@ class Bot(object):
         self.wiki = None
         self.settings = settings.Settings().settings
         if not self.settings:
-            raise exceptions.MissingSettingsError("Variable `settings`"+
+            raise exceptions.MissingSettingsError("Variable `settings` "+
                                                   "is empty")
         self.summary = self.settings['summary']
 
