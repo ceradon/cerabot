@@ -1,8 +1,11 @@
 import re
 import sys
 import inspect
+from cerabot import bot
 from datetime import datetime
-from cerabot import *
+import wikitools.wiki as wiki
+import wikitools.page as page
+import mwparserfromhell as parser
 
 class DateTemplates(bot.Bot):
     """Bot to date maintenance templates that have none."""
