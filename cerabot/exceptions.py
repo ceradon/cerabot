@@ -15,3 +15,9 @@ class NoPasswordError(CerabotError):
 
 class RunPageDisabledError(CerabotError):
     """The on-wiki page is disabled."""
+
+class PageInUseError(CerabotError):
+    """This is raised when the template {{in use}}
+    is present in a page's text. We should not be 
+    editing pages that are in use.
+    """
