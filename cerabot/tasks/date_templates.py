@@ -101,7 +101,7 @@ class DateTemplates(bot.Bot):
                 yield page
         return
 
-    def start(self):
+    def setup()(self):
         self.pages = self._generate_pages()
         self._load_templates()
     
