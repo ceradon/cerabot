@@ -1,3 +1,5 @@
+__all__ = ["bot", "settings", "exceptions"]
+
 import wikitools.api as api
 import wikitools.wiki as wiki
 import wikitools.page as page
