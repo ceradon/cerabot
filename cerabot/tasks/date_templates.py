@@ -164,12 +164,12 @@ class DateTemplates(bot.Bot):
                 return
             try:
                 self.run_page_enabled()
-                res = page.edit(text=newtext, self.build_summary(msg))
+                res = page.edit(text=newtext, summary=self.build_summary(msg))
                 if res['edit']['result'] == "Success":
                     out = "Edit was successful. New revision id is: {revid}."
                     print out.format(revid=res['edit']['newrevid'])
                 else:
-                    out = "Edit failed for some reason\n Here is the data the API"+
+                    out = "Edit failed for some reason\n Here is the data the API"+ \
                             "sent us: {api_data}"
                     print out.format(api_data=res)
             except wiki.WikiError as e:
