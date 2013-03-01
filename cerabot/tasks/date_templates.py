@@ -86,7 +86,8 @@ class DateTemplates(bot.Bot):
         code = parser.parse(text)
         templates = code.filter_templates()
         for template in templates:
-            if 'in use' in template.lower()
+            if 'in use' in template.lower():
+                return True
         return False
 
     def _generate_pages(self):
