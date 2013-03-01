@@ -73,7 +73,7 @@ class Bot(object):
         if not text.lower() == 'yes':
             raise exceptions.RunPageDisabledError("Run page is disabled.")
         else:
-            return True
+            return
 
     def build_summary(self, comment=None):
         """Builds the summary for every edit 
