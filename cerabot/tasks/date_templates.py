@@ -151,3 +151,31 @@ class DateTemplates(bot.Bot):
         msg = ', '.join('Dating templates: {{%s}} (%s)' % 
                 (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
+
+    def run(self):
+        for page in self.pages:
+            print "[["+page.title+"]]"
+            if page.isRedir():
+                return
+            if self._in_use(page.getWikiText):
+                raise exceptions.PageInUseError("Page "+page.title+" is in use.")
+            newtext, msg = self.run_bot(page)
+            if not msg:
+                return
+            try:
+                self.run_page_enabled()
+                res = page.edit(text=newtext, self.build_summary(msg))
+                if res['edit']['result'] == "Success":
+                    out = "Edit was successful. New revision id is: {revid}."
+                    print out.format(revid=res['edit']['newrevid'])
+                else:
+                    out = "Edit failed for some reason\n Here is the data the API"+
+                            "sent us: {api_data}"
+                    print out.format(api_data=res)
+            except wiki.WikiError as e:
+                print "Exception was raised: {1}".format(e)
+                continue
+
+if __name__ == '__main__':
+    bot = DateTemplates()
+    bot.run()
