@@ -123,41 +123,6 @@ class DateTemplates(bot.Bot):
                             summary[template.name.lower()] += 1
                         else:
                             summary[template.name.lower()] = 1
-                    elif template.has_param("date"):
-                        old_date = template.get("date").value
-                        date = template.get("date").value.lower()
-                        if len(date.split()) == 3:
-                            month = date.split()[1]
-                            year = date.split()[2]
-                        else:
-                            month = date.split()[0]
-                            year = date.split()[1]
-                        if month in self.correct_dates.keys():
-                            new_month = self.correct_dates[month]
-                        if 'currentmonthname' in month.lower():
-                            new_month = self.month
-                        if 'currentyear' in year.lower():
-                            new_year = self.year
-                        months = map(lambda x: x.lower(), list(set(
-                                self.correct_dates.values())))
-                        if not month.lower() in months:
-                            new_month = self.month
-                        if len(date.split()) < 2:
-                            new_date = self.month+' '+self.year
-                        elif len(date.split()) == 3 or 
-                                len(date.split() > 3:
-                            new_date = self.month+' '+self.year
-                        else:
-                            new_date = date.replace(month, new_month)
-                                    .replace(year, new_year)
-                        if old_date != new_date:
-                            template.get('date').value = new_date
-                            if template.name.lower() in summary.keys():
-                                summary[template.name.lower()] += 1
-                            else:
-                                summary[template.name.lower()] = 1
-                        else:
-                            continue
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) 
                 for item in summary.keys())
         return unicode(code), msg
