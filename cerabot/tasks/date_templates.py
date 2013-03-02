@@ -1,7 +1,6 @@
 import re
 import sys
 import codecs
-import inspect
 from cerabot import bot
 from datetime import datetime
 
@@ -107,7 +106,7 @@ class DateTemplates(bot.Bot):
     
     def run_bot(self, page=None):
         summary = {}
-        if page and inspect.isclass(page):
+        if page:
             text = page.getWikiText()
             code = self.parser.parse(text)
             templates = code.filter_templates(recursive=True)
