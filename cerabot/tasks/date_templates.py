@@ -147,8 +147,8 @@ class DateTemplates(bot.Bot):
                                 summary[template.name.lower()] = 1
                         else:
                             continue
-        msg = ', '.join('Dating templates: {{%s}} (%s)' % 
-                (item, summary[item]) for item in summary.keys())
+        msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) 
+                for item in summary.keys())
         return unicode(code), msg
 
     def run(self):
