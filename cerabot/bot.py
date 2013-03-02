@@ -1,7 +1,6 @@
 import sys
 import time
 import os.path as path
-from cerabot import bot
 from cerabot import settings
 from cerabot import exceptions
 
