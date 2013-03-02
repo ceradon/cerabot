@@ -24,7 +24,7 @@ class Bot(object):
         #Builds several important variales.
         self.is_logged_in = False
         self.site_api = None
-        self.wiki = None
+        self.site = None
         self.settings = settings.Settings().settings
         if not self.settings:
             raise exceptions.MissingSettingsError("Variable `settings` "+
@@ -52,7 +52,7 @@ class Bot(object):
         #Build site API URL
         self.site_api = self._build_site_api(
                 self.settings['site'][0])
-        self.wiki = wiki.Wiki(self.site_api)
+        self.site = wiki.Wiki(self.site_api)
 
         #Setup some convenience functions for
         #tasks to use:
@@ -86,7 +86,7 @@ class Bot(object):
         """
         run_page = self.settings['run_base']
         run_page = run_page.format(task=self.task)
-        page_ = page.Page(self.wiki, run_page)
+        page_ = page.Page(self.site, run_page)
         text = page_.getWikiText()
         if not text.lower() == 'yes':
             raise exceptions.RunPageDisabledError("Run page is disabled.")
