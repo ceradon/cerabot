@@ -124,7 +124,7 @@ class DateTemplates(bot.Bot):
                         else:
                             summary[template.name.lower()] = 1
                     else:
-                        old_date = tempalte.get("date").value
+                        old_date = template.get("date").value
                         date = template.get("date").value.lower()
                         month = date.split()[0]
                         year = date.split()[1]
@@ -167,11 +167,12 @@ class DateTemplates(bot.Bot):
                 if res['edit']['result'] == "Success":
                     out = "Edit was successful. New revision id is: {revid}."
                     print out.format(revid=res['edit']['newrevid'])
+                    print res
                 else:
                     out = "Edit failed for some reason\n Here is the data the API"+ \
                             "sent us: {api_data}"
                     print out.format(api_data=res)
-            except wiki.WikiError as e:
+            except self.access_wiki.WikiError as e:
                 print "Exception was raised: {1}".format(e)
                 continue
 
