@@ -105,7 +105,7 @@ class DateTemplates(bot.Bot):
         self._load_templates()
     
     def run_bot(self, page=None):
-        templates = {}
+        summary = {}
         if page and inspect.isclass(page):
             text = page.getWikiText()
             code = self.parser.parse(text)
