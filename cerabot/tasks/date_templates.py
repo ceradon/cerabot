@@ -126,8 +126,9 @@ class DateTemplates(bot.Bot):
                     else:
                         old_date = template.get("date").value
                         date = template.get("date").value.lower()
-                        month = date.split()[0]
-                        year = date.split()[1]
+                        bits = date.split()
+                        month = bits[0]
+                        year = bits[1]
                         if month in self.correct_dates.keys():
                             month = self.correct_dates[month]
                         if 'currentmonthname' in month.lower():
@@ -155,15 +156,15 @@ class DateTemplates(bot.Bot):
         for page in self.pages:
             print "[["+page.title+"]]"
             if page.isRedir():
-                return
+                continue
             if self._in_use(page.getWikiText()):
                 raise exceptions.PageInUseError("Page "+page.title+" is in use.")
             newtext, msg = self.run_bot(page)
             if not msg:
-                return
+                continue
             try:
                 self.run_page_enabled()
-                newtext = unicode(newtext.strip(codecs.BOM_UTF8), 'utf-8')
+                newtext = newtext.encode('utf-8')
                 res = page.edit(text=newtext, summary=self.build_summary(
                         'Dating templates: '+msg))
                 if res['edit']['result'] == "Success":
