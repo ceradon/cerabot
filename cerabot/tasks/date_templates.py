@@ -48,8 +48,8 @@ class DateTemplates(bot.Bot):
 
     def _load_templates(self):
         """Load the templates we have to date."""
-        templates_page = self.page.Page(self.wiki, "Wikipedia:AutoWikiBrowser/"+
-                                   "Dated templates")
+        templates_page = self.access_page.Page(self.wiki, 
+                "Wikipedia:AutoWikiBrowser/Dated templates")
         text = templates_page.getWikiText()
         code = self.parser.parse(text)
         for template in code.filter_templates():
@@ -60,8 +60,9 @@ class DateTemplates(bot.Bot):
         """Load the redirects to the templates we
         must date.
         """
-        redirects_page = self.page.Page(self.wiki, "Wikipedia:AutoWikiBrowser/"+
-                "Template redirects", section="Maintenance templates")
+        redirects_page = self.access_page.Page(self.wiki, 
+                "Wikipedia:AutoWikiBrowser/Template redirects", 
+                section="Maintenance templates")
         text_ = redirects_page.getWikiText()
         for line in text_.splitlines():
             if not '→' in line:
@@ -90,11 +91,11 @@ class DateTemplates(bot.Bot):
 
     def _generate_pages(self):
         """Generates a list of all pages to date."""
-        category_object = self.category.Category(self.wiki, "Category:Wikipedia maintenance "+
+        category_object = self.access_category.Category(self.wiki, "Category:Wikipedia maintenance "+
                 "categories sorted by month")
         members = category_object.getAllMembers(titleonly=True, namespaces=[14])
         for item in members:
-            item_object = self.category.Category(self.wiki, item)
+            item_object = self.access_category.Category(self.wiki, item)
             for page in item_object.getAllMembers(namespaces=[0]):
                 yield page
         return
