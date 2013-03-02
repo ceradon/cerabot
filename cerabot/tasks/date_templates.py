@@ -1,5 +1,6 @@
 import re
 import sys
+import codecs
 import inspect
 from cerabot import bot
 from datetime import datetime
@@ -163,6 +164,7 @@ class DateTemplates(bot.Bot):
                 return
             try:
                 self.run_page_enabled()
+                newtext = unicode(newtext.strip(codecs.BOM_UTF8), 'utf-8')
                 res = page.edit(text=newtext, summary=self.build_summary(msg))
                 if res['edit']['result'] == "Success":
                     out = "Edit was successful. New revision id is: {revid}."
