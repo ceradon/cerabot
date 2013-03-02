@@ -3,9 +3,6 @@ import sys
 import inspect
 from cerabot import bot
 from datetime import datetime
-import wikitools.wiki as wiki
-import wikitools.page as page
-import mwparserfromhell as parser
 
 class DateTemplates(bot.Bot):
     """Bot to date maintenance templates that have none."""
@@ -18,7 +15,7 @@ class DateTemplates(bot.Bot):
         """
         self.pages = []
         self._to_date = []
-        self._redirects= {}
+        self._redirects = {}
         self.year = datetime.today().strftime('%Y')
         self.month = datetime.today().strftime('%B')
         self.correct_dates = {
@@ -51,10 +48,10 @@ class DateTemplates(bot.Bot):
 
     def _load_templates(self):
         """Load the templates we have to date."""
-        templates_page = page.Page(self.wiki, "Wikipedia:AutoWikiBrowser/"+
+        templates_page = self.page.Page(self.wiki, "Wikipedia:AutoWikiBrowser/"+
                                    "Dated templates")
         text = templates_page.getWikiText()
-        code = parser.parse(text)
+        code = self.parser.parse(text)
         for template in code.filter_templates():
             if template.name.lower() == "tl":
                 self._to_date.append(template.get(1)
@@ -63,7 +60,7 @@ class DateTemplates(bot.Bot):
         """Load the redirects to the templates we
         must date.
         """
-        redirects_page = page.Page(self.wiki, "Wikipedia:AutoWikiBrowser/"+
+        redirects_page = self.page.Page(self.wiki, "Wikipedia:AutoWikiBrowser/"+
                 "Template redirects", section="Maintenance templates")
         text_ = redirects_page.getWikiText()
         for line in text_.splitlines():
@@ -72,8 +69,8 @@ class DateTemplates(bot.Bot):
             split = line.split('→')
             if len(split) != 2:
                 continue
-            code_1 = mwparserfromhell.parse(split[0])
-            code_2 = mwparserfromhell.parse(split[1])
+            code_1 = self.parser.parse(split[0])
+            code_2 = self.parser.parse(split[1])
             destination = code_2.filter_templates()[0].get(1).value
             for template in code_1.filter_templates():
                 if template.name.lower() == "tl":
@@ -84,7 +81,7 @@ class DateTemplates(bot.Bot):
 
     def _in_use(self, text):
         """Checks if the page is in use."""
-        code = parser.parse(text)
+        code = self.parser.parse(text)
         templates = code.filter_templates()
         for template in templates:
             if 'in use' in template.lower():
@@ -93,11 +90,11 @@ class DateTemplates(bot.Bot):
 
     def _generate_pages(self):
         """Generates a list of all pages to date."""
-        category_object = category.Category(self.wiki, "Category:Wikipedia maintenance "+
+        category_object = self.category.Category(self.wiki, "Category:Wikipedia maintenance "+
                 "categories sorted by month")
         members = category_object.getAllMembers(titleonly=True, namespaces=[14])
         for item in members:
-            item_object = category.Category(self.wiki, item)
+            item_object = self.category.Category(self.wiki, item)
             for page in item_object.getAllMembers(namespaces=[0]):
                 yield page
         return
@@ -110,7 +107,7 @@ class DateTemplates(bot.Bot):
         templates = {}
         if page and inspect.isclass(page):
             text = page.getWikiText()
-            code = parser.parse(text)
+            code = self.parser.parse(text)
             templates = code.filter_templates(recursive=True)
             for template in templates:
                 name = template.name.lower().strip()
