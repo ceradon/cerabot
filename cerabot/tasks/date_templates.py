@@ -69,6 +69,8 @@ class DateTemplates(bot.Bot):
                     +len("===Maintenance templates==="):
                     text_.find("===Navbox templates===")
                     +len("===Navbox templates===")]
+        except Exception:
+            pass
         for line in section.splitlines():
             if not '→' in line:
                 continue
@@ -155,7 +157,7 @@ class DateTemplates(bot.Bot):
                     print out.format(revid=res['edit']['newrevid'])
                     print res
                 else:
-                    out = "Edit failed for some reason\n "
+                    out = "Edit failed for some reason\n "+ \
                             "Here is the data the API sent us: {api_data}"
                     print out.format(api_data=res)
             except self.access_wiki.WikiError as e:
