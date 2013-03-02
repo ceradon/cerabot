@@ -123,8 +123,9 @@ class DateTemplates(bot.Bot):
                             summary[template.name.lower()] += 1
                         else:
                             summary[template.name.lower()] = 1
-                    else:
+                    elif template.has_param("date"):
                         old_date = template.get("date").value
+                        new_date = u""
                         date = template.get("date").value.lower()
                         bits = date.split()
                         month = bits[0]
@@ -139,7 +140,10 @@ class DateTemplates(bot.Bot):
                                 .values())
                         if not month.lower() in months:
                             month = self.month
-                        new_date = month+' '+year
+                        if len(bits) < 2:
+                            new_date = self.month+' '+self.year
+                        else:
+                            new_date = month+' '+year
                         if old_date != new_date:
                             template.get('date').value = new_date
                             if template.name.lower() in summary.keys():
