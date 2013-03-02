@@ -65,7 +65,7 @@ class Bot(object):
         self.parser = parser
 
         #Login to site API
-        self.wiki.login(self.user, self.passwd)
+        self.site.login(self.user, self.passwd)
         self.setup()
 
     def setup(self):
