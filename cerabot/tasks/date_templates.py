@@ -164,7 +164,8 @@ class DateTemplates(bot.Bot):
             try:
                 self.run_page_enabled()
                 newtext = unicode(newtext.strip(codecs.BOM_UTF8), 'utf-8')
-                res = page.edit(text=newtext, summary=self.build_summary(msg))
+                res = page.edit(text=newtext, summary=self.build_summary(
+                        'Dating templates: '+msg))
                 if res['edit']['result'] == "Success":
                     out = "Edit was successful. New revision id is: {revid}."
                     print out.format(revid=res['edit']['newrevid'])
