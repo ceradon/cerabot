@@ -1,10 +1,16 @@
 import sys
 import time
 import os.path as path
-import wikitools.wiki as wiki
-import wikitools.page as page
+from cerabot import bot
 from cerabot import settings
 from cerabot import exceptions
+#Import `wikitools` package
+import wikitools.api as api
+import wikitools.wiki as wiki
+import wikitools.page as page
+import wikitools.user as user
+import wikitools.wikifile as file
+import wikitools.category as category
 
 class Bot(object):
     """Base class for all of Cerabot's tasks."""
@@ -45,7 +51,16 @@ class Bot(object):
         self.site_api = self._build_site_api(
                 self.settings['site'][0])
         self.wiki = wiki.Wiki(self.site_api)
-        
+
+        #Setup some convenience functions for
+        #tasks to use:
+        self.api = api
+        self.wiki = wiki
+        self.page = page
+        self.user = user
+        self.file = file
+        self.category = category
+
         #Login to site API
         self.wiki.login(self.user, self.passwd)
         self.setup()
