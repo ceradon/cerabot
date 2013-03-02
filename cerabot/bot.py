@@ -56,12 +56,12 @@ class Bot(object):
 
         #Setup some convenience functions for
         #tasks to use:
-        self.api = api
-        self.wiki = wiki
-        self.page = page
-        self.user = user
-        self.file = file
-        self.category = category
+        self.access_api = api
+        self.access_wiki = wiki
+        self.access_page = page
+        self.access_user = user
+        self.access_ile = file
+        self.access_category = category
         self.parser = parser
 
         #Login to site API
