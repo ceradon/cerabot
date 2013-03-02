@@ -61,10 +61,15 @@ class DateTemplates(bot.Bot):
         must date.
         """
         redirects_page = self.access_page.Page(self.site, 
-                "Wikipedia:AutoWikiBrowser/Template redirects", 
-                section="Maintenance templates")
+                "Wikipedia:AutoWikiBrowser/Template redirects")
         text_ = redirects_page.getWikiText()
-        for line in text_.splitlines():
+        try:
+            section = text_[text.find(
+                    "===Maintenance templates===")
+                    +len("===Maintenance templates==="):
+                    text_.find("===Navbox templates===")
+                    +len("===Navbox templates===")]
+        for line in section.splitlines():
             if not '→' in line:
                 continue
             split = line.split('→')
@@ -91,9 +96,10 @@ class DateTemplates(bot.Bot):
 
     def _generate_pages(self):
         """Generates a list of all pages to date."""
-        category_object = self.access_category.Category(self.site, "Category:Wikipedia maintenance "+
-                "categories sorted by month")
-        members = category_object.getAllMembers(titleonly=True, namespaces=[14])
+        category_object = self.access_category.Category(self.site, 
+                "Category:Wikipedia maintenance categories sorted by month")
+        members = category_object.getAllMembers(titleonly=True, 
+                                                namespaces=[14])
         for item in members:
             item_object = self.access_category.Category(self.site, item)
             for page in item_object.getAllMembers(namespaces=[0]):
@@ -118,7 +124,8 @@ class DateTemplates(bot.Bot):
                         template.name = new_name
                 if template.name.lower() in self._to_date:
                     if not template.has_param("date"):
-                        template.add('date', datetime.today().strftime('%B %Y'))
+                        template.add('date', datetime.today()
+                                .strftime('%B %Y'))
                         if template.name.lower() in summary.keys():
                             summary[template.name.lower()] += 1
                         else:
@@ -133,7 +140,8 @@ class DateTemplates(bot.Bot):
             if page.isRedir():
                 continue
             if self._in_use(page.getWikiText()):
-                raise exceptions.PageInUseError("Page "+page.title+" is in use.")
+                raise exceptions.PageInUseError(
+                        "Page "+page.title+" is in use.")
             newtext, msg = self.run_bot(page)
             if not msg:
                 continue
@@ -147,8 +155,8 @@ class DateTemplates(bot.Bot):
                     print out.format(revid=res['edit']['newrevid'])
                     print res
                 else:
-                    out = "Edit failed for some reason\n Here is the data the API"+ \
-                            "sent us: {api_data}"
+                    out = "Edit failed for some reason\n "
+                            "Here is the data the API sent us: {api_data}"
                     print out.format(api_data=res)
             except self.access_wiki.WikiError as e:
                 print "Exception was raised: {1}".format(e)
