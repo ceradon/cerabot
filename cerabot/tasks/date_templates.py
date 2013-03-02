@@ -16,7 +16,6 @@ class DateTemplates(bot.Bot):
         """Ensures DateTemplates is the child of the
         `Bot` class.
         """
-        super(DateTemplates, self).__init__()
         self.pages = []
         self._to_date = []
         self._redirects= {}
@@ -48,6 +47,7 @@ class DateTemplates(bot.Bot):
             'december':'December',
             'dec':'December'
         }
+        super(DateTemplates, self).__init__()
 
     def _load_templates(self):
         """Load the templates we have to date."""
@@ -64,11 +64,9 @@ class DateTemplates(bot.Bot):
         must date.
         """
         redirects_page = page.Page(self.wiki, "Wikipedia:AutoWikiBrowser/"+
-                                   "Template redirects")
+                "Template redirects", section="Maintenance templates")
         text_ = redirects_page.getWikiText()
-        section = re.search('===Maintenance templates===\n?(.*)'+
-                        '===Navbox templates===', text, re.DOTALL)
-        for line in section.group(0).splitlines():
+        for line in text_.splitlines():
             if not '→' in line:
                 continue
             split = line.split('→')
