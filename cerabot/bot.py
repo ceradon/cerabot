@@ -4,13 +4,16 @@ import os.path as path
 from cerabot import bot
 from cerabot import settings
 from cerabot import exceptions
-#Import `wikitools` package
+
+#Import `wikitools` and `mwparserfromhell`
+#packages.
 import wikitools.api as api
 import wikitools.wiki as wiki
 import wikitools.page as page
 import wikitools.user as user
 import wikitools.wikifile as file
 import wikitools.category as category
+import mwparserfromhell as parser
 
 class Bot(object):
     """Base class for all of Cerabot's tasks."""
@@ -60,6 +63,7 @@ class Bot(object):
         self.user = user
         self.file = file
         self.category = category
+        self.parser = parser
 
         #Login to site API
         self.wiki.login(self.user, self.passwd)
