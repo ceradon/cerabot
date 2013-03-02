@@ -156,7 +156,7 @@ class DateTemplates(bot.Bot):
             print "[["+page.title+"]]"
             if page.isRedir():
                 return
-            if self._in_use(page.getWikiText):
+            if self._in_use(page.getWikiText()):
                 raise exceptions.PageInUseError("Page "+page.title+" is in use.")
             newtext, msg = self.run_bot(page)
             if not msg:
