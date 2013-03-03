@@ -57,7 +57,7 @@ class Connection(object):
 
     def _send_data(self, msg=None):
         """Send data to the server."""
-        last_sent = time() - self._last_send
+        last_sent = time.time() - self._last_send
         if last_sent < 0.85:
             time.sleep(0.85 - last_sent)
         try:
