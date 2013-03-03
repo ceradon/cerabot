@@ -77,3 +77,20 @@ class Connection(object):
             self.send_data("QUIT: {0}".format(msg))
         else:
             self.send_data("QUIT")
+
+    def loop(self):
+        """Connection's main loop."""
+        read_buffer = ""
+        while True:
+            try:
+                read_buffer += self.recieve_data()
+            except DeadSocketError:
+                break
+
+            lines = read_buffer.split("\n")
+            read_buffer = lines.pop()
+            for line in lines:
+                line = line.strip().split()
+                self._process_pong(line)
+
+        self._close_conn()
