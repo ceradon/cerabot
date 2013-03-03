@@ -178,5 +178,8 @@ class Connection(object):
         self._last_ping = time.time()
 
     def shutdown(self, msg):
-        self.quit(msg)
+        if msg:
+            self.quit(msg)
+        else:
+            self.quit()
         self._close_conn()
