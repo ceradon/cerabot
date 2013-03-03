@@ -37,7 +37,8 @@ class Connection(object):
         self._send_data("USER {0} {1} * :{2}".format(
                 self.ident, self.host, self.realname))
         if self.passwd:
-            self._send("PASS {0}".format(self.passwd))
+            self._send_data("PASS {0}".format(
+                            self.passwd))
 
     def _close_conn(self):
         """Close the connection with the server."""
