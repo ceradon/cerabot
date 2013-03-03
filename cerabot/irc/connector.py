@@ -52,7 +52,7 @@ class Connection(object):
         socket_data = self.socket.recv(max_size)
         if not socket_data:
             #We might have a dead socket, if no data is being returned.
-            raise DeadSocketError():
+            raise DeadSocketError()
         return socket_data
 
     def _send_data(self, msg=None):
@@ -71,7 +71,7 @@ class Connection(object):
         """Processes PONG message from the server."""
         self._last_recvd = time.time()
         if line[0] == "PING":
-            self.send_data("PONG {0}".format(line[1][1:])
+            self.send_data("PONG {0}".format(line[1][1:]))
 
     def _process_line(self):
         """Processes a line from the server.
@@ -163,13 +163,13 @@ class Connection(object):
 
     def mode(self, target, level, msg):
         """Sends MODE `msg` to server."""
-        self._send_data("MODE {0} {1} {2}".format(target, level
+        self._send_data("MODE {0} {1} {2}".format(target, level,
                                                   msg))
 
     def notice(self, target, msg):
         for line in self._split_message(msg, 220):
             self._send_data("NOTICE {0} :{1}".format(target, 
-                                                     msg)
+                                                     msg))
 
     def ping(self, target):
         """Sends a PING message to `target`."""
