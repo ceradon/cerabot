@@ -136,7 +136,7 @@ class Connection(object):
 
     def join(self, chan):
         """Joins a channel on the server."""
-        self._send_data("JOIN {0}".format(chan)
+        self._send_data("JOIN {0}".format(chan))
         self._channels.append(chan)
 
     def part(self, chan, msg=None):
