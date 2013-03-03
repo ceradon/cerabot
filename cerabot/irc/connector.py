@@ -82,9 +82,9 @@ class Connection(object):
     def quit(self, msg=None):
         """Quits from the server, but doesn't close connection."""
         if msg:
-            self.send_data("QUIT: {0}".format(msg))
+            self._send_data("QUIT: {0}".format(msg))
         else:
-            self.send_data("QUIT")
+            self._send_data("QUIT")
 
     def loop(self):
         """Connection's main loop."""
