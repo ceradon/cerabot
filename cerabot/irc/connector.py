@@ -117,7 +117,7 @@ class Connection(object):
                         "Shutting down..."
                 self._shutdown("Ba-bye.")
 
-    def _split_message(msgs, maxlen, maxsplits=5):
+    def _split_message(self, msgs, maxlen, maxsplits=5):
         """Split a large message into multiple messages smaller than maxlen.
         Credit goes to Ben Kurtovic (Earwig) for writing this awesome piece
         of code."""
