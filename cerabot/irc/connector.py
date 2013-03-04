@@ -158,9 +158,9 @@ class Connection(object):
             self._send_data("PRIVMSG {0} :{1}".format(target,
                                                       msg))
 
-    def action(self, msg):
+    def action(self, target, msg):
         """Sends ACTION `msg` to server."""
-        self._send_data("\x01ACTION {0}\x01".format(msg))
+        self.say(target, "\x01ACTION {0}\x01".format(msg))
 
     def mode(self, target, level, msg):
         """Sends MODE `msg` to server."""
