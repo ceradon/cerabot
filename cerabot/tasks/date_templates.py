@@ -142,8 +142,7 @@ class DateTemplates(bot.Bot):
             if page.isRedir():
                 continue
             if self._in_use(page.getWikiText()):
-                raise exceptions.PageInUseError(
-                        "Page "+page.title+" is in use.")
+                print "Page "+page.title+" is in use."
             newtext, msg = self.run_bot(page)
             if not msg:
                 continue
