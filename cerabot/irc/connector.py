@@ -74,7 +74,7 @@ class Connection(object):
         if line[0] == "PING":
             self.send_data("PONG {0}".format(line[1][1:]))
 
-    def _process_line(self):
+    def _process_line(self, line):
         """Processes a line from the server.
         To be implemented in subclasses."""
         raise NotImplementedError()
@@ -85,6 +85,12 @@ class Connection(object):
             self._send_data("QUIT: {0}".format(msg))
         else:
             self._send_data("QUIT")
+    def normalize(self, string):
+        """Normalizes strings to say in IRC."""
+        string = string.replace("<bold>", "\u0002").replace("<underline>",
+                "\u001").replace("<italics>", "\u0016")
+        string = string.replace("<normal>", "\u000F")
+        return string
 
     def loop(self):
         """Connection's main loop."""
@@ -156,11 +162,11 @@ class Connection(object):
         """Sends PRIVMSG `msg` to `target`."""
         for line in self._split_message(msg, 220):
             self._send_data("PRIVMSG {0} :{1}".format(target,
-                                                      msg))
+                            self.normalize(msg)))
 
     def action(self, target, msg):
         """Sends ACTION `msg` to server."""
-        self.say(target, "\x01ACTION {0}\x01".format(msg))
+        self.say("\x01ACTION {0}\x01".format(msg), target)
 
     def mode(self, target, level, msg):
         """Sends MODE `msg` to server."""
