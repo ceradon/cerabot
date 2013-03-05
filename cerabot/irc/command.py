@@ -25,7 +25,7 @@ class Command(Connection):
         idle by default; override if necessary."""
         pass
 
-    def call(self):
+    def call(self, args=None, kwargs=None):
         """Main entry point for the command and the 
         main means by which the task does stuff. Is
         used by other parts of the module to run the
