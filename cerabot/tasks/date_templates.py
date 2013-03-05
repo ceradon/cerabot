@@ -2,6 +2,7 @@ import re
 import sys
 import codecs
 from cerabot import bot
+from cerabot import exceptions
 from datetime import datetime
 
 class DateTemplates(bot.Bot):
