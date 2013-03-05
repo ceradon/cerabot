@@ -68,8 +68,8 @@ class Connection(object):
         else:
             self._last_send = time.time()
 
-    def _process_pong(self, line):
-        """Processes PONG message from the server."""
+    def _process_ping(self, line):
+        """Processes PING message from the server."""
         self._last_recvd = time.time()
         if line[0] == "PING":
             self.send_data("PONG {0}".format(line[1][1:]))
@@ -106,7 +106,8 @@ class Connection(object):
             read_buffer = lines.pop()
             for line in lines:
                 line = line.strip().split()
-                self._process_pong(line)
+                self._process_ping(line)
+                self._process_line(line)
 
         self._close_conn()
 
