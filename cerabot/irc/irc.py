@@ -5,9 +5,9 @@ from cerabot import settings
 from cerabot import exceptions
 from cerabot.irc import parser
 from cerabot.irc import command
-from cerabot.irc import connector
+from cerabot.irc import connection
 
-class IRC(connector.Connection):
+class IRC(connection.Connection):
     def __init__(self):
         """Main frontend component of the IRC module
         for Cerabot. Loads connection, parses and runs

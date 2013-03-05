@@ -1,5 +1,5 @@
 import sys
-from ..connector import Connection
+from ..connection import Connection
 
 class Command(Connection):
     req_args = 0

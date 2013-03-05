@@ -2,7 +2,7 @@ import re
 import sys
 from cerabot import settings
 from cerabot import exceptions
-from cerabot.irc.connector import Connection
+from cerabot.irc.connection import Connection
 
 class Parser(Connection):
     """Parses a single line from IRC and searches
