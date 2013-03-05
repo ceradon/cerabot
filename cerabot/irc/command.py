@@ -2,6 +2,7 @@ import sys
 from ..connector import Connection
 
 class Command(Connection):
+    req_args = 0
     command_name = None
     callable_hooks = []
     help_docs = None
