@@ -52,7 +52,6 @@ class IRC(connector.Connection):
         commands = [cls for cls in command.Command.__subclasses__()]
         for command in commands:
             self._commands[command.command_name] = []
-            self._commands[command.command_name].append(cls)
             self._commands[command.command_name].append(command.help_docs)
             self._commands[command.command_name].append(tuple(command
                                                         .callable_hooks))
@@ -60,8 +59,37 @@ class IRC(connector.Connection):
     def _parse_line(self, line):
         parse = parser.Parser(line, self._nick)
         if parse.is_command:
-            if parse.command_name in self._commands:
-                self._commands[parse.command_name][0]().call(args=parse.args,
-                        kwargs=parse.kwargs)
+            if parse.command_name in self._commands.keys():
+                command = self.get_command_instance(parse.command_name)
+                if len(parse.args) < command.req_args:
+                    self.say(u"<bold>{0}<normal>, You have not provided "+ \
+                            "enough arguments to {1}".format(parse.nick, 
+                            parse.command_name), parse.chan)
+                elif len(parse.args) > command.req_args:
+                    self.say(u"<bold>{0}<normal>, {1} arguments required "+ \
+                            "for {2}, {3} given".format(parse.nick,
+                            unicode(parse.req_args), len(parse.args))
+                else:
+                    command.call(parse, args=args, kwargs=kwargs):
+
+    def get_command_instance(self, command_name):
+        commands = [cls for cls in command.Command.__subclasses__()]
+        for command in commands:
+            if command.command_name == command:
+                return command
             else:
-                pass
+                continue
+
+    def get_command_hooks(self, command_name):
+        for command in self._commands.keys():
+            if command == command_name:
+                return self.get_command_instance(command).callable_hooks
+            else:
+                continue
+
+    def get_command_docs(self, command_name):
+        for command in self._commands.keys():
+            if command == command_name:
+                return self.get_command_instance(command).help_docs
+            else:
+                continue
