@@ -85,6 +85,7 @@ class Connection(object):
             self._send_data("QUIT: {0}".format(msg))
         else:
             self._send_data("QUIT")
+
     def normalize(self, string):
         """Normalizes strings to say in IRC."""
         string = string.replace("<bold>", "\u0002").replace("<underline>",
