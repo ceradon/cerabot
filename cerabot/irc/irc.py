@@ -53,7 +53,7 @@ class IRC(connection.Connection):
             self._commands[command.command_name].append(tuple(command
                                                         .callable_hooks))
 
-    def _parse_line(self, line):
+    def _process_line(self, line):
         parse = parser.Parser(line, self._nick)
         if parse.is_command:
             if parse.command_name in self._commands.keys():
