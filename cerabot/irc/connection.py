@@ -102,7 +102,7 @@ class Connection(object):
         while True:
             try:
                 read_buffer += self.recieve_data()
-            except DeadSocketError:
+            except exceptions.DeadSocketError():
                 break
 
             lines = read_buffer.split("\n")
