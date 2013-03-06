@@ -15,6 +15,7 @@ class Connection(object):
         self._last_send = 0
         self._last_pang = 0
         self._last_recvd = time.time()
+        self.is_running = False
         
         self._channels = []
 
@@ -33,6 +34,7 @@ class Connection(object):
 
     def _send_conn_data(self):
         """Send vital data for our connection."""
+        self.is_running = True
         self._send_data("NICK {0}".format(self.nick))
         self._send_data("USER {0} {1} * :{2}".format(
                 self.ident, self.host, self.realname))
