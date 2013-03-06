@@ -21,3 +21,6 @@ class PageInUseError(CerabotError):
     is present in a page's text. We should not be 
     editing pages that are in use.
     """
+
+class DeadSocketError(CerabotError):
+    """IRC Socket is dead."""
