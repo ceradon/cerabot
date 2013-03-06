@@ -32,7 +32,7 @@ class Parser(Connection):
 
     def _load(self):
         """Load message's attribute."""
-        if "freenode.net" or self._my_name in self._line[0]:
+        if "freenode.net" or self.my_name in self._line[0].lower():
             return False
         (self.nick, self.host) = self._line[0].split('@', 2)
         (self.nick, self.ident) = self.nick[1:].split('!')
