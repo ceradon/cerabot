@@ -32,9 +32,9 @@ class IRC(connection.Connection):
         self._port = self.settings['irc_server'][1]
         self._real_name = self.settings['irc_name']
         self._ident = self.settings['irc_ident']
-        base = super(IRC, self).__init__(self._nick, self._passwd,
-                self._host, self._port, self._real_name, self._ident)
-        base.connect()
+        super(IRC, self).__init__(self._nick, self._passwd,
+              self._host, self._port, self._real_name, self._ident)
+        self.connect()
 
     def _load_conn(self):
         if self.is_running:
