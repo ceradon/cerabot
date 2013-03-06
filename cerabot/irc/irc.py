@@ -40,7 +40,7 @@ class IRC(connection.Connection):
         if self.is_running:
             self.loop()
 
-        while self._server.is_running:
+        while self.is_running:
             self.stayin_alive()
             self._last_conn_check = time.time()
             time.sleep(320)
