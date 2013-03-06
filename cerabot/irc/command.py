@@ -1,5 +1,5 @@
 import sys
-from ..connection import Connection
+from cerabot.irc.connection import Connection
 
 class Command(Connection):
     req_args = 0
