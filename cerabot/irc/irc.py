@@ -45,9 +45,6 @@ class IRC(connection.Connection):
             self._last_conn_check = time.time()
             time.sleep(320)
 
-        for chan in self.settings["join_on_startup"]:
-            self.join(chan)
-
     def _assemble_commands(self):
         commands = [cls for cls in command.Command.__subclasses__()]
         for command in commands:
