@@ -26,6 +26,7 @@ class Connection(object):
                                     socket.SOCK_STREAM)
         try:
             self.socket.connect((self.host, self.port))
+            self.is_running = True
         except socket.error:
             print "Unable to establish connection; Retrying..."
             print "Sleeping for 10 seconds"
@@ -34,7 +35,6 @@ class Connection(object):
 
     def _send_conn_data(self):
         """Send vital data for our connection."""
-        self.is_running = True
         self._send_data("NICK {0}".format(self.nick))
         self._send_data("USER {0} {1} * :{2}".format(
                 self.ident, self.host, self.realname))
@@ -110,6 +110,8 @@ class Connection(object):
                 line = line.strip().split()
                 if line [1] == "376":
                     self._send_conn_data()
+                for chan in self.settings["join_on_statrup"]:
+                    self.join(chan)
                 self._process_ping(line)
                 self._process_line(line)
 
