@@ -29,7 +29,7 @@ class Connection(object):
         except socket.error:
             print "Unable to establish connection; Retrying..."
             print "Sleeping for 10 seconds"
-            time.sleep(0)
+            time.sleep(10)
             self.connect()
 
     def _send_conn_data(self):
