@@ -35,9 +35,9 @@ class Connection(object):
 
     def _send_conn_data(self):
         """Send vital data for our connection."""
-        self._send_data("NICK {0}".format(self.nick))
         self._send_data("USER {0} {1} * :{2}".format(
                 self.ident, self.host, self.realname))
+        self._send_data("NICK {0}".format(self.nick))
         if self.passwd:
             self._send_data("PASS {0}".format(
                             self.passwd))
