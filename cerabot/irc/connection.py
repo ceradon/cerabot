@@ -4,7 +4,7 @@ import socket
 from cerabot import exceptions
 
 class Connection(object):
-    def __init__(self, nick, passwd, host, port, 
+    def __init__(self, nick, passwd, host, port,
             realname, ident):
         self.host = host
         self.port = port
@@ -12,35 +12,38 @@ class Connection(object):
         self.ident = ident
         self.passwd = passwd
         self.realname = realname
-        
+
         self._last_send = 0
         self._last_pang = 0
         self._last_recvd = time.time()
         self.is_running = False
-        
+
         self._channels = []
 
     def connect(self):
         """Connect to the specified IRC server."""
-        self.socket = socket.socket(socket.AF_INET, 
+        self.is_running = True
+        self.socket = socket.socket(socket.AF_INET,
                                     socket.SOCK_STREAM)
         try:
             self.socket.connect((self.host, self.port))
-            self.is_running = True
+            self._send_conn_data()
         except socket.error:
             print "Unable to establish connection; Retrying..."
             print "Sleeping for 10 seconds"
-            time.sleep(10)
+            time.sleep(0)
             self.connect()
 
     def _send_conn_data(self):
         """Send vital data for our connection."""
+        self._send_data("NICK {0}".format(self.nick))
         self._send_data("USER {0} {1} * :{2}".format(
                 self.ident, self.host, self.realname))
-        self._send_data("NICK {0}".format(self.nick))
         if self.passwd:
             self._send_data("PASS {0}".format(
                             self.passwd))
+        for chan in self.settings["join_on_startup"]:
+            self.join(chan)
 
     def _close_conn(self):
         """Close the connection with the server."""
@@ -50,7 +53,7 @@ class Connection(object):
             pass
         self.socket.close()
 
-    def _recieve_data(self, max_size=2048):
+    def _recieve_data(self, max_size=512):
         """Recieve data from the server."""
         socket_data = self.socket.recv(max_size)
         if not socket_data:
@@ -65,8 +68,8 @@ class Connection(object):
             time.sleep(0.85 - last_sent)
         try:
             self.socket.sendall(msg + '\r\n')
-        except socket.error:
-            raise exceptions.DeadSocketError()
+        except secket.error:
+            raise excpetions.DeadSocketError()
         else:
             self._last_send = time.time()
 
@@ -101,17 +104,13 @@ class Connection(object):
         while True:
             try:
                 read_buffer += self._recieve_data()
-            except exceptions.DeadSocketError():
+            except exceptions.DeadSocketError:
                 break
 
             lines = read_buffer.split("\n")
             read_buffer = lines.pop()
             for line in lines:
                 line = line.strip().split()
-                if line [1] == "376":
-                    self._send_conn_data()
-                for chan in self.settings["join_on_statrup"]:
-                    self.join(chan)
                 self._process_ping(line)
                 self._process_line(line)
 
@@ -119,7 +118,7 @@ class Connection(object):
 
     def stayin_alive(self):
         """'Feel the city breakin' and everybody shakin''
-        Keeps the connection alive, and ensures we are 
+        Keeps the connection alive, and ensures we are
         still connected to the server."""
         now = time.time()
         if now - self._last_recvd > 120:
@@ -183,7 +182,7 @@ class Connection(object):
 
     def notice(self, target, msg):
         for line in self._split_message(msg, 220):
-            self._send_data("NOTICE {0} :{1}".format(target, 
+            self._send_data("NOTICE {0} :{1}".format(target,
                                                      msg))
 
     def ping(self, target):
@@ -196,5 +195,5 @@ class Connection(object):
             self.quit(msg)
         else:
             self.quit()
-        self.is_running = False
+        selfis_running = False
         self._close_conn()
