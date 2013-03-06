@@ -51,7 +51,7 @@ class Connection(object):
             pass
         self.socket.close()
 
-    def _recieve_data(self, max_size=4096):
+    def _recieve_data(self, max_size=2048):
         """Recieve data from the server."""
         socket_data = self.socket.recv(max_size)
         if not socket_data:
@@ -101,7 +101,7 @@ class Connection(object):
         read_buffer = ""
         while True:
             try:
-                read_buffer += self.recieve_data()
+                read_buffer += self._recieve_data()
             except exceptions.DeadSocketError():
                 break
 
