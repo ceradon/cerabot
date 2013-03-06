@@ -1,6 +1,7 @@
 import sys
 import time
 import socket
+from cerabot import exceptions
 
 class Connection(object):
     def __init__(self, nick, passwd, host, port, 
@@ -55,7 +56,7 @@ class Connection(object):
         socket_data = self.socket.recv(max_size)
         if not socket_data:
             #We might have a dead socket, if no data is being returned.
-            raise DeadSocketError()
+            raise exceptions.DeadSocketError()
         return socket_data
 
     def _send_data(self, msg=None):
@@ -66,7 +67,7 @@ class Connection(object):
         try:
             self.socket.sendall(msg + '\r\n')
         except secket.error:
-            raise DeadSocketError()
+            raise exceptions.DeadSocketError()
         else:
             self._last_send = time.time()
 
@@ -192,4 +193,5 @@ class Connection(object):
             self.quit(msg)
         else:
             self.quit()
+        self.is_running = False
         self._close_conn()
