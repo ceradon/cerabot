@@ -55,6 +55,9 @@ class IRC(connection.Connection):
 
     def _process_line(self, line):
         parse = parser.Parser(line, self._nick)
+        result = parse._load()
+        if not result:
+            return
         if parse.is_command:
             if parse.command_name in self._commands.keys():
                 command = self.get_command_instance(parse.command_name)
