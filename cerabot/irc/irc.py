@@ -18,7 +18,7 @@ class IRC(connection.Connection):
         self._nick = self.settings['irc_nick']
         if self.settings['irc_passwd']:
             self._passwd = self.settings['passwd']
-        elif self.settings['passwd_file'] and 
+        elif self.settings['passwd_file'] and \
                 path.isfile(self.settings['passwd_file']):
             file = open(self.settings['passwd_file'], 'r')
             contents = file.read()
@@ -68,9 +68,9 @@ class IRC(connection.Connection):
                 elif len(parse.args) > command.req_args:
                     self.say(u"<bold>{0}<normal>, {1} arguments required "+ \
                             "for {2}, {3} given".format(parse.nick,
-                            unicode(parse.req_args), len(parse.args))
+                            unicode(parse.req_args), len(parse.args)))
                 else:
-                    command.call(parse, args=args, kwargs=kwargs):
+                    command.call(parse, args=args, kwargs=kwargs)
 
     def get_command_instance(self, command_name):
         commands = [cls for cls in command.Command.__subclasses__()]
