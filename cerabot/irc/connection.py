@@ -26,7 +26,6 @@ class Connection(object):
                                     socket.SOCK_STREAM)
         try:
             self.socket.connect((self.host, self.port))
-            self._send_conn_data()
         except socket.error:
             print "Unable to establish connection; Retrying..."
             print "Sleeping for 10 seconds"
@@ -109,6 +108,8 @@ class Connection(object):
             read_buffer = lines.pop()
             for line in lines:
                 line = line.strip().split()
+                if line [1] == "376":
+                    self._send_conn_data()
                 self._process_ping(line)
                 self._process_line(line)
 
