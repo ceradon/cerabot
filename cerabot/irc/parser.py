@@ -32,13 +32,15 @@ class Parser(Connection):
 
     def _load(self):
         """Load message's attribute."""
-        self._line = self._line.split()
-
+        if "freenode.net" or self._my_name in self._line[0]:
+            return False
         (self.nick, self.host) = self._line[0].split('@', 2)
         (self.nick, self.ident) = self.nick[1:].split('!')
         self.chan = self._line[2]
         self.msg_type = self._line[1]
         self.msg = line[3:]
+        self._parse()
+        return True
 
     def _parse(self):
         """Parses a line from IRC."""
