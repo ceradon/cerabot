@@ -60,7 +60,7 @@ class Bot(object):
         self.access_wiki = wiki
         self.access_page = page
         self.access_user = user
-        self.access_ile = file
+        self.access_file = file
         self.access_category = category
         self.parser = parser
 
