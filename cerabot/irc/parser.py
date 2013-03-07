@@ -32,7 +32,6 @@ class Parser(Connection):
 
     def _load(self):
         """Load message's attribute."""
-        print self._line
         re_line = re.compile(r"(.*?).freenode.net")
         if re_line.search(self._line[0], re.I):
             return False
