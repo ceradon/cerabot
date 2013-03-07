@@ -1,4 +1,5 @@
 import sys
+import collections
 from cerabot.irc.connection import Connection
 
 class Command(Connection):
