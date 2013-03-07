@@ -1,7 +1,7 @@
 import sys
 from cerabot import bot
 
-class BotRequestNotifier(object):
+class BotRequestNotifier(bot.Bot):
     """Notifies bot owners of their failed/
     successful request for bot approval.
     """
