@@ -7,6 +7,16 @@ class Command(Connection):
     callable_hooks = []
     help_docs = None
 
+    """Tracks inheritence."""
+    class __metaclass__(type):
+        __inheritors__ = collections.defaultdict(list)
+
+        def __new__(meta, name, bases, dct):
+            klass = type.__new__(meta, name, bases, dct)
+            for base in klass.mro()[1:-1]:
+                meta.__inheritors__[base.__name__].append(klass.__name__)
+            return klass
+
     def __init__(self):
         """Base class for all commands."""
         self.say = lambda msg, target: self.say(msg, target)
