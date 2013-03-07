@@ -15,7 +15,7 @@ class Command(Connection):
         def __new__(meta, name, bases, dct):
             klass = type.__new__(meta, name, bases, dct)
             for base in klass.mro()[1:-1]:
-                meta.__inheritors__[base.__name__].append(klass.__name__)
+                meta.__inheritors__[base.__name__].append(klass)
             return klass
 
     def __init__(self):
