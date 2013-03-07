@@ -41,7 +41,7 @@ class Parser(Connection):
         (self.nick, self.ident) = self.nick[1:].split('!')
         self.chan = self._line[2]
         self.msg_type = self._line[1]
-        self.msg = self._line[3][0:]
+        self.msg = " ".join(self._line[3:])
         self._parse()
         return True
 
