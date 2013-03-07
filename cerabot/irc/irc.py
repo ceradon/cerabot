@@ -46,7 +46,7 @@ class IRC(connection.Connection):
             time.sleep(320)
 
     def _assemble_commands(self):
-        commands = [cls for cls in command.Command.__inheritors__]
+        commands = [cls for cls in command.Command.__inheritors__.items()]
         for command in commands:
             self._commands[command.command_name] = []
             self._commands[command.command_name].append(command.help_docs)
@@ -73,7 +73,7 @@ class IRC(connection.Connection):
                     command.call(parse, args=args, kwargs=kwargs)
 
     def get_command_instance(self, command_name):
-        commands = [cls for cls in command.Command.__inheritors__]
+        commands = [cls for cls in command.Command.__inheritors__.items()]
         for command in commands:
             if command.command_name == command:
                 return command
