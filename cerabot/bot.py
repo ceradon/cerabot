@@ -66,6 +66,7 @@ class Bot(object):
 
         #Login to site API
         self.site.login(self.user, self.passwd)
+        self.is_logged_in = True
         self.setup()
 
     def setup(self):
