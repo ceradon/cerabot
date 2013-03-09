@@ -1,8 +1,12 @@
+import re
 import sys
+import json
 import time
 import os.path as path
 from cerabot import settings
+from urllib import urlencode
 from cerabot import exceptions
+from urllib2 import Request, urlopen
 
 #Import `wikitools` and `mwparserfromhell`
 #packages.
@@ -80,6 +84,44 @@ class Bot(object):
         serves as the main entry point for the task.
         """
         pass
+
+    def edit_time(self, page):
+        try:
+            base_url = "http://en.wikipedia.org/w/api.php"
+            user_agent = self.settings["user_agent"]
+            data = {'action':'query',
+                    'prop':'revisions',
+                    'titles':page,
+                    'format':'json',
+                    'rvprop':'timestamp|user'}
+            args = urlencode(data)
+            headers = {'User-Agent':user_agent}
+            request = Request(base_url, args, headers)
+            send_data = urlopen(request)
+            response = unicode(send_data.read())
+            return_data = json.loads(send_data)
+            result = return_data["query"]["pages"].values()[0]
+            edit_time = result["revisions"][0]["timestamp"]
+        except HTTPError as e:
+            print "The server could not fulfill our request."+ \
+                    "Closed with error code: {0}".format(e.code)
+            return None
+        except URLError as e:
+            print "Unable to connect to server, Retuned: {0}".format(
+                e.reason)
+            return None
+        return edit_time
+
+    def check_exclusion(self, page, text=None):
+        if not text:
+            page_obj = page.Page(self.site, page)
+            text = page_obj.getWikiText()
+        regex = "\{\{\s*(no)?bots\s*\|?(deny=(.*?)|allow=(.*?))?\}\}"
+        compile_regex = re.compile(regex)
+        if compile_regex.search(text):
+            return False
+        else:
+            return True
 
     def run_page_enabled(self):
         """Checks if the run page for
