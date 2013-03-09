@@ -112,7 +112,13 @@ class DateTemplates(bot.Bot):
     def setup(self):
         self.pages = self._generate_pages()
         self._load_templates()
-    
+
+    def is_dormant(self, page):
+        timestamp = self.edit_time(page.title)
+        delta = datetime.datetime.now() - timestamp
+        result = delta > datetime.timedelta(seconds=900)
+        return result
+
     def run_bot(self, page=None):
         summary = {}
         if page:
@@ -144,6 +150,9 @@ class DateTemplates(bot.Bot):
                 continue
             if self._in_use(page.getWikiText()):
                 print "Page "+page.title+" is in use."
+                continue
+            if not self.is_dormant(page):
+                return
             newtext, msg = self.run_bot(page)
             if not msg:
                 continue
