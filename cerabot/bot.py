@@ -2,6 +2,7 @@ import re
 import sys
 import json
 import time
+import datetime
 import os.path as path
 from cerabot import settings
 from urllib import urlencode
@@ -102,6 +103,8 @@ class Bot(object):
             return_data = json.loads(send_data)
             result = return_data["query"]["pages"].values()[0]
             edit_time = result["revisions"][0]["timestamp"]
+            date_time = datetime.datetime.strptime(edit_time, 
+                    '%Y-%m-%dT%H:%M:%SZ')
         except HTTPError as e:
             print "The server could not fulfill our request."+ \
                     "Closed with error code: {0}".format(e.code)
@@ -110,7 +113,7 @@ class Bot(object):
             print "Unable to connect to server, Retuned: {0}".format(
                 e.reason)
             return None
-        return edit_time
+        return date_time
 
     def check_exclusion(self, page, text=None):
         if not text:
