@@ -12,7 +12,7 @@ class Settings(object):
         self.settings['passwd'] = u""
         self.settings['passwd_file'] = u".passwd"
         self.settings['user_agent'] = u"Cerabot/0.1 (wikibot; {0} {1} {2};"+ \
-                u"{3})".format(platform.linux_distibution()[0], platform.version(),
+                u"{3})".format(platform.linux_distribution()[0], platform.version(),
                 platform.linux_distribution()[1], platform.machine)
 
         #Wikipedia settings
