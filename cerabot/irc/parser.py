@@ -2,9 +2,9 @@ import re
 import sys
 from cerabot import settings
 from cerabot import exceptions
-from cerabot.irc.connection import Connection
+from cerabot.irc import connection
 
-class Parser(Connection):
+class Parser(connection.Connection):
     """Parses a single line from IRC and searches
     for cammands and arguments in that line of 
     data."""
@@ -85,3 +85,13 @@ class Parser(Connection):
                 continue
             if key and value:
                 self.kwargs[key] = value
+
+    def __repr__(self):
+        """Return a canonical string representation of Parser."""
+        return "Parser(line=\"{0!r}\", my name={1!r}".format(
+                " ".join(self._line), self._my_name)
+
+    def __str__(self):
+        """Return a prettier string representation of Parser."""
+        return "<Parser \"{0!r}\" for {1!r}".format(" ".join(self.line),
+                self._my_name)
