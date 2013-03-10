@@ -88,9 +88,9 @@ class DateTemplates(bot.Bot):
                     self._redirects[destination.lower()] = destination
         return
 
-    def _in_use(self, text):
+    def _in_use(self, page):
         """Checks if the page is in use."""
-        code = self.parser.parse(text)
+        code = self.parser.parse(page.getWikiText())
         templates = code.filter_templates()
         for template in templates:
             if 'in use' in template.lower():
@@ -148,11 +148,13 @@ class DateTemplates(bot.Bot):
             print "[["+page.title+"]]"
             if page.isRedir():
                 continue
-            if self._in_use(page.getWikiText()):
+            if self._in_use(page):
                 print "Page "+page.title+" is in use."
                 continue
             if not self.is_dormant(page):
-                return
+                continue
+            if not self.check_exclusion(page):
+                continue
             newtext, msg = self.run_bot(page)
             if not msg:
                 continue
