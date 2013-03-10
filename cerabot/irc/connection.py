@@ -197,7 +197,7 @@ class Connection(object):
             self.quit(msg)
         else:
             self.quit()
-        selfis_running = False
+        self.is_running = False
         self._close_conn()
 
     def __repr__(self):
