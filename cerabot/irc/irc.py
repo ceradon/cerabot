@@ -37,7 +37,7 @@ class IRC(connection.Connection):
             self._port = self.settings['rc_server'][1]
             super(IRC, self).__init__(self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident,
-                  join_startup_chans=False)
+                  join_startup_chans=False, no_login=True)
         elif not self.rc_watch:
             self._host = self.settings['irc_server'][0]
             self._port = self.settings['irc_server'][1]
