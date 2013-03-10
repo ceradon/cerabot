@@ -119,12 +119,15 @@ class Bot(object):
         if not text:
             page_obj = page.Page(self.site, page)
             text = page_obj.getWikiText()
-        regex = "\{\{\s*(no)?bots\s*\|?(deny=(.*?)|allow=(.*?))?\}\}"
-        compile_regex = re.compile(regex)
-        if compile_regex.search(text):
+        regex = "\{\{\s*(no)?bots\s*\|?((deny|allow)=(.*?))?\}\}"
+        re_compile = re.search(regex, text)
+        if re_compile.group(1):
             return False
-        else:
-            return True
+        if (self.user.lower() in re_compile.group(4).lower()):
+            if re_compile.group(3) == "allow":
+                return True
+            if re_compile.group(3) == "deny":
+                return False
 
     def run_page_enabled(self):
         """Checks if the run page for
