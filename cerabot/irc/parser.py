@@ -93,5 +93,5 @@ class Parser(connection.Connection):
 
     def __str__(self):
         """Return a prettier string representation of Parser."""
-        return u"<Parser \"{0!r}\" for {1!r}".format(" ".join(self.line),
-                self._my_name)
+        return u"<Parser \"{0!r}\" for {1!r}".format(
+            " ".join(self.line), self._my_name)
