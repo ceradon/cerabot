@@ -17,8 +17,8 @@ class DateTemplates(bot.Bot):
         self.pages = []
         self._to_date = []
         self._redirects = {}
-        self.year = datetime.today().strftime('%Y')
-        self.month = datetime.today().strftime('%B')
+        self.year = datetime.datetime.today().strftime('%Y')
+        self.month = datetime.datetime.today().strftime('%B')
         self.correct_dates = {
             'january':'January',
             'jan':'January',
