@@ -8,7 +8,7 @@ from cerabot.irc import command
 from cerabot.irc import connection
 
 class IRC(connection.Connection):
-    def __init__(self):
+    def __init__(self, rc_watch=False):
         """Main frontend component of the IRC module
         for Cerabot. Loads connection, parses and runs
         commands when called, imports all commands."""
@@ -28,8 +28,13 @@ class IRC(connection.Connection):
             else:
                 #If there is no password, leave it alone.
                 pass
-        self._host = self.settings['irc_server'][0]
-        self._port = self.settings['irc_server'][1]
+        if rc_watch:
+            self._host = self.settings['rc_server'][0]
+            self._port = self.settings['rc_server'][1]
+        elif not rc_watch:
+            self._host = self.settings['irc_server'][0]
+            self._port = self.settings['irc_server'][1]
+            self._assemble_commands()
         self._real_name = self.settings['irc_name']
         self._ident = self.settings['irc_ident']
         super(IRC, self).__init__(self._nick, self._passwd,
