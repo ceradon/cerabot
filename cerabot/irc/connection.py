@@ -5,7 +5,8 @@ from cerabot import exceptions
 
 class Connection(object):
     def __init__(self, nick, passwd, host, port,
-            realname, ident, join_startup_chans=True):
+            realname, ident, join_startup_chans=True
+            no_login=False):
         self.host = host
         self.port = port
         self.nick = nick
@@ -14,7 +15,8 @@ class Connection(object):
         self.realname = realname
 
         self._last_send = 0
-        self._last_pang = 0
+        self._last_ping = 0
+        self._no_login = no_login
         self._last_recvd = time.time()
         self._join_startup_chans = join_startup_chans
         self.is_running = False
@@ -40,7 +42,7 @@ class Connection(object):
         self._send_data("NICK {0}".format(self.nick))
         self._send_data("USER {0} {1} * :{2}".format(
                 self.ident, self.host, self.realname))
-        if self.passwd:
+        if self.passwd and not self._no_login:
             self._send_data("PASS {0}".format(
                             self.passwd))
         if self._join_startup_chans:
