@@ -100,7 +100,7 @@ class Bot(object):
             request = Request(base_url, args, headers)
             send_data = urlopen(request)
             response = unicode(send_data.read())
-            return_data = json.loads(send_data)
+            return_data = json.loads(response)
             result = return_data["query"]["pages"].values()[0]
             edit_time = result["revisions"][0]["timestamp"]
             date_time = datetime.datetime.strptime(edit_time, 
