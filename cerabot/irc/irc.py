@@ -6,6 +6,7 @@ from cerabot import exceptions
 from cerabot.irc import parser
 from cerabot.irc import command
 from cerabot.irc import connection
+from cerabot.irc import rc_watcher
 
 class IRC(connection.Connection):
     def __init__(self, rc_watch=False):
@@ -70,6 +71,9 @@ class IRC(connection.Connection):
         result = parse._load()
         if not result:
             return
+        if self.rc_watch:
+            self._parse_rc_line(parse)
+            return
         if parse.is_command:
             if parse.command_name in self._command_hooks[parse.command_name]:
                 command = self.get_command_instance(parse.command_name)
@@ -106,6 +110,18 @@ class IRC(connection.Connection):
                 return self.get_command_instance(command).help_docs
             else:
                 continue
+
+    def __repr__(self):
+        """Reutrn a canonical string representation of IRC."""
+        return u"IRC(server=({0!r}, {1!r}), nick={2!r}, realname={3!r}"+ \
+                "ident=4!r".format(self._host, unicode(self.port), self._nick,
+                self._real_name, self._ident)
+
+    def __str__(self):
+        """Return a prettier string representation of IRC."""
+        res = u"<IRC ({0!r}, {1!r}) with nickname {2!r} and ident {3!r})>"
+        return res.format(self._host, unicode(self._port), self._nick, 
+                self._ident)
 
 if __name__ == '__main__':
     irc = IRC()
