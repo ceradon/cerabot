@@ -12,7 +12,7 @@ class RCWatcher(irc.IRC):
                 "\s+?\*\s(.*)\s\*\s(\(\+\d+\))?\s(.*)\Z")
         self.re_rc_log = re.compile("\A\[\[(.*)?\]\]\s(\w+)?\s\*\s(.*)"+ \
                 "\s\*\s\s(.*)\Z")
-        super(RCWatcher, self).__init__(rc_watch=False)
+        super(RCWatcher, self).__init__(rc_watch=True)
 
     def _parse_rc_line(self, parser):
         """Processes a single line from the IRC server."""
