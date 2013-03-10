@@ -105,11 +105,11 @@ class Bot(object):
             edit_time = result["revisions"][0]["timestamp"]
             date_time = datetime.datetime.strptime(edit_time, 
                     '%Y-%m-%dT%H:%M:%SZ')
-        except urllib2.HTTPError as e:
+        except HTTPError as e:
             print "The server could not fulfill our request."+ \
                     "Closed with error code: {0}".format(e.code)
             return None
-        except urllib2.URLError as e:
+        except URLError as e:
             print "Unable to connect to server, Retuned: {0}".format(
                 e.reason)
             return None
