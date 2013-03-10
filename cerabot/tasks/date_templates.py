@@ -116,7 +116,7 @@ class DateTemplates(bot.Bot):
     def is_dormant(self, page):
         timestamp = self.edit_time(page.title)
         delta = datetime.datetime.now() - timestamp
-        result = delta > datetime.timedelta(seconds=900)
+        result = delta > datetime.timedelta(seconds=600)
         return result
 
     def run_bot(self, page=None):
