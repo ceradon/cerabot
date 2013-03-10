@@ -199,3 +199,13 @@ class Connection(object):
             self.quit()
         selfis_running = False
         self._close_conn()
+
+    def __repr__(self):
+        """Return the canonical string representation of Connection."""
+        return u"Connection(server=({0!r}, {1!r}), realname={2!r})".format(
+                self.host, unicode(self.port), self.realname)
+
+    def __str__(self):
+        """Return the prettier string representation of Connection."""
+        return u"<Connection ({0!r}, {1!r}); Realname {2!r}>".format(
+                self.host, unicode(self.port), self.realname)
