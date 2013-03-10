@@ -31,13 +31,14 @@ class IRC(connection.Connection):
                 pass
         self._real_name = self.settings['irc_name']
         self._ident = self.settings['irc_ident']
-        if rc_watch:
+        self.rc_watch = rc_watch
+        if self.rc_watch:
             self._host = self.settings['rc_server'][0]
             self._port = self.settings['rc_server'][1]
             super(IRC, self).__init__(self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident,
                   join_startup_chans=False)
-        elif not rc_watch:
+        elif not self.rc_watch:
             self._host = self.settings['irc_server'][0]
             self._port = self.settings['irc_server'][1]
             self._assemble_commands()
