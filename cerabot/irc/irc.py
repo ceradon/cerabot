@@ -15,6 +15,7 @@ class IRC(connection.Connection):
         self.settings = settings.Settings().settings
         self._last_conn_check = 0
         self._commands = {}
+        self._command_hooks = {}
         self._nick = self.settings['irc_nick']
         if self.settings['irc_passwd']:
             self._passwd = self.settings['passwd']
@@ -56,10 +57,12 @@ class IRC(connection.Connection):
     def _assemble_commands(self):
         commands = [cls for cls in command.Command.__inheritors__.items()]
         for command in commands:
-            self._commands[command.command_name] = []
-            self._commands[command.command_name].append(command.help_docs)
-            self._commands[command.command_name].append(tuple(command
-                                                        .callable_hooks))
+            self._commands[command.command_name.lower()] = []
+            self._commands[command.command_name.lower()].append(
+                    command.help_docs)
+            self._commands_hooks[command.command_name] = command.callable_hooks
+            self._commands_hooks[command.command_name].insert(0, 
+                    command.command_name)
 
     def _process_line(self, line):
         parse = parser.Parser(line, self._nick)
@@ -67,7 +70,7 @@ class IRC(connection.Connection):
         if not result:
             return
         if parse.is_command:
-            if parse.command_name in self._commands.keys():
+            if parse.command_name in self._command_hooks[parse.command_name]:
                 command = self.get_command_instance(parse.command_name)
                 if len(parse.args) < command.req_args:
                     self.say(u"<bold>{0}<normal>, You have not provided "+ \
@@ -78,7 +81,8 @@ class IRC(connection.Connection):
                             "for {2}, {3} given".format(parse.nick,
                             unicode(parse.req_args), len(parse.args)))
                 else:
-                    command.call(parse, args=args, kwargs=kwargs)
+                    command.call(args=parse.args.insert(0, parse), 
+                            kwargs=parse.kwargs)
 
     def get_command_instance(self, command_name):
         commands = [cls for cls in command.Command.__inheritors__.items()]
