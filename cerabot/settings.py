@@ -1,4 +1,5 @@
 import sys
+import platform
 
 class Settings(object):
     def __init__(self):
@@ -10,6 +11,9 @@ class Settings(object):
         self.settings['site'] = [(u"wikipedia", u"en")]
         self.settings['passwd'] = u""
         self.settings['passwd_file'] = u".passwd"
+        self.settings['user_agent'] = u"Cerabot/0.1 (wikibot; {0} {1} {2};"+ \
+                u"{3})".format(platform.linux_distibution()[0], platform.version(),
+                platform.linux_distribution()[1], platform.machine)
 
         #Wikipedia settings
         self.settings['run_base'] = u"User:Cerabot/Run/Task {task}"
