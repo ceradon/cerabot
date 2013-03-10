@@ -7,7 +7,7 @@ import os.path as path
 from cerabot import settings
 from urllib import urlencode
 from cerabot import exceptions
-from urllib2 import Request, urlopen
+from urllib2 import Request, urlopen, HTTPError, URLError
 
 #Import `wikitools` and `mwparserfromhell`
 #packages.
