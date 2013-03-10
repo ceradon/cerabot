@@ -1,9 +1,9 @@
 import re
 import sys
 import codecs
+import datetime
 from cerabot import bot
 from cerabot import exceptions
-from datetime import datetime
 
 class DateTemplates(bot.Bot):
     """Bot to date maintenance templates that have none."""
@@ -133,7 +133,7 @@ class DateTemplates(bot.Bot):
                         template.name = new_name
                 if template.name.lower() in self._to_date:
                     if not template.has_param("date"):
-                        template.add('date', datetime.today()
+                        template.add('date', datetime.datetime.today()
                                 .strftime('%B %Y'))
                         if template.name.lower() in summary.keys():
                             summary[template.name.lower()] += 1
