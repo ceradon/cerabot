@@ -28,17 +28,20 @@ class IRC(connection.Connection):
             else:
                 #If there is no password, leave it alone.
                 pass
+        self._real_name = self.settings['irc_name']
+        self._ident = self.settings['irc_ident']
         if rc_watch:
             self._host = self.settings['rc_server'][0]
             self._port = self.settings['rc_server'][1]
+            super(IRC, self).__init__(self._nick, self._passwd,
+                  self._host, self._port, self._real_name, self._ident,
+                  join_startup_chans=False)
         elif not rc_watch:
             self._host = self.settings['irc_server'][0]
             self._port = self.settings['irc_server'][1]
             self._assemble_commands()
-        self._real_name = self.settings['irc_name']
-        self._ident = self.settings['irc_ident']
-        super(IRC, self).__init__(self._nick, self._passwd,
-              self._host, self._port, self._real_name, self._ident)
+            super(IRC, self).__init__(self._nick, self._passwd,
+                  self._host, self._port, self._real_name, self._ident)
         self.connect()
 
     def _load_conn(self):
