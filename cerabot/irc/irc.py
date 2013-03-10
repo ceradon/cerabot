@@ -98,3 +98,7 @@ class IRC(connection.Connection):
                 return self.get_command_instance(command).help_docs
             else:
                 continue
+
+if __name__ == '__main__':
+    irc = IRC()
+    irc._load_conn()
