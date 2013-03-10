@@ -27,3 +27,4 @@ class Settings(object):
         self.settings['irc_name'] = u"IRC extension to Wikipedia robot Cerabot."
         self.settings['irc_ident'] = u"cerabot"
         self.settings['join_on_startup'] = ["##cerabot", "##ceradon"]
+        self.settings['rc_server'] = u"irc.wikimedia.org", 6667
