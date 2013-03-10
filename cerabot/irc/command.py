@@ -1,8 +1,8 @@
 import sys
 import collections
-from cerabot.irc.connection import Connection
+from cerabot.irc import irc
 
-class Command(Connection):
+class Command(irc.IRC):
     req_args = 0
     command_name = None
     callable_hooks = []
@@ -18,7 +18,7 @@ class Command(Connection):
                 meta.__inheritors__[base.__name__].append(klass)
             return klass
 
-    def __init__(self):
+    def __init__(self, irc):
         """Base class for all commands."""
         self.say = lambda msg, target: self.say(msg, target)
         self.action = lambda target, msg: self.action(target, msg)
