@@ -25,12 +25,14 @@ class RC(object):
             self.oldid = edit.group(4)
             self.user = edit.group(5)
             self.comment = edit.group(7)
+            result = []
             if self.flags:
-                result = self.msg_type, self.title, self.flags, 
-                        self.diff, self.oldid, self.user, self.comment
+                result = result.append(self.msg_type, self.title, 
+                        self.flags, self.comment, self.diff, self.oldid, 
+                        self.user)
             else:
-                result = self.msg_type, self.title, self.diff, self.oldid, 
-                        self.user, self.comment
+                result = result.append(self.msg_type, self.title, 
+                        self.diff, self.oldid, self.user, self.comment)
             return result
 
         elif self.re_rc_log.search(parser.msg):
