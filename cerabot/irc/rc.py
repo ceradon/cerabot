@@ -36,4 +36,4 @@ class RC(object):
                     log.group(3)
 
     rc_event = self.RC(parser)
-    self._handle_line(rc_event)
+    return rc_event
