@@ -26,11 +26,12 @@ class RC(object):
             self.user = edit.group(5)
             self.comment = edit.group(7)
             if self.flags:
-                return self.msg_type, self.title, self.flags, 
+                result = self.msg_type, self.title, self.flags, 
                         self.diff, self.oldid, self.user, self.comment
             else:
-                return self.msg_type, self.title, self.diff, self.oldid, 
+                result = self.msg_type, self.title, self.diff, self.oldid, 
                         self.user, self.comment
+            return result
 
         elif self.re_rc_log.search(parser.msg):
             log = self.re_color.sub("", parser.msg)
