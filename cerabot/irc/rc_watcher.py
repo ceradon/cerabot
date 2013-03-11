@@ -47,7 +47,8 @@ class RCWatcher(irc.IRC):
                             "Special:Log/", ""), log.group(1),
                             log.group(2), log.group(3)
 
-        self._handle_line(self.RC(parser))
+        rc_event = self.RC(parser)
+        self._handle_line(rc_event)
 
     def _handle_line(self, rc_event):
         """Handles a single line in IRC."""
