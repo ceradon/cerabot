@@ -89,9 +89,9 @@ class Parser(connection.Connection):
     def __repr__(self):
         """Return a canonical string representation of Parser."""
         return u"Parser(line=\"{0!r}\", my name={1!r}".format(
-                " ".join(self._line), self._my_name)
+                self._line, self._my_name)
 
     def __str__(self):
         """Return a prettier string representation of Parser."""
         return u"<Parser \"{0!r}\" for {1!r}".format(
-            " ".join(self.line), self._my_name)
+                self.line, self._my_name)
