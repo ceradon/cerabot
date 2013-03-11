@@ -5,7 +5,7 @@ from cerabot import exceptions
 
 class Connection(object):
     def __init__(self, nick, passwd, host, port,
-            realname, ident, join_startup_chans=True
+            realname, ident, join_startup_chans=True,
             no_login=False):
         self.host = host
         self.port = port
