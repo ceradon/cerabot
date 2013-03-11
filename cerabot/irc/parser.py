@@ -39,8 +39,8 @@ class Parser(connection.Connection):
             return False
         if self._line[0] == "PING":
             return False
-        (self.nick, self.host) = self._line[0].split('@', 2)
-        (self.nick, self.ident) = self.nick[1:].split('!')
+        self.nick, self.ident, self.host = re.findall(r":(.*?)!(.*?)@(.*?)\Z",
+                self._line[0])
         self.chan = self._line[2]
         self.msg_type = self._line[1]
         self.msg = " ".join(self._line[3:])
