@@ -11,7 +11,7 @@ from cerabot.irc import connection
 __all__ = ["IRC", "Command"]
 
 class IRC(connection.Connection):
-    def __init__(self, rc_watch=False):
+    def __init__(self, rc_watch=False, _line_parser=None):
         """Main frontend component of the IRC module
         for Cerabot. Loads connection, parses and runs
         commands when called, imports all commands."""
@@ -19,6 +19,7 @@ class IRC(connection.Connection):
         self._last_conn_check = 0
         self._commands = {}
         self._command_hooks = {}
+        self._line_parser = _line_parser
         self._nick = self.settings['irc_nick']
         if self.settings['irc_passwd']:
             self._passwd = self.settings['passwd']
@@ -59,7 +60,7 @@ class IRC(connection.Connection):
             time.sleep(320)
 
     def _assemble_commands(self):
-        commands = [cls for cls in command.Command.__inheritors__.items()]
+        commands = [cls for cls in Command.__inheritors__.items()]
         for command in commands:
             self._commands[command.command_name.lower()] = []
             self._commands[command.command_name.lower()].append(
@@ -69,13 +70,22 @@ class IRC(connection.Connection):
                     command.command_name)
 
     def _process_line(self, line):
+        """Processes a single line from IRC. Should be
+        overrided."""
         parse = parser.Parser(line, self._nick)
         result = parse._load()
         if not result:
             return
-        if self.rc_watch:
-            self._parse_rc_line(parse)
-            return
+        if self._line_parser:
+            self._line_parser(line, parse)
+        elif not self._line_parser and self.rc_watch:
+            rc.RC(parse)
+        else:
+            self._process_data(line, parse)
+        
+    def _process_data(self, line, parse):
+        """Processes a single line of data when _line_parser
+        is no specified."""
         if parse.is_command:
             if parse.command_name in self._command_hooks[parse.command_name]:
                 command = self.get_command_instance(parse.command_name)
@@ -90,9 +100,11 @@ class IRC(connection.Connection):
                 else:
                     command.call(args=parse.args.insert(0, parse), 
                             kwargs=parse.kwargs)
+            else:
+                return
 
     def get_command_instance(self, command_name):
-        commands = [cls for cls in command.Command.__inheritors__.items()]
+        commands = [cls for cls in Command.__inheritors__.items()]
         for command in commands:
             if command.command_name == command:
                 return command
