@@ -41,6 +41,5 @@ class RC(object):
             self.msg_type = u"log"
             self.log_type = log.group(0).replace(
                     "Special:Log/", ""), log.group(1)
-            self.log_type = self.log_type + log.group(2), 
-                    log.group(3)
+            self.log_type = self.log_type + log.group(2), log.group(3)
             return self.msg_type, self.log_type
