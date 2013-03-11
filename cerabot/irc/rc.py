@@ -25,6 +25,12 @@ class RC(object):
             self.oldid = edit.group(4)
             self.user = edit.group(5)
             self.comment = edit.group(7)
+            if self.flags:
+                return self.msg_type, self.title, self.flags, 
+                        self.diff, self.oldid, self.user, self.comment
+            else:
+                return self.msg_type, self.title, self.diff, self.oldid, 
+                        self.user, self.comment
 
         elif self.re_rc_log.search(parser.msg):
             log = self.re_color.sub("", parser.msg)
@@ -34,6 +40,4 @@ class RC(object):
                     "Special:Log/", ""), log.group(1)
             self.log_type = self.log_type + log.group(2), 
                     log.group(3)
-
-    rc_event = self.RC(parser)
-    return rc_event
+            return self.msg_type, self.log_type
