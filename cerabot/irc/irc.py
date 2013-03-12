@@ -18,6 +18,7 @@ class IRC(connection.Connection):
         self.settings = settings.Settings().settings
         self._last_conn_check = 0
         self._commands = {}
+        self._command_obj = None
         self._command_hooks = {}
         self._line_parser = _line_parser
         self._nick = self.settings['irc_nick']
@@ -51,6 +52,7 @@ class IRC(connection.Connection):
         self.connect()
 
     def _load_conn(self):
+        self._command_obj = Command(self)
         if self.is_running:
             self.loop()
 
@@ -60,7 +62,7 @@ class IRC(connection.Connection):
             time.sleep(320)
 
     def _assemble_commands(self):
-        commands = [cls for cls in Command.__inheritors__.items()]
+        commands = [cls for cls in self._command_obj.__inheritors__.items()]
         for command in commands:
             self._commands[command.command_name.lower()] = []
             self._commands[command.command_name.lower()].append(
@@ -104,7 +106,7 @@ class IRC(connection.Connection):
                 return
 
     def get_command_instance(self, command_name):
-        commands = [cls for cls in Command.__inheritors__.items()]
+        commands = [cls for cls in self._command_obj.__inheritors__.items()]
         for command in commands:
             if command.command_name == command:
                 return command
@@ -137,7 +139,7 @@ class IRC(connection.Connection):
         return res.format(self._host, unicode(self._port), self._nick, 
                 self._ident)
 
-class Command(irc.IRC):
+class Command(object):
     req_args = 0
     command_name = None
     callable_hooks = []
@@ -155,14 +157,14 @@ class Command(irc.IRC):
 
     def __init__(self, irc):
         """Base class for all commands."""
-        self.say = lambda msg, target: self.say(msg, target)
-        self.action = lambda target, msg: self.action(target, msg)
-        self.notice = lambda target, msg: self.notice(target, msg)
-        self.join = lambda chan: self.join(chan)
-        self.part = lambda chan, msg=None: self.part(chan, msg)
-        self.mode = lambda t, level, msg: self.mode(target, level, 
-                                                    msg)
-        self.ping = lambda target: self.ping(target)
+        self.say = lambda msg, target: self.irc.say(msg, target)
+        self.action = lambda target, msg: self.irc.action(target, msg)
+        self.notice = lambda target, msg: self.irc.notice(target, msg)
+        self.join = lambda chan: self.irc.join(chan)
+        self.part = lambda chan, msg=None: self.irc.part(chan, msg)
+        self.mode = lambda t, level, msg: self.irc.mode(target, level, 
+                                                        msg)
+        self.ping = lambda target: self.irc.ping(target)
         self.setup()
 
     def setup(self):
