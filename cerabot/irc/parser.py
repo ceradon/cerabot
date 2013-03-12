@@ -32,6 +32,11 @@ class Parser(connection.Connection):
 
     def _load(self):
         """Load message's attribute."""
+        if not type(self._line) == list:
+            try:
+                self._line.split()
+            except Exception:
+                return False
         re_line = re.compile(r"(.*?).freenode.net")
         if re_line.search(self._line[0], re.I):
             return False
@@ -70,10 +75,10 @@ class Parser(connection.Connection):
             self.is_command = True
             self.trigger = self.command_name[0]
             self.command_name = self.command_name[1:]
-        elif re.match(r"{0}\W*?$".format(re.escape(self.my_nick)),
+        elif re.match(r"{0}\W*?$".format(re.escape(self._my_name)),
                       self.command, re.U):
             self.is_command = True
-            self.trigger = self.my_name
+            self.trigger = self._my_name
             self.command_name = self.command_name
 
     def _load_kwargs(self):
@@ -94,4 +99,4 @@ class Parser(connection.Connection):
     def __str__(self):
         """Return a prettier string representation of Parser."""
         return u"<Parser \"{0!r}\" for {1!r}".format(
-                self.line, self._my_name)
+                " ".join(self.line), self._my_name)
