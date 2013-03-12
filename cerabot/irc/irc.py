@@ -52,7 +52,7 @@ class IRC(connection.Connection):
         self.connect()
 
     def _load_conn(self):
-        self._command_obj = Command(self)
+        self._command_obj = Command(irc=self)
         if self.is_running:
             self.loop()
 
@@ -157,6 +157,8 @@ class Command(object):
 
     def __init__(self, irc):
         """Base class for all commands."""
+        self.irc = irc
+
         self.say = lambda msg, target: self.irc.say(msg, target)
         self.action = lambda target, msg: self.irc.action(target, msg)
         self.notice = lambda target, msg: self.irc.notice(target, msg)
