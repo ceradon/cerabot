@@ -76,7 +76,7 @@ class Parser(connection.Connection):
             self.trigger = self.command_name[0]
             self.command_name = self.command_name[1:]
         elif re.match(r"{0}\W*?$".format(re.escape(self._my_name)),
-                      self.command, re.U):
+                      self.command_name, re.U):
             self.is_command = True
             self.trigger = self._my_name
             self.command_name = self.command_name
