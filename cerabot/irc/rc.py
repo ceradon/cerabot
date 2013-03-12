@@ -28,7 +28,7 @@ class RC(object):
         if line[0].strip("02").startswith("http://"):
             x = re.findall("(\d+)?http://en.wikipedia.org/w/index.php"+ \
                     "?diff\=(.*?)&oldid\=(.*?)", line[0])
-            self.diff, self.oldid = x[1:]
+            self.diff, self.oldid = x[0][1:]
         elif line[0][0] in self.valid_flags.keys():
             self.flags = line[0]
             x = re.findall("(\d+)?http://en.wikipedia.org/w/index.php"+ \
