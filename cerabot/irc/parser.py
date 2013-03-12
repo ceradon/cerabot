@@ -34,7 +34,7 @@ class Parser(connection.Connection):
         """Load message's attribute."""
         if not type(self._line) == list:
             try:
-                self._line.split()
+                self._line = self._line.split()
             except Exception:
                 return False
         re_line = re.compile(r"(.*?).freenode.net")
