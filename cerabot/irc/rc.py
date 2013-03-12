@@ -33,7 +33,7 @@ class RC(object):
             self.flags = line[0]
             x = re.findall("(\d+)?http://en.wikipedia.org/w/index.php"+ \
                     "?diff=(.*?)&oldid=(.*?)", line[1])
-            self.diff, self.oldid = x[1:]
+            self.diff, self.oldid = x[0][1:]
         x = [i for i, x in enumerate(line) if x == "*"]
         self.user = line[x[0]:[1]]
         self.diff_size = line[x[1]+1].strip("(").strip(")")
