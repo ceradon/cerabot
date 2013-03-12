@@ -50,7 +50,7 @@ class Parser(connection.Connection):
     def _parse(self):
         """Parses a line from IRC."""
         if self.msg_type == "PRIVMSG":
-            if self.chan.lower() == self.my_name:
+            if self.chan.lower() == self._my_name:
                 #This is a private message to us
                 self.chan = self.nick
                 self.private_message = True
