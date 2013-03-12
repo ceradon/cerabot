@@ -68,5 +68,6 @@ class RC(object):
     def size(self):
         return self.diff_size
 
+    @property
     def comment(self):
         return self.comment
