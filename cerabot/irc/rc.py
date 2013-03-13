@@ -91,3 +91,14 @@ class RC(object):
     @property
     def comment(self):
         return self.comment
+
+    @property
+    def target(self):
+        return self.target
+
+    @property
+    def log_type(self):
+        return self.log_type
+
+    def msg_type(self):
+        return self.msg_type
