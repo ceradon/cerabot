@@ -1,9 +1,11 @@
 import re
 import sys
+import time
 import codecs
 import datetime
 from cerabot import bot
 from cerabot import exceptions
+from dateutil import parser 
 
 class DateTemplates(bot.Bot):
     """Bot to date maintenance templates that have none."""
@@ -118,6 +120,19 @@ class DateTemplates(bot.Bot):
         delta = datetime.datetime.now() - timestamp
         result = delta > datetime.timedelta(seconds=600)
         return result
+
+    def handle_invalid_date(self, template):
+        return = None
+        for parameter in template.params:
+            try:
+                i = parser.parse(parameter.value, fuzzy=True)
+            except ValueError:
+                continue
+            date = parser.parse(unicode(i))
+            years = datetime.date.today().year - 2
+            if date.year <= years:
+                template.add("date", datetime.datetime.today()
+                        .strftime("%B %Y"))
 
     def run_bot(self, page=None):
         summary = {}
