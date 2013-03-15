@@ -170,6 +170,9 @@ class Bot(object):
             res = template.format(site=args[0], lang=args[1])
         return res
 
+    def _return_bot_instance(self):
+        return self
+
     def __repr__(self):
         """Return the canonical string representation of the Task."""
         res = "Bot(name={0!r}, task={1!r})"
