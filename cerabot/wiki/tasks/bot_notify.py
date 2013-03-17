@@ -1,6 +1,5 @@
 import sys
 from cerabot import bot
-from cerabot.irc import rc_watcher
 
 class BotRequestNotifier(bot.Bot):
     """Notifies bot owners of their failed/
