@@ -13,6 +13,7 @@ from StringIO import StringIO
 from cookielib import CookieJar
 from urllib import quote_plus
 from cerabot import exceptions
+from urlparse import urlparse
 from platform import python_version as pyv
 from urllib2 import build_opener, HTTPCookieProcessor, URLError
 
@@ -190,3 +191,39 @@ class MediaWiki(object):
         *pageid* as arguments, unless *pagename* is a category, then returns a
         Cateogry instance."""
         raise NotImplementedError()
+
+    def get_category(self, catname, follow_redirects=False, pageid=None):
+        """Returns an instance of Category for *catname* with *follow_redirects*
+        and *pageid* as arguments."""
+        raise NotImplementedError()
+
+    def get_user(self, username=None):
+        """Returns an instance of User for *username*."""
+        raise NotImplementedError()
+
+    @property
+    def domain(self):
+        """Returns the site's web domain, like \"en.wikipedia.org\""""
+        return urlparse(self._base_url).netloc
+
+    def get_username(self):
+        """Gets the name of the user that is currently logged into the site's API.
+        Simple way to ensure that we are logged in."""
+        data = self.query(action="query", meta="userinfo")
+        return data["query"]["userinfo"]["name"]
+
+    def get_cookies(self, name, domain):
+        for cookie in self.cookie_jar:
+            if cookie.name == name and cookie.domain == domain:
+                if cookie.is_expired():
+                    break
+                return cookie
+
+    def save_cookie_jar(self):
+        """Attempts to save all changes to our cookiejar after a successful login or
+        logout."""
+        if hasattr(self.cookie_jar, "save"):
+            try:
+                getattr(self._cookiejar, "save")()
+            except (NotImplementedError, ValueError):
+                pass
