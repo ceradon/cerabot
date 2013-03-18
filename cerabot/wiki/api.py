@@ -8,6 +8,7 @@ try:
     import gzip
 except Exception:
     gzip = False
+from threading import Lock
 from copy import deepcopy
 from StringIO import StringIO
 from cookielib import CookieJar
@@ -61,6 +62,7 @@ class MediaWiki(object):
         self._query_wait = query_wait
         self._last_query_time = 0
         self.cookie_jar = CookieJar()
+        self.api_lock = Lock()
         self.opener = build_opener(HTTPCookieProcessor(self.cookie_jar))
         self.opener.addheaders = [("User-Agent", self._user_agent),
                                   ("Accept-Encoding", "gzip")]
@@ -227,3 +229,8 @@ class MediaWiki(object):
                 getattr(self._cookiejar, "save")()
             except (NotImplementedError, ValueError):
                 pass
+
+    def query(self, **params, query_continue=True):
+        """Queries the site's API."""
+        with self.api_lock:
+            self._query(params, query_continue)
