@@ -18,7 +18,7 @@ from urlparse import urlparse
 from platform import python_version as pyv
 from urllib2 import build_opener, HTTPCookieProcessor, URLError
 
-class MediaWiki(object):
+class Site(object):
     """Main point for which interaction with a MediaWiki
     API is made."""
     GITHUB = "https://github.com/ceradon/cerabot"
@@ -222,8 +222,8 @@ class MediaWiki(object):
                 return cookie
 
     def save_cookie_jar(self):
-        """Attempts to save all changes to our cookiejar after a successful login or
-        logout."""
+        """Attempts to save all changes to our cookiejar after a successful 
+        login or logout."""
         if hasattr(self.cookie_jar, "save"):
             try:
                 getattr(self._cookiejar, "save")()
@@ -234,3 +234,51 @@ class MediaWiki(object):
         """Queries the site's API."""
         with self.api_lock:
             self._query(params, query_continue)
+
+    def _login(self, login, token=None, attempts=0):
+        """Logs into the site's API."""
+        username, password = login
+        if token:
+            i = self.query(action="login", lgname=username, lgpassword=password,
+                    lgtoken=token)
+        else:
+            i = self.query(action="login", lgname=username, lgpassword=password)
+
+        res = i["login"]["result"]
+        if res == "Success":
+            self.save_cookie_jar()
+        elif res == "NeedToken" and attempts == 0:
+            token = i["login"]["token"]
+            return self._login(login, token, attempts=1)
+        else:
+            if res == "Illegal":
+                e = "The provided username is illegal."
+            elif res == "NotExists":
+                e = "The provided username does not exist."
+            elif res == "EmptyPass":
+                e = "No password was given."
+            elif res == "WrongPass" or res == "WrongPluginPass":
+                e = "The given password is incorrect."
+            else:
+                e = "An unknown error occured, API responded with {0)."
+                e = e.format(res)
+            raise exceptions.APILoginError(e)
+
+    def login(self, login):
+        """Public method for logging in to the API."""
+        if not login and self._login:
+            login = self._login
+        else:
+            e = "No login data ptovided."
+            raise exceptions.APILoginError(e)
+        if type(login) == tuple:
+            self._login(login)
+        else:
+            e = "Login data must be in tuple format, got {0}"
+            raise exceptions.APILoginError(e.format(type(login)))
+
+    def logout(self):
+        """Attempts to logout out the API and clear the cookie jar."""
+        self.query(action="logout")
+        self.cookie_jar.clear()
+        self.save_cookie_jar()
