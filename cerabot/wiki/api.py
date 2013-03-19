@@ -35,6 +35,8 @@ class Site(object):
         self._name = name
         if not project and not lang:
             self._base_url = base_url
+            self._project = None
+            self._lang = None
         else:
             self._lang = lang
             self._project = project
