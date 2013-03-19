@@ -27,7 +27,8 @@ class IRC(connection.Connection):
         if self.settings['irc_passwd']:
             self._passwd = self.settings['passwd']
         elif self.settings['passwd_file'] and dir:
-            file = open(self.settings['passwd_file'], 'r')
+            i = path.join(path.dirname(__file__), self.settings["passwd_file"])
+            file = open(i, 'r')
             contents = file.read()
             file.close()
             if contents.strip():
