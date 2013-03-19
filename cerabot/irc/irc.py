@@ -52,7 +52,7 @@ class IRC(connection.Connection):
         self.connect()
 
     def _load_conn(self):
-        self._command_obj = Command(irc=self)
+#       self._command_obj = Command(irc=self)
         if self.is_running:
             self.loop()
 
