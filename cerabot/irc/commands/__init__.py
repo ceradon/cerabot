@@ -1,9 +1,7 @@
-from .. import *
-
 class Command(object):
     req_args = 0
-    command_name = None
-    callable_hooks = []
+    name = None
+    hooks = []
     help_docs = None
 
     def __init__(self, irc):
@@ -25,6 +23,13 @@ class Command(object):
         the command specifies. Runs on initiation. Is
         idle by default; override if necessary."""
         pass
+
+    def assert_command(self, parse):
+        """Checks if the current command should be called as a 
+        response to *parse*."""
+        if self.hooks:
+            return parse.is_command and parse.command_name in self.hooks
+        return parse.is_command and parse.command_name == self.name
 
     def call(self, parser, args=None, kwargs=None):
         """Main entry point for the command and the 
