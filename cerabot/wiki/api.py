@@ -47,7 +47,7 @@ class Site(object):
         if path:
             self._path = path
         else:
-            self._path = "/wiki/"
+            self._path = "/w/"
         self._namespaces = namespaces
         if config:
             self._config = config
