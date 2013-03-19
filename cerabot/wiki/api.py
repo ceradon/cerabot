@@ -23,15 +23,15 @@ class Site(object):
     """Main point for which interaction with a MediaWiki
     API is made."""
     GITHUB = "https://github.com/ceradon/cerabot"
-    USER_AGENT = "Cerabot/{0!r} (Python/{1!r}; {2!r})"
-    USER_AGENT.format("0.1", pyv(), GITHUB)
+    USER_AGENT = "Cerabot/{0!r} (wikibot; Python/{1!r}; {2!r})"
+    USER_AGENT = USER_AGENT.format("0.1", pyv(), GITHUB)
     config = {"throttle":10,
               "maxlag":10,
               "max_retries":3}
 
-    def __init__(self, name, base_url="http://en.wikipedia.org", 
-            project=None, lang=None, namespaces={}, user_agent,
-            login=(None, None), secure=False, config=None, path=None):
+    def __init__(self, name, user_agent, base_url="http://en.wikipedia.org",
+            project=None, lang=None, namespaces={}, login=(None, None),
+            secure=False, config=None, path=None):
         self._name = name
         if not project and not lang:
             self._base_url = base_url
