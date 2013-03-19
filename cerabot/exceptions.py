@@ -24,3 +24,10 @@ class PageInUseError(CerabotError):
 
 class DeadSocketError(CerabotError):
     """IRC Socket is dead."""
+
+class APIError(CerabotError):
+    """Error when interacting eith the MediaWiki
+    API."""
+
+class APILoginError(APIError):
+    """Error when logging into the API."""
