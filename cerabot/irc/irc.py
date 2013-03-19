@@ -22,10 +22,11 @@ class IRC(connection.Connection):
         self._command_hooks = {}
         self._line_parser = _line_parser
         self._nick = self.settings['irc_nick']
+        dir = path.isfile(path.join(path.dirname(__file__), 
+                self.settings["passwd_file"]))
         if self.settings['irc_passwd']:
             self._passwd = self.settings['passwd']
-        elif self.settings['passwd_file'] and \
-                path.isfile(self.settings['passwd_file']):
+        elif self.settings['passwd_file'] and dir:
             file = open(self.settings['passwd_file'], 'r')
             contents = file.read()
             file.close()
