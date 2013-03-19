@@ -46,7 +46,7 @@ class IRC(connection.Connection):
         elif not self.rc_watch:
             self._host = self.settings['irc_server'][0]
             self._port = self.settings['irc_server'][1]
-            self._assemble_commands()
+#           self._assemble_commands()
             super(IRC, self).__init__(self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident)
         self.connect()
@@ -80,8 +80,6 @@ class IRC(connection.Connection):
             return
         if self._line_parser:
             self._line_parser(line, parse)
-        elif not self._line_parser and self.rc_watch:
-            rc.RC(parse)
         else:
             self._process_data(line, parse)
         
