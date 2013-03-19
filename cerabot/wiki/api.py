@@ -114,7 +114,7 @@ class Site(object):
             result = zipper.read()
         
         try:
-            res = json.load(result)
+            res = json.loads(result)
         except ValueError:
             e = "API query failed: JSON could not be loaded"
             raise exceptions.APIError(e)
