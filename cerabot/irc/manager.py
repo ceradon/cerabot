@@ -32,7 +32,7 @@ class CommandManager(_Manager):
     def call(self, hook, parse):
         for command, obj in self.resources.items():
             if hook in command.hooks and self._wrap_assert(command, parse):
-                thread = Thread(target=self.wrap_call, args=(command, parse))
+                thread = Thread(target=self._wrap_call, args=(command, parse))
                 start_time = strftime("%b %d %H:%M:%S")
                 thread.name = "command:{0} ({1})".format(command.name,
                         start_time)
