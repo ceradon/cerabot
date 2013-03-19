@@ -1,3 +1,4 @@
+import re
 import sys
 import time
 try:
@@ -30,8 +31,7 @@ class Site(object):
 
     def __init__(self, name, base_url="http://en.wikipedia.org", 
             project=None, lang=None, namespaces={}, user_agent,
-            login=(None, None, False), secure=False, config=None,
-            stop_at_high_maxlag=True, query_wait=3, path=None):
+            login=(None, None), secure=False, config=None, path=None):
         self._name = name
         if not project and not lang:
             self._base_url = base_url
@@ -66,6 +66,8 @@ class Site(object):
         self.opener = build_opener(HTTPCookieProcessor(self.cookie_jar))
         self.opener.addheaders = [("User-Agent", self._user_agent),
                                   ("Accept-Encoding", "gzip")]
+        if login:
+            self.login(login)
         self._load()
 
     def urlencode(self, params):
@@ -82,12 +84,12 @@ class Site(object):
     def _query(self, params, query_continue=True, tries=0, idle=5):
         """queries the site's API."""
         last_query = time.time() - self._last_query_time
-        if last_query < self._config["throttle"]:
-            throttle = self._config["throttle"] - last_query
+        if last_query < self._throttle:
+            throttle = self._throttle - last_query
             print "Throttling: waiting {0} seconds".format(round(throttle, 2))
             time.sleep(throttle)
-        params.setdefault("maxlag", self.config["maxlag"])
-        params["format"] = "json"
+        params.setdefault("maxlag", self._maxlag)
+        params.setdefault("format", "json")
         params["continue"] = ""
         url = ''.join((self._base_url, self._path, "api.php"))
         data = urlencode(params)
@@ -230,7 +232,7 @@ class Site(object):
             except (NotImplementedError, ValueError):
                 pass
 
-    def query(self, **params, query_continue=True):
+    def query(self, params, query_continue=True):
         """Queries the site's API."""
         with self.api_lock:
             self._query(params, query_continue)
@@ -282,3 +284,34 @@ class Site(object):
         self.query(action="logout")
         self.cookie_jar.clear()
         self.save_cookie_jar()
+
+    def tokener(self, args=[]):
+        i = re.compile("Action (.*?) is not allowed for the current user")
+        valid_args = ["block", "delete", "edit", "email", "import", "move",
+                      "options", "patrol", "protect", "unblock", "watch"]
+        if not args:
+            args = valid_args
+        if not type(args) == list:
+            return
+        query = {"action":"query", "prop":"info", "titles":"Main Page",
+                 "intoken":"|".join(args)}
+        result = self.query(query)
+        res = result["query"]["pages"]
+        _tokens = {}
+        for key, val in res[0][1][list(x[0][1])[0]].items():
+            if key.endswith("token"):
+                name = key.find("token")
+                _tokens[name] = val
+                args.pop(name)
+        
+        if "warnings" in result:
+            if len(args) > 1:
+                a = result["warnings"]["info"]["*"].split("\n")
+            else:
+                a = [result["warnings"]["info"]["*"]]
+            for item in a:
+                name = i.findall(item)
+                name = name.strip("'")
+                _tokens[name] = None
+
+        return _tokens
