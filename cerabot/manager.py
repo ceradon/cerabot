@@ -2,15 +2,15 @@ import os
 import sys
 import imp
 
-class Manager(object):
+class _Manager(object):
     """Manages all commands and tasks that
     Cerabot has to run."""
     def __init__(self, name, base):
         self.name = name
         self.base = base
         
-        #Initaite resources ist
-        self._resources = []
+        #Initaite resources dictionary
+        self._resources = {}
 
     def _load_directory(self, directory):
         """Load all modules in a given directory."""
@@ -41,8 +41,7 @@ class Manager(object):
                                 e = "Couldn't load {0} {1} from {2}"
                                 print e.format(self.name[:-1], modname, path)
                             else:
-                                a = resource.name, resource
-                                self._resource.append(a)
+                                self._resources[resource.name] = resource
                                 print "Loaded {0} {1}".format(self.name[:-1],
                                         resource.name)
                         else:
