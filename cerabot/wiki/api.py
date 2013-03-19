@@ -148,14 +148,14 @@ class Site(object):
                 self._path]
         query = {"action":"query", "meta":"siteinfo", "siprop":"general"}
 
-        if not self._namespace or force:
+        if not self._namespaces or force:
             query["siprop"] += "|namespaces|namespacealiases"
             result = self._query(query)
             for item in result["query"]["namespaces"].values():
                 ns_id = item["id"]
                 name = item["*"]
                 try:
-                    canonical = namespace["canonical"]
+                    canonical = item["canonical"]
                 except KeyError:
                     self._namespaces[ns_id] = [name]
                 else:
