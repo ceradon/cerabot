@@ -32,8 +32,9 @@ class IRC(connection.Connection):
             if contents.strip():
                 self._passwd = contents
             else:
-                #If there is no password, leave it alone.
-                pass
+                #If there is no password, leave it alone
+                #It was problably meant to be that way.
+                self._passwd = ""
         self._real_name = self.settings['irc_name']
         self._ident = self.settings['irc_ident']
         self.rc_watch = rc_watch
