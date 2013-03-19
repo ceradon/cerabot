@@ -56,6 +56,6 @@ class Manager(object):
         return self.name
 
     @property
-    def resource(self):
+    def resources(self):
         """Returns a list of resources."""
         return self._resources
