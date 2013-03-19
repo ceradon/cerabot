@@ -59,7 +59,6 @@ class Site(object):
             self._user_agent = self.USER_AGENT
 
         self._throttle, self._maxlag, self._max_retries = self._config.values()
-        self._query_wait = query_wait
         self._last_query_time = 0
         self.cookie_jar = CookieJar()
         self.api_lock = Lock()
