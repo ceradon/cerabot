@@ -175,6 +175,10 @@ class Connection(object):
             self._send_data("PRIVMSG {0} :{1}".format(target,
                             self.normalize(msg)))
 
+    def reply(self, msg, parse):
+        """Replies to the user in *parse* with *msg*."""
+        self.say(msg, parse.chan)
+
     def action(self, target, msg):
         """Sends ACTION `msg` to server."""
         self.say("\x01ACTION {0}\x01".format(msg), target)
