@@ -1,7 +1,7 @@
 from threading import Thread
 from os import path
 from time import strftime
-from cerabot.manager import Manager
+from cerabot.manager import _Manager
 from cerabot.irc.commands import Command
 
 class CommandManager(_Manager):
