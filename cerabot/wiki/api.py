@@ -65,7 +65,7 @@ class Site(object):
         self.opener = build_opener(HTTPCookieProcessor(self.cookie_jar))
         self.opener.addheaders = [("User-Agent", self._user_agent),
                                   ("Accept-Encoding", "gzip")]
-        if login:
+        if login[0] and login[1]:
             self.login(login)
         self._load()
 
