@@ -1,1 +1,1 @@
-from .. import *
+class Task(object):
