@@ -122,7 +122,7 @@ class Site(object):
         try:
             code = res["error"]["code"]
             info = res["error"]["info"]
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, KeyError):
             if "continue" in res:
                 continue_data = self._handle_query_continue(params, res)
                 res["query"][res["query"].keys()[0]].extend(continue_data)
