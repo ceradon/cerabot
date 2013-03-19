@@ -29,9 +29,9 @@ class Site(object):
               "maxlag":10,
               "max_retries":3}
 
-    def __init__(self, name, user_agent, base_url="http://en.wikipedia.org",
+    def __init__(self, name=None, base_url="http://en.wikipedia.org",
             project=None, lang=None, namespaces={}, login=(None, None),
-            secure=False, config=None, path=None):
+            secure=False, config=None, path=None, user_agent=None):
         self._name = name
         if not project and not lang:
             self._base_url = base_url
