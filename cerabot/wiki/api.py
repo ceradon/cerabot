@@ -93,7 +93,7 @@ class Site(object):
         params.setdefault("format", "json")
         params["continue"] = ""
         url = ''.join((self._base_url, self._path, "api.php"))
-        data = urlencode(params)
+        data = self.urlencode(params)
         try:
             reply = self.opener.open(url, data)
         except URLError as e:
