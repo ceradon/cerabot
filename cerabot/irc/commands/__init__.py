@@ -39,6 +39,15 @@ class Command(object):
         overrided always."""
         pass
 
+    def has_args(self, parse):
+        if len(parse.args) < self.req_args:
+            code = "insufficient"
+            return False, code
+        elif len(parse.args) > self.req_args:
+            code = "excess"
+            return False, code
+        return True,
+
     def __repr__(self):
         """Returns a canonical string representation of Command."""
         return "Command(name={0!r}, hooks={1!r}, help={2!r}".format(
