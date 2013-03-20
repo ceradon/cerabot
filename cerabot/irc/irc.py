@@ -105,7 +105,7 @@ class IRC(connection.Connection):
                     e = u"<bold>{0}<normal>, {1} arguments required "+ \
                             "for {2}, {3} given."
                     self.reply(e.format(parse.nick, unicode(parse.req_args), 
-                            len(parse.args))
+                            len(parse.args)))
 
     def get_hooks(self, name):
         """Get all the hooks that can be used to call a command
