@@ -129,12 +129,12 @@ class IRC(connection.Connection):
     def __repr__(self):
         """Reutrn a canonical string representation of IRC."""
         return u"IRC(server=({0!r}, {1!r}), nick={2!r}, realname={3!r}"+ \
-                "ident=4!r".format(self._host, unicode(self.port), self._nick,
+                "ident=4!r)".format(self._host, unicode(self.port), self._nick,
                 self._real_name, self._ident)
 
     def __str__(self):
         """Return a prettier string representation of IRC."""
-        res = u"<IRC ({0!r}, {1!r}) with nickname {2!r} and ident {3!r})>"
+        res = u"<IRC ({0!r}, {1!r} with nickname {2!r} and ident {3!r})>"
         return res.format(self._host, unicode(self._port), self._nick, 
                 self._ident)
 
