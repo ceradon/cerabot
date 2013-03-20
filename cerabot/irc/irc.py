@@ -110,21 +110,21 @@ class IRC(connection.Connection):
     def get_hooks(self, name):
         """Get all the hooks that can be used to call a command
         from IRC."""
-        if not name in self.manager.resources.keys():
+        if not name in self._manager.resources.keys():
             raise ValueError("{0} is not a valid command.".format(name))
-        return getattr(self.manager.resources[name], "hooks")
+        return getattr(self._manager.resources[name], "hooks")
 
     def get_docs(self, name):
         """Get the help documentation of a command."""
-        if not name in self.manager.resources.keys():
+        if not name in self._manager.resources.keys():
             raise ValueError("{0} is not a valid command.".format(name))
-        return getattr(self.manager.resources[name], "help_docs")
+        return getattr(self._manager.resources[name], "help_docs")
 
     def get_required_args(self, name):
         """Gets the amount of required arguments for a command."""
-        if not name in self.manager.resources.keys():
+        if not name in self._manager.resources.keys():
             raise ValueError("{0} is not a valid command.".format(name))
-        return getattr(self.manager.resources[name], "req_args")
+        return getattr(self._manager.resources[name], "req_args")
 
     def __repr__(self):
         """Reutrn a canonical string representation of IRC."""
