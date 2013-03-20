@@ -33,8 +33,8 @@ class _Manager(object):
 
                 for obj in vars(module).values():
                     if type(obj) is type:
-                        is_resource = issubclass(obj, self.base)
-                        if is_resource and not obj is self.base:
+                        is_resource = issubclass(obj, self._base)
+                        if is_resource and not obj is self._base:
                             try:
                                 resource = obj()
                             except Exception:
