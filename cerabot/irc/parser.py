@@ -48,7 +48,7 @@ class Parser(connection.Connection):
                 self._line[0])[0]
         self.chan = self._line[2]
         self.msg_type = self._line[1]
-        self.msg = " ".join(self._line[3:])
+        self.msg = " ".join(self._line[3:])[1:]
         self._parse()
         return True
 
