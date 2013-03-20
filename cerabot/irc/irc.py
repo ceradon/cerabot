@@ -74,7 +74,7 @@ class IRC(connection.Connection):
         for name in self._manager.resources.keys():
             docs = self.get_docs(name)
             hooks = self.get_hooks(name)
-            self.commands.update({name:hooks.insert(0, name), docs})
+            self.commands.update({name:hooks.insert(0, name)})
 
     def _process_line(self, line):
         """Processes a single line from IRC."""
@@ -90,7 +90,7 @@ class IRC(connection.Connection):
     def _process_data(self, line, parse):
         """Processes a single line of data when _line_parser
         is not specified."""
-        if parse.is_command and parse.command_name in self.commands:
+        if parse.is_command and parse.command_name in self.commands.values():
             command = self._manager.resources[parse.command_name]
             a = command.has_args
             if a[0]:
