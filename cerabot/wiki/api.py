@@ -31,7 +31,8 @@ class Site(object):
 
     def __init__(self, name=None, base_url="http://en.wikipedia.org",
             project=None, lang=None, namespaces={}, login=(None, None),
-            secure=False, config=None, path=None, user_agent=None):
+            secure=False, config=None, user_agent=None, article_path=None
+            script_path=None):
         self._name = name
         if not project and not lang:
             self._base_url = base_url
@@ -44,16 +45,16 @@ class Site(object):
                     self._project)
             if secure:
                 self._base_url = self._base_url.replace("http://", "https://")
-        if path:
-            self._path = path
-        else:
-            self._path = "/w/"
+        if article_path:
+            self._artcle_path = article_path
+        if script_path:
+            self._script_path = script_path
         self._namespaces = namespaces
         if config:
             self._config = config
         else:
             self._config = self.config
-        self._login = login
+        self._login_data = login
         self._secure = secure
         if user_agent:
             self._user_agent = user_agent
@@ -67,7 +68,7 @@ class Site(object):
         self.opener = build_opener(HTTPCookieProcessor(self.cookie_jar))
         self.opener.addheaders = [("User-Agent", self._user_agent),
                                   ("Accept-Encoding", "gzip")]
-        if login[0] and login[1]:
+        if self._login_data[0] and self._login_data[1]:
             self.login(login)
         self._load()
 
@@ -168,6 +169,8 @@ class Site(object):
                 ns_id = item["id"]
                 alias = item["*"]
                 self._namespaces[ns_id].append(alias)
+        else:
+            return
         
         result = result["query"]["general"]
         self._name = result["wikiid"]
@@ -316,3 +319,28 @@ class Site(object):
                 _tokens[name] = None
 
         return _tokens
+
+    def __repr__(self):
+        """Returns a coanonical string representation of Site."""
+        res = u"Site(name={0}, base_url={1}, project={2}, lang={3}, "+ \
+            "namespaces={4}, secure={5}, config={6}, article_path={7}"+ \
+            "script_path={8}, user_agent={9}".format(self._name, 
+            self._base_url, self._project, self._lang, self._namespaces, 
+            self._secure, unicode(self._config), self._article_path,
+            self._script_path, self._user_agent)
+        if self._login_data[0] and self._login_data[1]:
+            res = res + ", username={0}, password=<hidden>".format(
+                self._login_data[0])
+        return res
+
+    def __str__(self):
+        """Returns a prettier string representation of Site."""
+        res = u"<Site(site object {0} ({1}, {{2}) for site {3}"+ \
+            " with user {4}, config {5} and user agent {6}."
+        if not self._login_data[0]:
+            res = res.replace("user {4}," "")
+            return res.format(self._name, self._project, self._base_url,
+                self._login_data[0], unicode(self._config), 
+                self._user_agent)
+        return res.format(self._name, self._project, self._base_url,
+            unicode(self._config), self._user_agent)
