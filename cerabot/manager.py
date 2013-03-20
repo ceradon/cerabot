@@ -6,8 +6,8 @@ class _Manager(object):
     """Manages all commands and tasks that
     Cerabot has to run."""
     def __init__(self, name, base):
-        self.name = name
-        self.base = base
+        self._name = name
+        self._base = base
         
         #Initaite resources dictionary
         self._resources = {}
@@ -52,7 +52,7 @@ class _Manager(object):
     @property
     def name(self):
         """Name of the resource; either 'commands' or 'tasks'."""
-        return self.name
+        return self._name
 
     @property
     def resources(self):
