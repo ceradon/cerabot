@@ -53,8 +53,8 @@ class IRC(connection.Connection):
                   self._host, self._port, self._real_name, self._ident)
 
     def start_conn(self):
-        """loop() over all IRC data, calling _process_line() for
-        each line in IRC, and keeps the connection alive."""
+        """Connect to irc, loop() over all IRC data, calling _process_line() 
+        for each line in IRC, and keeps the connection alive."""
         self.connect()
         if self.is_running:
             self.loop()
