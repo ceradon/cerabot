@@ -100,5 +100,6 @@ class RC(object):
     def log_type(self):
         return self.log_type
 
+    @property
     def msg_type(self):
         return self.msg_type
