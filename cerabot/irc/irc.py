@@ -90,9 +90,12 @@ class IRC(connection.Connection):
     def _process_data(self, line, parse):
         """Processes a single line of data when _line_parser
         is not specified."""
-        if parse.is_command and parse.command_name in self.commands.values():
-            command = self._manager.resources[parse.command_name]
-            a = command.has_args
+        if parse.is_command:
+            try:
+                command = self._manager.resources[parse.command_name]
+            except Exception:
+                return
+            a = command.has_args(parse)
             if a[0]:
                 self.manager.call(parse.command_name)
             else:
