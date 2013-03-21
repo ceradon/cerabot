@@ -12,13 +12,13 @@ from cerabot.irc import connection
 __all__ = ["IRC"]
 
 class IRC(connection.Connection):
+    """Starts an irc connection from the data in the config."""
     def __init__(self, rc_watch=False, _line_parser=None):
-        """Main frontend component of the IRC module
-        for Cerabot. Loads connection, parses and runs
-        commands when called, imports all commands."""
+        """Main frontend component of the IRC module for Cerabot. 
+        Loads connection, parses and runscommands when called, 
+        imports all commands."""
         self.settings = settings.Settings().settings
         self._last_conn_check = 0
-        self.commands = None
         self._manager = CommandManager()
         self._line_parser = _line_parser
         self._nick = self.settings['irc_nick']
@@ -51,12 +51,11 @@ class IRC(connection.Connection):
             self._port = self.settings['irc_server'][1]
             super(IRC, self).__init__(self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident)
-            self.assemble_commands()
-        self.connect()
 
-    def _load_conn(self):
+    def start_conn(self):
         """loop() over all IRC data, calling _process_line() for
         each line in IRC, and keeps the connection alive."""
+        self.connect()
         if self.is_running:
             self.loop()
 
@@ -65,50 +64,16 @@ class IRC(connection.Connection):
             self._last_conn_check = time.time()
             time.sleep(320)
 
-    def assemble_commands(self):
-        """Assembles all the commands we'll be using, putting the
-        name of the command and each command's hooks into one 
-        dictionary."""
-        self.commands = {}
-
-        for name in self._manager.resources.keys():
-            docs = self.get_docs(name)
-            hooks = self.get_hooks(name)
-            self.commands.update({name:hooks.insert(0, name)})
-
     def _process_line(self, line):
         """Processes a single line from IRC."""
-        parse = parser.Parser(line, self._nick)
-        result = parse._load()
+        data = parser.Parser(line, self._nick)
+        result = data._load()
         if not result:
             return
         if self._line_parser:
-            self._line_parser(line, parse)
+            self._line_parser(line, data)
         else:
-            self._process_data(line, parse)
-        
-    def _process_data(self, line, parse):
-        """Processes a single line of data when _line_parser
-        is not specified."""
-        if parse.is_command:
-            try:
-                command = self._manager.resources[parse.command_name]
-            except Exception:
-                return
-            a = command.has_args(parse)
-            if a[0]:
-                self.manager.call(parse.command_name)
-            else:
-                if a[1] == "insufficient":
-                    e = u"<bold>{0}<normal>, You have not provided "+ \
-                            "enough arguments to {1}."
-                    self.reply(e.format(parse.nick, parse.command_name),
-                            parse)
-                elif a[1] == "excess":
-                    e = u"<bold>{0}<normal>, {1} arguments required "+ \
-                            "for {2}, {3} given."
-                    self.reply(e.format(parse.nick, unicode(parse.req_args), 
-                            len(parse.args)))
+            return self._manager.call(data.command_name, data)
 
     def get_hooks(self, name):
         """Get all the hooks that can be used to call a command
@@ -143,4 +108,4 @@ class IRC(connection.Connection):
 
 if __name__ == '__main__':
     irc = IRC()
-    irc._load_conn()
+    irc.start_conn()
