@@ -184,7 +184,7 @@ class Config(object):
                 self.data["wiki"]["article_path"] = article_path
             username = self._ask("What is your bot's username on the wiki? ")
             password = self._ask_pass("What is your bot's password? ")
-            self.data["wiki"]["username"], self.data["wiki"]["username"] = 
+            self.data["wiki"]["username"], self.data["wiki"]["username"] = \
                     username, password
             summary = self._ask("""What would you like to appear at the end 
                 of your bot's edits (i.e. ([[User:MyAwesomeBot|Bot]]; $1 is
