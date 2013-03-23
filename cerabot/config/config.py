@@ -228,7 +228,7 @@ class Config(object):
                 irc["host"] = self._ask(msg, "irc.freenode.net")
                 irc["port"] = self._ask("IRC port:", 6667)
                 irc["nick"] = self._ask("IRC nickname:")
-                irc["ident"] = self._ask("IRC ident", irc.get("nick").lower())
+                irc["ident"] = self._ask("IRC ident", irc["nick"].lower())
                 irc["realname"] = self._ask("IRC realname:", "Cerabot")
                 if self._ask_bool("Should the bot identify to NickServ?"):
                     ns_user = self._ask("NickServ username:", irc["nick"])
