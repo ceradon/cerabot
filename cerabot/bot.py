@@ -38,7 +38,7 @@ class Bot(object):
 
     def stop_component(self, name, msg=None):
         """Stop component *name* if it is a string."""
-        return getattr(self, name).shutdown(msg) if type(name) is str
+        return getattr(self, name).shutdown(msg)
 
     def stop_all_components(self):
         """Stops all running components."""
