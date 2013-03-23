@@ -155,7 +155,7 @@ class Config(object):
             watcher, a sub-component of the IRC module connects to an recent
             changes server, such as irc.wikimedia.org, and parses each line,
             returning an object with attributes that can be used in "feed"
-            channels or as apart of bot tasks."""
+            channels or as apart of bot tasks.""")
         self.data["components"]["irc"] = self._ask_bool("Enable IRC? ")
         self.data["components"]["watcher"] = self._ask_bool("Enable IRC "+ \
                                                             "watcher? ")
