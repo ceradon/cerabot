@@ -220,10 +220,7 @@ class Config(object):
         wiki()
 
         def irc(name):
-            if not type(name) is tuple:
-                raise Exception("name must be tuple, got {0}".format(
-                    type(name)))
-            if name[0] == "irc":
+            if name == "irc":
                 print
                 irc = self.data["irc"]["main"] = OrderedDict()
                 msg = """Hostname of the IRC server to connect to without 
@@ -241,7 +238,7 @@ class Config(object):
                 chans = "Should any particular channels be joined by default?"
                 irc["channels"] = self._ask_list(chans)
 
-            elif name[0] == "watcher":
+            elif name == "watcher":
                 print
                 watcher = self.data["irc"]["watcher"] = OrderedDict()
                 if wmfbot:
@@ -270,9 +267,9 @@ class Config(object):
                     chans = "Should any particular channels be joined by default?"
                     watcher["cahnnels"] = self._ask_list(chans)
         if self.data["components"]["irc"]:
-            irc(("irc"))
+            irc(name="irc")
         elif self.data["components"]["watcher"]:
-            irc(("watcher"))
+            irc(name="watcher")
         self._print("""The settings you have entered will now be saved in a file 
             called config.yml within the same directory as this configuration
             helper. YAML comprises a straight-forward format that is easily
