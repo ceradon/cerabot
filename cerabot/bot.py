@@ -4,7 +4,7 @@ import logging
 import threading
 
 from time import sleep
-from cerabot import flatten
+from .utils import flatten
 from cerabot.irc.watcher import Watcher
 from cerabot.irc.irc import IRC
 from cerabot.wiki.api import Site
