@@ -120,8 +120,8 @@ class Config(object):
         self.data["metadata"]["encryption"] = False
         if self._ask_bool("Encrypt your passwords? "):
             key = getpass(self.PROMPT + """Enter an encryption key (an 
-                encryption key is a random string of data, so bam on your 
-                keyboard a couple and you'll be good!): """)
+                encryption key acts as a password to unlock your encryted
+                nodes): """)
             self._print("Attempting to encrypt your key...", newline=False)
             if bcrypt and blowfish:
                 salt = bcrypt.gensalt(12)
