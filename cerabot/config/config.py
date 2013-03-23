@@ -160,7 +160,7 @@ class Config(object):
         self.data["components"]["watcher"] = self._ask_bool("Enable IRC "+ \
                                                             "watcher? ")
 
-        def wiki(self):
+        def wiki():
             print
             wmfbot = self._ask_bool("""Will your bot be run on a Wikimedia 
                 Foundation wiki (i.e. wikipedia, wikinews, etc.)? """)
@@ -219,7 +219,7 @@ class Config(object):
                     ("disabled", content)])
         wiki()
 
-        def irc(self, name):
+        def irc(name):
             if not type(name) is tuple:
                 raise
             if name[0] == "irc":
