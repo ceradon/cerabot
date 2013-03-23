@@ -14,7 +14,7 @@ except ImportError:
 from os import path, mkdir, chmod
 from hashlib import sha256
 from getpass import getpass
-from textwrap import fill
+from textwrap import fill, wrap
 import logging.handlers as handlers
 from .ordered import OrderedDumper
 from collections import OrderedDict
