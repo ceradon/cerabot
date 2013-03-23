@@ -31,3 +31,6 @@ class APIError(CerabotError):
 
 class APILoginError(APIError):
     """Error when logging into the API."""
+
+class NoConfigError(CerabotError):
+    """No config exists or config is empty."""
