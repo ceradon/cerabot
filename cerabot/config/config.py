@@ -221,7 +221,8 @@ class Config(object):
 
         def irc(name):
             if not type(name) is tuple:
-                raise
+                raise Exception("name must be tuple, got {0}".format(
+                    type(name)))
             if name[0] == "irc":
                 print
                 irc = self.data["irc"]["main"] = OrderedDict()
@@ -285,7 +286,7 @@ class Config(object):
             chmod(self.config.path, stat.S_IRUSR|stat.S_IWUSR)
         except IOError:
             print "I can't seem to write to the config file:"
-            raise
+            raise Exception()
         directory = path.join(path.dirname(__file__), "config.yml")
         with open(directory, "w") as io:
             yaml.dump(self.data, io, OrderedDumper, ident=4, allow_unicode=True,
@@ -298,7 +299,7 @@ class Config(object):
                 self._data = yaml.load(fp, OrderedLoader)
             except yaml.YAMLError:
                 print "Error parsing config file {0}:".format(filename)
-                raise
+                raise Exception()
 
     def _handle_missing_config(self):
         print "Config file is either missing or empty"
