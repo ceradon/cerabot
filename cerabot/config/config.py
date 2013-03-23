@@ -271,7 +271,7 @@ class Config(object):
         if self.data["components"]["irc"]:
             irc(("irc"))
         elif self.data["components"]["watcher"]:
-            irc((watcher"))
+            irc(("watcher"))
         self._print("""The settings you have entered will now be saved in a file 
             called config.yml within the same directory as this configuration
             helper. YAML comprises a straight-forward format that is easily
