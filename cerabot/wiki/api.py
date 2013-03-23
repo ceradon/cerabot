@@ -31,7 +31,7 @@ class Site(object):
 
     def __init__(self, name=None, base_url="http://en.wikipedia.org",
             project=None, lang=None, namespaces={}, login=(None, None),
-            secure=False, config=None, user_agent=None, article_path=None
+            secure=False, config=None, user_agent=None, article_path=None,
             script_path=None):
         self._name = name
         if not project and not lang:
