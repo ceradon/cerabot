@@ -287,7 +287,7 @@ class Config(object):
             print "I can't seem to write to the config file:"
             raise
         directory = path.join(path.dirname(__file__), "config.yml")
-        with open(directory, "config.yml"), "w") as io:
+        with open(directory, "w") as io:
             yaml.dump(self.data, io, OrderedDumper, ident=4, allow_unicode=True,
                 default_flow_style=False)
 
