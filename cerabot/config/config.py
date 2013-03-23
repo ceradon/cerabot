@@ -124,7 +124,7 @@ class Config(object):
                 keyboard a couple and you'll be good!): """)
             self._print("Attempting to encrypt your key...", newline=False)
             if bcrypt and blowfish:
-                salt = bcrypt.gensalt(self.BCRYPT_ROUNDS)
+                salt = bcrypt.gensalt(12)
                 signature = bcrypt.hashpw(key, salt)
                 self._cipher = blowfish.new(sha256(key).digest())
             elif not bycrypt or not blowfish:
