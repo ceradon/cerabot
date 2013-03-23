@@ -144,7 +144,7 @@ class Config(object):
                 print " done."
         self._print("""A number of componenets within this bot use logging. 
             Logging may be useful in discovering errors and correcting bug. 
-            Enabling this module is recommended and could be beneficial."""
+            Enabling this module is recommended and could be beneficial.""")
         if self._ask_bool("Enable logging? "):
             self.data["metadata"]["logging"] = True
 
