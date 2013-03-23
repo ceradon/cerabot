@@ -278,13 +278,13 @@ class Config(object):
         self._save()
 
     def _save(self):
+        directory = path.join(path.dirname(__file__), "config.yml")
         try:
-            open(self.config.path, "w").close()
-            chmod(self.config.path, stat.S_IRUSR|stat.S_IWUSR)
+            open(directory, "w").close()
+            chmod(directory, stat.S_IRUSR|stat.S_IWUSR)
         except IOError:
             print "I can't seem to write to the config file:"
             raise Exception()
-        directory = path.join(path.dirname(__file__), "config.yml")
         with open(directory, "w") as io:
             yaml.dump(self.data, io, OrderedDumper, ident=4, allow_unicode=True,
                 default_flow_style=False)
