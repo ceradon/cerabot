@@ -21,7 +21,7 @@ class IRC(connection.Connection):
         self._last_conn_check = 0
         self._manager = CommandManager()
         self._line_parser = _line_parser
-        self._nick = self.settings['irc_nick']
+        self._nick = self.settings["irc"]["nick"]
         self._passwd = ""
         dir = path.isfile(path.join(path.dirname(__file__), 
                 self.settings["passwd_file"]))
@@ -44,8 +44,8 @@ class IRC(connection.Connection):
                   self._host, self._port, self._real_name, self._ident,
                   join_startup_chans=False, no_login=True)
         elif not self.rc_watch:
-            self._host = self.settings['irc_server'][0]
-            self._port = self.settings['irc_server'][1]
+            self._host = self.settings["irc"]["server"][0]
+            self._port = self.settings["irc"]["server"][1]
             super(IRC, self).__init__(self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident)
 
