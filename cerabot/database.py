@@ -1,5 +1,6 @@
 import sys
 import oursql
+from cerabot import exceptions
 
 class Database(object):
     """Database manager for Cerabot. Loads a database
@@ -9,7 +10,8 @@ class Database(object):
     def __init__(self, bot, db_name, host=None, port=None,
             user=None, passwd=None):
         self._bot = bot
-        self._config = self._bot.config["db"]
+        self._logger = self._bot.logger
+        self._config = self._bot.config["sql"]
         self._db_name = db_name
 
         self._host = host if host else self._config["host"]
@@ -26,6 +28,61 @@ class Database(object):
         database = oursql.connect
         with database(self._host, self._user, self._passwd, 
                 self._port) as conn:
-            self._connection = None
-            self._cursor = None
+            self._connection = conn
+            self._cursor = conn.cursor()
+            self._is_connected = True
         return
+
+    def _query(self, query, params=()):
+        """Queries the database if we are connected."""
+        if self.is_connected:
+            with self._connection:
+                try:
+                    self._cursor.execute(query, params=params)
+                except oursql.ProgrammingError as e:
+                    msg = "Query could not be completed. Got back: {0}"
+                    self._logger.exception(msg.format(e))
+                    return False
+        return True
+
+    def select(self, table, where=None, generator=False, *args):
+        """Selects data from *table* in the database we have connected
+        to, with arguments *args*."""
+        results = []
+        statement = "SELECT {0} FROM {1}".format(tuple(args), table)
+        if where:
+            try:
+                statement += "WHERE {0} = {1}".format(where[0], where[1])
+            except IndexError:
+                raise exceptions.SQLError("`where` must be a tuple or list")
+        query = self._query(statement.replace("'", ""))
+        if not query:
+            raise exceptions.SQLError("`SELECT` query could not be completed.")
+        while True:
+            results.append(self._cursor.fetchone())
+        if generator:
+            for item in results:
+                yield item
+            return
+        return results
+
+    def insert(self, table, values, specify):
+        """Inserts *values* into *table*."""
+        strt, end = "INSERT INTO {0} {1}", "VALUES {0}"
+        strt = strt.format(table, tuple(specify))
+        end = end.format(tuple(values))
+        statement = strt + end
+        query = self._query(statement.replace("'", ""))
+        if not query:
+            raise exceptions.SQLError("`INSERT` query could not be completed.")
+        return
+
+    def __repr__(self):
+        """Return a canonical string representation of Database."""
+        res = "Database(bot={0}, config={1}, database name={2})"
+        return res.format(self._bot, self._config, self._db_name)
+
+    def __str__(self):
+        """Return a prettier string representation of Database."""
+        res = "<Database(bot {0} with config {1}; connected to database {2})>"
+        return res.format(self._bot, self._config, self._db_name)
