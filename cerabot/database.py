@@ -65,8 +65,7 @@ class Database(object):
         while True:
             results.append(self._cursor.fetchone())
         if generator:
-            for item in results:
-                yield item
+            return (i for i in results)
         else:
             return results
 
