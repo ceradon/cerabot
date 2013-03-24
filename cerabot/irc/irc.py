@@ -13,11 +13,11 @@ __all__ = ["IRC"]
 
 class IRC(connection.Connection):
     """Starts an irc connection from the data in the config."""
-    def __init__(self, rc_watch=False, _line_parser=None):
+    def __init__(self, settings, rc_watch=False, _line_parser=None):
         """Main frontend component of the IRC module for Cerabot. 
         Loads connection, parses and runscommands when called, 
         imports all commands."""
-        self.settings = settings.Settings().settings
+        self.settings = settings
         self._last_conn_check = 0
         self._manager = CommandManager()
         self._line_parser = _line_parser
@@ -104,5 +104,5 @@ class IRC(connection.Connection):
                 self._ident)
 
 if __name__ == '__main__':
-    irc = IRC()
+    irc = IRC(settings.Settings().settings)
     irc.start_conn()
