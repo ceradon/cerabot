@@ -5,9 +5,10 @@ class Settings(object):
     def __init__(self):
         """Initiate the `settings` dictionary"""
         self.settings = {}
-        self.settings["user_agent'"] = u"Cerabot/0.1 (wikibot; {0} {1} {2};"+ \
-                u"{3})".format(platform.linux_distribution()[0], platform.version(),
-                platform.linux_distribution()[1], platform.machine)
+        self.settings["user_agent"] = u"Cerabot/0.1 (wikibot; {0} {1} {2}; {3})"
+        self.settings["user_agent"] = self.settings["user_agent"].format(
+                platform.linux_distribution()[0], platform.version(),
+                platform.linux_distribution()[1], platform.machine())
         self.settings["wiki"] = {}
         self.settings["irc"] = {}
         self.settings["sql"] = {}
