@@ -22,27 +22,24 @@ class IRC(connection.Connection):
         self._manager = CommandManager()
         self._line_parser = _line_parser
         self._nick = self.settings['irc_nick']
+        self._passwd = ""
         dir = path.isfile(path.join(path.dirname(__file__), 
                 self.settings["passwd_file"]))
-        if self.settings['irc_passwd']:
-            self._passwd = self.settings['passwd']
-        elif self.settings['passwd_file'] and dir:
+        if self.settings["irc"]["passwd"]:
+            self._passwd = self.settings["irc"]["passwd"]
+        elif self.settings["passwd_file"] and dir:
             i = path.join(path.dirname(__file__), self.settings["passwd_file"])
             file = open(i, 'r')
             contents = file.read()
             file.close()
             if contents.strip():
                 self._passwd = contents
-            else:
-                #If there is no password, leave it alone
-                #It was problably meant to be that way.
-                self._passwd = ""
-        self._real_name = self.settings['irc_name']
-        self._ident = self.settings['irc_ident']
+        self._real_name = self.settings["irc"]["realname"]
+        self._ident = self.settings["irc"]["ident"]
         self.rc_watch = rc_watch
         if self.rc_watch:
-            self._host = self.settings['rc_server'][0]
-            self._port = self.settings['rc_server'][1]
+            self._host = self.settings["watcher"]["server"][0]
+            self._port = self.settings["watcher"]["server"][1]
             super(IRC, self).__init__(self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident,
                   join_startup_chans=False, no_login=True)
