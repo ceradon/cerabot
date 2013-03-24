@@ -6,7 +6,7 @@ class Settings(object):
         """Initiate the `settings` dictionary"""
         self.settings = {}
         self.settings["user_agent"] = u"Cerabot/0.1 (Python/{0}; {1}; {2}; {3}; {4})"
-        self.settings["user_agent"] = self.settings["user_agent"].format(pyv(), dist()[0]
+        self.settings["user_agent"] = self.settings["user_agent"].format(pyv(), dist()[0],
             version(), dist()[1], machine())
         self.settings["wiki"] = {}
         self.settings["irc"] = {}
