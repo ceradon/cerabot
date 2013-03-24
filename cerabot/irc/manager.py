@@ -8,8 +8,9 @@ class CommandManager(_Manager):
     """Manages commands, checks if commands are 
     being called and calls the if they are."""
 
-    def __init__(self):
-        super(CommandManager, self).__init__("commands", Command)
+    def __init__(self, bot):
+        self._bot = bot
+        super(CommandManager, self).__init__(self._bot, "commands", Command)
         dir = path.join(path.dirname(__file__), "commands")
         self._load_directory(dir)
 
