@@ -5,7 +5,8 @@ import imp
 class _Manager(object):
     """Manages all commands and tasks that
     Cerabot has to run."""
-    def __init__(self, name, base):
+    def __init__(self, bot, name, base):
+        self._bot = bot
         self._name = name
         self._base = base
         
@@ -36,7 +37,7 @@ class _Manager(object):
                         is_resource = issubclass(obj, self._base)
                         if is_resource and not obj is self._base:
                             try:
-                                resource = obj()
+                                resource = obj(self._bot)
                             except Exception:
                                 e = "Couldn't load {0} {1} from {2}"
                                 print e.format(self.name[:-1], modname, path)
