@@ -96,7 +96,7 @@ class Bot(object):
         component = getattr(self, name)
         if not component.is_running:
             msg = "Component {0} unexpectedly stopped; restarting"
-            self.logger.warn(msg.format(name))
+            self._logger.warn(msg.format(name))
             self.start_component(name, klass)
 
     def cleanup_threads(self, skip=[]):
@@ -119,7 +119,7 @@ class Bot(object):
 
     def run(self):
         """Starts the bot."""
-        self.logger.info("Starting Cerabot")
+        self._logger.info("Starting Cerabot")
         self.start_component("irc", IRC)
         self._start_logging_component()
         while self.keep_running:
@@ -138,9 +138,9 @@ class Bot(object):
 
     def stop(self, msg=None):
         if msg:
-            self.logger.info("Stopping bot ({0})".format(msg))
+            self._logger.info("Stopping bot ({0})".format(msg))
         else:
-            self.logger.info("stopping bot")
+            self._logger.info("stopping bot")
         self.stop_all_components()
         if self._logger:
             self._logger.close()
