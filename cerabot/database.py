@@ -1,7 +1,7 @@
 import re
 import sys
 import oursql
-from os import path, expanduser
+from os import path
 from cerabot import exceptions
 
 class Database(object):
@@ -82,7 +82,7 @@ class Database(object):
 
     def read_password_from_default_file(self):
         """Reads the password to the database from a .my.cnf file."""
-        i = open(path.join(expanduser("~"), ".my.cnf"), "r")
+        i = open(path.join(path.expanduser("~"), ".my.cnf"), "r")
         content = i.read().strip()
         return re.search("password\=(.*)", content).group(1)
 
