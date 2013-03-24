@@ -119,9 +119,9 @@ class Bot(object):
 
     def run(self):
         """Starts the bot."""
+        self._start_logging_component()
         self._logger.info("Starting Cerabot")
         self.start_component("irc", IRC)
-        self._start_logging_component()
         while self.keep_running:
             with self._component_lock:
                 self.keep_componenet_alive("irc", IRC)
