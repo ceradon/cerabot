@@ -1,10 +1,14 @@
+from wikitools import page
+
 class Task(object):
     """Base class for all of Cerabot's tasks."""
     name = None
     task = 0
 
-    def __init__(self):
+    def __init__(self, bot):
         """Constructor for new classes."""
+        self._bot = bot
+        self.summary = self._bot.config["wiki"]["summary"]
         self.setup()
 
     def setup(self):
@@ -23,7 +27,7 @@ class Task(object):
         """Checks if the run page for
         Cerabot is enabled.
         """
-        run_page = self.settings['run_base']
+        run_page = self._bot.config["wiki"]["run_base"]
         run_page = run_page.format(task=self.task)
         page_ = page.Page(self.site, run_page)
         text = page_.getWikiText()
