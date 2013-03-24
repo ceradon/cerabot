@@ -15,7 +15,7 @@ class Settings(object):
         self.settings["wiki"]["passwd"] = u""
         self.settings["wiki"]["passwd_file"] = u".passwd"
         self.settings["wiki"]["run_base"] = u"User:Cerabot/Run/Task {task}"
-        self.settings["wiki"]["summary'] = u"Task {task}: {comment}. "
+        self.settings["wiki"]["summary"] = u"Task {task}: {comment}. "
         self.settings["wiki"]["summary"] += "([[User:Cerabot/Run/Task {task}|bot]])"
         
         #IRC settings
