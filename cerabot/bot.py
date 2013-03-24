@@ -1,8 +1,10 @@
+import threading
 import re
 import sys
 import logging
-import threading
+import stat
 
+from os import path, mkdir
 from time import sleep
 from .utils import flatten
 from cerabot import settings
@@ -18,16 +20,16 @@ class Bot(object):
     def __init__(self):
         self._config = settings.Settings().settings
         self._component_lock = threading.Lock()
-        self.logger = logging.getLogger("cerabot")
         self.threads = {"general":[], "commands":[], "tasks":[]}
 
+        self._logger = None
         self.watcher = None
         self.irc = None
         self.site = None
         self.keep_running = True
 
     def start_component(self, name, klass):
-        """Starts component *kalss* and fills *name8 up with the
+        """Starts component *kalss* and fills *name* up with the
         classes instance."""
         if name == "irc":
             self.logger.info("Starting IRC component.")
@@ -48,6 +50,44 @@ class Bot(object):
             self.stop_component("irc")
         if self.watcher:
             self.stop_component("watcher")
+
+    def _start_logging_component(self):
+        """Starts Cerabot's logger."""
+        log_dir = path.join(path.dirname(__file__), "logs")
+        logger = logging.getLogger("cerabot")
+        logger.handlers = []
+        logger.setLevel(logging.DEBUG)
+        fmt = "[%(acstime)s %(levelname)-8s] %(name)s: %(message)s"
+        datefmt = "%Y-%m-%d %H:%M:%S"
+        formatter = logging.Formatter(fmt=fmt, datefmt=datefmt)
+
+        file_handle = lambda f: path.join(log_dir, f)
+        handler = logging.handlers.FileHandler
+        if not path.isdir(log_dir):
+            if not path.exists(log_dir):
+                mkdir(log_dir, stat.S_IWUSR|stat.S_IRUSR|stat.S_IXUSR)
+            else:
+                print "log_dir ({0}) exists, but is not a directory:"
+                raise Exception()
+
+        main_handler = handler(file_handle("bot.log"))
+        error_handler = handler(file_handle("error.log"))
+        debug_handler = handler(file_handle("debug.log"))
+
+        main_handler.setLevel(logging.INFO)
+        error_handler.setLevel(logging.WARNING)
+        debug_handler.setLevel(logging.DEBUG)
+
+        for i in (main_handler, error_handler, debug_handler):
+            i.setFormatter(formatter)
+            logger.addHandler(i)
+
+        stream = logging.StreamHandler()
+        stream.setLevel(logging.INFO)
+        stream.setFormatter(formatter)
+        logger.addHandler(stream)
+        self._logger = logger
+        return
 
     def keep_component_alive(self, name, klass):
         """Keeps *name* alive and running. If it stops, restart it with 
@@ -76,6 +116,7 @@ class Bot(object):
         """Starts the bot."""
         self.logger.info("Starting Cerabot")
         self.start_component("irc", IRC)
+        self._start_logging_component()
         while self.keep_running:
             with self._component_lock:
                 self.keep_componenet_alive("irc", IRC)
@@ -96,11 +137,13 @@ class Bot(object):
         else:
             self.logger.info("stopping bot")
         self.stop_all_components()
+        if self._logger:
+            self._logger.close()
         self.keep_looping = False
         self.cleanup_threads()
 
     def __repr__(self):
-        return "Bot()"
+        return "Bot(config={0})".format(self.config)
 
     def __str__(self):
-        return "<Bot>"
+        return "<Bot(config {0})>".format(self.config)
