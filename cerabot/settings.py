@@ -8,6 +8,10 @@ class Settings(object):
         self.settings["user_agent'"] = u"Cerabot/0.1 (wikibot; {0} {1} {2};"+ \
                 u"{3})".format(platform.linux_distribution()[0], platform.version(),
                 platform.linux_distribution()[1], platform.machine)
+        self.settings["wiki"] = {}
+        self.settings["irc"] = {}
+        self.settings["sql"] = {}
+        self.settings["watcher"] = {}
 
         #Wiki settings
         self.settings["wiki"]["user"] = u"Cerabot"
