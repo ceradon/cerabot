@@ -11,6 +11,7 @@ from cerabot import settings
 from cerabot.irc.watcher import Watcher
 from cerabot.irc.irc import IRC
 from cerabot.wiki.api import Site
+from cerabot.database import Database
 
 class Bot(object):
     """Main bot class. Acts as the core of Cerabot. Initiates
@@ -111,6 +112,10 @@ class Bot(object):
             else:
                 continue
         return
+
+    def get_db(self, db_name):
+        """Returns a Database object."""
+        return Database(self, db_name)
 
     def run(self):
         """Starts the bot."""
