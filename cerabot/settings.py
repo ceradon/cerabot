@@ -32,3 +32,9 @@ class Settings(object):
         self.settings["watcher"]["realname"] = u"IRC extension to Python robot Cerabot."
         self.settings["watcher"]["ident"] = u"cerabot"
         self.settings["watcher"]["channels"] = ["#en.wikipedia"]
+
+        #Database settings
+        self.settings["sql"]["host"] = u"bots-bsql01"
+        self.settings["sql"]["port"] = 1433
+        self.settings["sql"]["user"] = u"ceradon"
+        self.settings["sql"]["password"] = u""
