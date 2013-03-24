@@ -34,3 +34,7 @@ class APILoginError(APIError):
 
 class NoConfigError(CerabotError):
     """No config exists or config is empty."""
+
+class SQLError(CerabotError):
+    """Error performing something related to an 
+    SQL query."""
