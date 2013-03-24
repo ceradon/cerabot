@@ -5,6 +5,7 @@ import threading
 
 from time import sleep
 from .utils import flatten
+from cerabot import settings
 from cerabot.irc.watcher import Watcher
 from cerabot.irc.irc import IRC
 from cerabot.wiki.api import Site
@@ -15,6 +16,7 @@ class Bot(object):
     will need."""
 
     def __init__(self):
+        self._config = settings.Settings().settings
         self._component_lock = threading.Lock()
         self.logger = logging.getLogger("cerabot")
         self.threads = {"general":[], "commands":[], "tasks":[]}
@@ -83,6 +85,10 @@ class Bot(object):
     def is_running(self):
         """Whether or not the bot is running."""
         return self.keep_running
+
+    @property
+    def config(self):
+        return self._config
 
     def stop(self, msg=None):
         if msg:
