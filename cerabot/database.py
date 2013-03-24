@@ -1,5 +1,7 @@
+import re
 import sys
 import oursql
+from os import path, expanduser
 from cerabot import exceptions
 
 class Database(object):
@@ -25,6 +27,8 @@ class Database(object):
 
     def _connect(self):
         """Connects to the database."""
+        if not self._passwd:
+            self._passwd = self.read_password_from_default_file()
         database = oursql.connect
         with database(self._host, self._user, self._passwd, 
                 self._port) as conn:
@@ -76,6 +80,23 @@ class Database(object):
         if not query:
             raise exceptions.SQLError("`INSERT` query could not be completed.")
         return
+
+    def read_password_from_default_file(self):
+        """Reads the password to the database from a .my.cnf file."""
+        i = open(path.join(expanduser("~"), ".my.cnf"), "r")
+        content = i.read().strip()
+        return re.search("password\=(.*)", content).group(1)
+
+    def shutdown(self):
+        """Gracefully shut down all operations."""
+        self._connection.close()
+        self._cursor.close()
+        self._is_connected = True
+
+    @property
+    def is_connected(self):
+        """Whether or not we are connected to a database."""
+        return self._is_connected
 
     def __repr__(self):
         """Return a canonical string representation of Database."""
