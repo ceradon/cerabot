@@ -39,4 +39,5 @@ class CommandManager(_Manager):
                         start_time)
                 thread.daemon = True
                 thread.start()
+                self._bot.threads["commands"].append(thread)
                 return
