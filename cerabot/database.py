@@ -67,8 +67,8 @@ class Database(object):
         if generator:
             for item in results:
                 yield item
-            return
-        return results
+        else:
+            return results
 
     def insert(self, table, values, specify):
         """Inserts *values* into *table*."""
