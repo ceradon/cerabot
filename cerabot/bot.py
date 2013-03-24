@@ -22,7 +22,7 @@ class Bot(object):
         self.watcher = None
         self.irc = None
         self.site = None
-        self.kepp_running = True
+        self.keep_running = True
 
     def start_component(self, name, klass):
         """Starts component *kalss* and fills *name8 up with the
