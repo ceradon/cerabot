@@ -80,7 +80,7 @@ class Connection(object):
             self._last_send = time.time()
         if not nolog:
             self._logger.info("{0}: {1}".format(target,
-                                                msg)
+                                                msg))
 
     def _process_ping(self, line):
         """Processes PING message from the server."""
