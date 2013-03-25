@@ -85,7 +85,7 @@ class Connection(object):
         """Processes PING message from the server."""
         self._last_recvd = time.time()
         if line[0] == "PING":
-            self._send_data("PONG {0}".format(line[1][1:]))
+            self._send_data("PONG {0}".format(line[1][1:]), nolog=True)
 
     def _process_line(self, line):
         """Processes a line from the server.
