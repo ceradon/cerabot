@@ -18,6 +18,7 @@ class IRC(connection.Connection):
         Loads connection, parses and runscommands when called, 
         imports all commands."""
         self._bot = bot
+        self._logger = self._bot.logger
         self.settings = self._bot.config
         self._last_conn_check = 0
         self._manager = CommandManager(self._bot)
@@ -28,7 +29,7 @@ class IRC(connection.Connection):
                 self.settings["irc"]["passwd_file"]))
         if self.settings["irc"]["passwd"]:
             self._passwd = self.settings["irc"]["passwd"]
-        elif self.settings["passwd_file"] and dir:
+        elif self.settings["irc"]["passwd_file"] and dir:
             i = path.join(path.dirname(__file__), 
                 self.settings["irc"]["passwd_file"])
             file = open(i, 'r')
@@ -42,13 +43,13 @@ class IRC(connection.Connection):
         if self.rc_watch:
             self._host = self.settings["watcher"]["server"][0]
             self._port = self.settings["watcher"]["server"][1]
-            super(IRC, self).__init__(self._nick, self._passwd,
+            super(IRC, self).__init__(self._logger, self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident,
                   join_startup_chans=False, no_login=True)
         elif not self.rc_watch:
             self._host = self.settings["irc"]["server"][0]
             self._port = self.settings["irc"]["server"][1]
-            super(IRC, self).__init__(self._nick, self._passwd,
+            super(IRC, self).__init__(self._logger, self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident)
 
     def start_conn(self):
