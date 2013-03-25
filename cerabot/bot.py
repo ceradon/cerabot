@@ -124,7 +124,7 @@ class Bot(object):
         self.start_component("irc", IRC)
         while self.keep_running:
             with self._component_lock:
-                self.keep_componenet_alive("irc", IRC)
+                self.keep_component_alive("irc", IRC)
             sleep(5)
 
     @property
