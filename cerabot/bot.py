@@ -63,7 +63,7 @@ class Bot(object):
         formatter = logging.Formatter(fmt=fmt, datefmt=datefmt)
 
         file_handle = lambda f: path.join(log_dir, f)
-        handler = logging.handlers.FileHandler
+        handler = logging.FileHandler
         if not path.isdir(log_dir):
             if not path.exists(log_dir):
                 mkdir(log_dir, stat.S_IWUSR|stat.S_IRUSR|stat.S_IXUSR)
