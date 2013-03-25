@@ -58,7 +58,7 @@ class Bot(object):
         logger = logging.getLogger("cerabot")
         logger.handlers = []
         logger.setLevel(logging.DEBUG)
-        fmt = "[%(asctime)s %(levelname)-8s] %(name)s: %(message)s"
+        fmt = "[%(asctime)s %(levelname)s] %(name)s: %(message)s"
         datefmt = "%Y-%m-%d %H:%M:%S"
         formatter = logging.Formatter(fmt=fmt, datefmt=datefmt)
 
