@@ -29,12 +29,11 @@ class Database(object):
         """Connects to the database."""
         if not self._passwd:
             self._passwd = self.read_password_from_default_file()
-        database = oursql.connect
-        with database(host=self._host, user=self._user, passwd=self._passwd, 
-                port=self._port) as conn:
-            self._connection = conn
-            self._cursor = conn.cursor()
-            self._is_connected = True
+        database = oursql.connect(host=self._host, user=self._user, 
+            passwd=self._passwd, db=self._db_name)
+        self._connection = database
+        self._cursor = self._connection.cursor()
+        self._is_connected = True
         return
 
     def _query(self, query, params=()):
