@@ -48,14 +48,15 @@ class Database(object):
                     return False
         return True
 
-    def select(self, table, where=None, generator=False, *args):
+    def select(self, *args **kwargs):
         """Selects data from *table* in the database we have connected
         to, with arguments *args*."""
         results = []
-        statement = "SELECT {0} FROM {1}".format(tuple(args), table)
-        if where:
+        statement = "SELECT {0} FROM {1}".format(tuple(args), kwargs["table"])
+        if kwargs["where"]:
             try:
-                statement += "WHERE {0} = {1}".format(where[0], where[1])
+                statement += "WHERE {0} = {1}".format(kwargs["where"][0], 
+                    kwargs["where"][1])
             except IndexError:
                 raise exceptions.SQLError("`where` must be a tuple or list")
         query = self._query(statement.replace("'", ""))
