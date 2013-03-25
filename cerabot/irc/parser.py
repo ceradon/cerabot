@@ -44,7 +44,7 @@ class Parser(connection.Connection):
             return False
         if self._line[0] == "PING":
             return False
-        self.nick, self.ident, self.host = re.findall(":(.*?)!(.*?)@(.*?)",
+        self.nick, self.ident, self.host = re.findall(":(.*?)!(.*?)@(.*)",
                 self._line[0])[0]
         self.chan = self._line[2]
         self.msg_type = self._line[1]
