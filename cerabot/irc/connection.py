@@ -4,9 +4,10 @@ import socket
 from cerabot import exceptions
 
 class Connection(object):
-    def __init__(self, nick, passwd, host, port,
+    def __init__(self, logger, nick, passwd, host, port,
             realname, ident, join_startup_chans=True,
             no_login=False):
+        self._logger = logger
         self.host = host
         self.port = port
         self.nick = nick
@@ -32,8 +33,9 @@ class Connection(object):
             self.socket.connect((self.host, self.port))
             self._send_conn_data()
         except socket.error:
-            print "Unable to establish connection; Retrying..."
-            print "Sleeping for 10 seconds"
+            msg = "Unable to establish connection; Retrying..."
+            self._logger.debug(msg)
+            self._logger.debug("Sleeping for 10 seconds")
             time.sleep(10)
             self.connect()
 
@@ -44,7 +46,7 @@ class Connection(object):
                 self.ident, self.host, self.realname))
         if self.passwd and not self._no_login:
             self._send_data("PASS {0}".format(
-                            self.passwd))
+                            self.passwd), nolog=True)
         if self._join_startup_chans:
             for chan in self.settings["join_on_startup"]:
                 self.join(chan)
@@ -65,7 +67,7 @@ class Connection(object):
             raise exceptions.DeadSocketError()
         return socket_data
 
-    def _send_data(self, msg=None):
+    def _send_data(self, msg=None, nolog=False):
         """Send data to the server."""
         last_sent = time.time() - self._last_send
         if last_sent < 0.85:
@@ -76,6 +78,9 @@ class Connection(object):
             raise excpetions.DeadSocketError()
         else:
             self._last_send = time.time()
+        if not nolog:
+            self._logger.info("{0}: {1}".format(target,
+                                                msg)
 
     def _process_ping(self, line):
         """Processes PING message from the server."""
@@ -88,12 +93,12 @@ class Connection(object):
         To be implemented in subclasses."""
         raise NotImplementedError()
 
-    def quit(self, msg=None):
+    def quit(self, msg=None, nolog=False):
         """Quits from the server, but doesn't close connection."""
         if msg:
-            self._send_data("QUIT: {0}".format(msg))
+            self._send_data("QUIT: {0}".format(msg), nolog)
         else:
-            self._send_data("QUIT")
+            self._send_data("QUIT", nolog)
 
     def normalize(self, string):
         """Normalizes strings to say in IRC."""
@@ -152,50 +157,50 @@ class Connection(object):
                     msg.append(words.pop(0))
                 yield " ".join(msg)
 
-    def join(self, chan):
+    def join(self, chan, nolog=False):
         """Joins a channel on the server."""
-        self._send_data("JOIN {0}".format(chan))
+        self._send_data("JOIN {0}".format(chan), nolog)
         self._channels.append(chan)
 
-    def part(self, chan, msg=None):
+    def part(self, chan, msg=None, nolog=False):
         """Parts a channel on the server."""
         if msg:
-            self._send_data("PART {0} :{1}".format(chan, msg))
+            self._send_data("PART {0} :{1}".format(chan, msg), nolog)
         else:
-            self._send_data("PART {0}".format(chan))
+            self._send_data("PART {0}".format(chan), nolog)
         try:
             self._channels.remove(chan)
         except ValueError:
             #We're not in that channel.
             pass
 
-    def say(self, msg, target):
+    def say(self, msg, target, nolog=False):
         """Sends PRIVMSG `msg` to `target`."""
         for line in self._split_message(msg, 220):
             self._send_data("PRIVMSG {0} :{1}".format(target,
-                            self.normalize(msg)))
+                            self.normalize(msg)), nolog)
 
-    def reply(self, msg, data):
+    def reply(self, msg, data, nolog=False):
         """Replies to the user in *parse* with *msg*."""
-        self.say(msg, data.chan)
+        self.say(msg, data.chan, nolog)
 
-    def action(self, target, msg):
+    def action(self, target, msg, nolog=False):
         """Sends ACTION `msg` to server."""
-        self.say("\x01ACTION {0}\x01".format(msg), target)
+        self.say("\x01ACTION {0}\x01".format(msg), target, nolog)
 
-    def mode(self, target, level, msg):
+    def mode(self, target, level, msg, nolog=False):
         """Sends MODE `msg` to server."""
         self._send_data("MODE {0} {1} {2}".format(target, level,
-                                                  msg))
+                                                  msg), nolog)
 
-    def notice(self, target, msg):
+    def notice(self, target, msg, nolog=False):
         for line in self._split_message(msg, 220):
             self._send_data("NOTICE {0} :{1}".format(target,
-                                                     msg))
+                                                     msg), nolog)
 
-    def ping(self, target):
+    def ping(self, target, nolog=False):
         """Sends a PING message to `target`."""
-        self._send_data("PING {0}".format(target))
+        self._send_data("PING {0}".format(target), nolog)
         self._last_ping = time.time()
 
     def shutdown(self, msg):
