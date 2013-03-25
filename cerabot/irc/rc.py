@@ -46,7 +46,7 @@ class RC(object):
                     "\?diff=(.*?)&oldid=(.*?)", line[1])
             self._diff, self._oldid = x[0][1:]
         x = [i for i, x in enumerate(line) if x == "*"]
-        self._user = line[x[0]:[1]]
+        self._user = " ".join(line[x[0]:x[1]][1:])
         self._diff_size = line[x[1]+1].strip("(").strip(")")
         self._comment = " ".join(line[x[1]+2:])
         self._msg_type = u"edit"
