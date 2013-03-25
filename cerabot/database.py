@@ -19,7 +19,7 @@ class Database(object):
         self._host = host if host else self._config["host"]
         self._port = port if port else self._config["port"]
         self._user = user if user else self._config["user"]
-        password = passwd if passwd else self._config["passwd"]
+        password = passwd if passwd else self._config["password"]
         self._passwd = password
 
         self._cursor = None
