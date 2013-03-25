@@ -3,7 +3,7 @@ import sys
 import logging
 import stat
 
-from threading import Thread
+from threading import Thread, Lock
 from os import path, mkdir
 from time import sleep
 from .utils import flatten
@@ -20,7 +20,7 @@ class Bot(object):
 
     def __init__(self):
         self._config = settings.Settings().settings
-        self._component_lock = threading.Lock()
+        self._component_lock = Lock()
         self.threads = {"general":[], "commands":[], "tasks":[]}
 
         self._logger = None
