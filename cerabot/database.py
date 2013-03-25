@@ -30,8 +30,8 @@ class Database(object):
         if not self._passwd:
             self._passwd = self.read_password_from_default_file()
         database = oursql.connect
-        with database(self._host, self._user, self._passwd, 
-                self._port) as conn:
+        with database(host=self._host, user=self._user, passwd=self._passwd, 
+                port=self._port) as conn:
             self._connection = conn
             self._cursor = conn.cursor()
             self._is_connected = True
