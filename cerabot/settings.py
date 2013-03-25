@@ -25,6 +25,7 @@ class Settings(object):
         #IRC settings
         self.settings["irc"]["nick"] = u"Cerabot"
         self.settings["irc"]["passwd"] = u""
+        self.settings["irc"]["passwd_file"] = u".passwd"
         self.settings["irc"]["server"] = u"irc.freenode.net", 6667
         self.settings["irc"]["realname"] = u"IRC extension to Pyhton robot Cerabot."
         self.settings["irc"]["ident"] = u"cerabot"
