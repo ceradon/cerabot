@@ -1,9 +1,9 @@
-import threading
 import re
 import sys
 import logging
 import stat
 
+from threading import Thread
 from os import path, mkdir
 from time import sleep
 from .utils import flatten
