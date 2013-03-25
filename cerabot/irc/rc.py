@@ -2,13 +2,13 @@ import re
 import sys
 
 class RC(object):
-    def __init__(self, parser):
+    def __init__(self, data):
         self.diff = None
         self.user = None
         self.flags = None
         self.oldid = None
         self.title = None
-        self.parser = parser
+        self.data = data
         self.comment = u""
         self.msg_type = u""
         self.diff_size = None
