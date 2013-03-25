@@ -195,9 +195,9 @@ class Site(object):
         return all_data
 
     def get_page(self, pagename, follow_redirects=False, pageid=None):
-        """Returns an instance of Page for *pagename* with *follow_redirects* and
-        *pageid* as arguments, unless *pagename* is a category, then returns a
-        Cateogry instance."""
+        """Returns an instance of Page for *pagename* with *follow_redirects* 
+        and *pageid* as arguments, unless *pagename* is a category, then 
+        returns a Cateogry instance."""
         raise NotImplementedError()
 
     def get_category(self, catname, follow_redirects=False, pageid=None):
@@ -217,7 +217,7 @@ class Site(object):
     def get_username(self):
         """Gets the name of the user that is currently logged into the site's API.
         Simple way to ensure that we are logged in."""
-        data = self.query(action="query", meta="userinfo")
+        data = self.query({"action":"query", "meta":"userinfo"})
         return data["query"]["userinfo"]["name"]
 
     def get_cookies(self, name, domain):
@@ -228,8 +228,8 @@ class Site(object):
                 return cookie
 
     def save_cookie_jar(self):
-        """Attempts to save all changes to our cookiejar after a successful 
-        login or logout."""
+        """Attempts to save all changes to our cookiejar after a 
+        successful login or logout."""
         if hasattr(self.cookie_jar, "save"):
             try:
                 getattr(self._cookiejar, "save")()
@@ -245,10 +245,12 @@ class Site(object):
         """Logs into the site's API."""
         username, password = login
         if token:
-            i = self.query(action="login", lgname=username, lgpassword=password,
-                    lgtoken=token)
+            i = self.query({"action":"login", "lgname":username, 
+                            "lgpassword":password, "lgtoken":token})
         else:
-            i = self.query(action="login", lgname=username, lgpassword=password)
+            i = self.query({"action":"login", 
+                            "lgname":username, 
+                            "lgpassword":password})
 
         res = i["login"]["result"]
         if res == "Success":
@@ -285,7 +287,7 @@ class Site(object):
 
     def logout(self):
         """Attempts to logout out the API and clear the cookie jar."""
-        self.query(action="logout")
+        self.query({"action":"logout"})
         self.cookie_jar.clear()
         self.save_cookie_jar()
 
@@ -319,6 +321,11 @@ class Site(object):
                 _tokens[name] = None
 
         return _tokens
+
+    def iterator(self, **kwargs):
+        """Iterates over result of api query with *kwargs* as arguments
+        and returns a generator."""
+        pass
 
     def __repr__(self):
         """Returns a coanonical string representation of Site."""
