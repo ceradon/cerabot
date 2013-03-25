@@ -48,7 +48,7 @@ class Connection(object):
             self._send_data("PASS {0}".format(
                             self.passwd), nolog=True)
         if self._join_startup_chans:
-            for chan in self.settings["join_on_startup"]:
+            for chan in self.settings["irc"]["channels"]:
                 self.join(chan)
 
     def _close_conn(self):
