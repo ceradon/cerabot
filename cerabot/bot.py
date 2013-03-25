@@ -58,7 +58,7 @@ class Bot(object):
         logger = logging.getLogger("cerabot")
         logger.handlers = []
         logger.setLevel(logging.DEBUG)
-        fmt = "[%(acstime)s %(levelname)-8s] %(name)s: %(message)s"
+        fmt = "[%(asctime)s %(levelname)-8s] %(name)s: %(message)s"
         datefmt = "%Y-%m-%d %H:%M:%S"
         formatter = logging.Formatter(fmt=fmt, datefmt=datefmt)
 
@@ -136,11 +136,16 @@ class Bot(object):
     def config(self):
         return self._config
 
+    @property
+    def logger(self):
+        """Returns the currently setup logging component."""
+        return self._logger
+
     def stop(self, msg=None):
         if msg:
             self._logger.info("Stopping bot ({0})".format(msg))
         else:
-            self._logger.info("stopping bot")
+            self._logger.info("Stopping bot")
         self.stop_all_components()
         if self._logger:
             self._logger.close()
