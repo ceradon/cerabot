@@ -38,3 +38,6 @@ class NoConfigError(CerabotError):
 class SQLError(CerabotError):
     """Error performing something related to an 
     SQL query."""
+
+class ParserError(CerabotError):
+    """Error parsing an IRC line."""
