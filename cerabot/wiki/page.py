@@ -111,6 +111,50 @@ class Page(object):
         """Loads the content of the current page."""
         raise NotImplementedError()
 
+    @property
+    def title(self):
+        return self._title
+
+    @property
+    def pageid(self):
+        return self._pageid
+
+    @property
+    def exists(self):
+        return self._exists
+
+    @property
+    def is_redirect(self):
+        return self._is_redirect
+
+    @property
+    def last_revid(self):
+        return self._last_revid
+
+    @property
+    def last_edited(self):
+        return self._last_edited
+
+    @property
+    def creator(self):
+        return self._creator
+
+    @property
+    def fullurl(self):
+        return self._fullurl
+
+    @property
+    def content(self):
+        return self._content
+
+    @property
+    def prefix(self):
+        return self._prefix
+
+    @property
+    def namespace(self):
+        return self._namespace
+
     def __repr__(self):
         """Return a canonical string representation of Page."""
         res = "Page(title={0!r}, follow_redirects={1!r}, site={2!r})"
