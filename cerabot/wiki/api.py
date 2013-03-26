@@ -33,7 +33,7 @@ class Site(object):
     def __init__(self, name=None, base_url="http://en.wikipedia.org",
             project=None, lang=None, namespaces={}, login=(None, None),
             secure=False, config=None, user_agent=None, article_path=None,
-            script_path=None):
+            script_path="/w/"):
         self._name = name
         if not project and not lang:
             self._base_url = base_url
@@ -94,7 +94,7 @@ class Site(object):
         params.setdefault("maxlag", self._maxlag)
         params.setdefault("format", "json")
         params["continue"] = ""
-        url = ''.join((self._base_url, self._path, "api.php"))
+        url = ''.join((self._base_url, self._script_path, "api.php"))
         data = self.urlencode(params)
         try:
             reply = self.opener.open(url, data)
@@ -170,15 +170,18 @@ class Site(object):
                 ns_id = item["id"]
                 alias = item["*"]
                 self._namespaces[ns_id].append(alias)
-        else:
+        elif all(attrs):
             return
+        else:
+            result = self.query(query)
         
         result = result["query"]["general"]
         self._name = result["wikiid"]
         self._project = result["sitename"].lower()
         self._lang = result["lang"]
         self._base_url = result["server"]
-        self._path = result["scriptpath"]
+        self._script_path = result["scriptpath"]
+        self._article_path = result["articlepath"]
 
     def _handle_query_continue(self, request, data):
         """Handle \'query-continues\' in API queries."""
