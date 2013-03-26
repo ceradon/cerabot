@@ -1,6 +1,7 @@
 import re
 import sys
 import time
+import itertools
 try:
     import json
 except Exception:
@@ -83,8 +84,8 @@ class Site(object):
             args.append(key + "=" + val)
         return "&".join(args)
 
-    def _query(self, params, query_continue=True, tries=0, idle=5):
-        """queries the site's API."""
+    def _query(self, params, query_continue=False, tries=0, idle=5):
+        """Queries the site's API."""
         last_query = time.time() - self._last_query_time
         if last_query < self._throttle:
             throttle = self._throttle - last_query
@@ -124,7 +125,7 @@ class Site(object):
             code = res["error"]["code"]
             info = res["error"]["info"]
         except (TypeError, ValueError, KeyError):
-            if "continue" in res:
+            if "continue" in res and query_continue:
                 continue_data = self._handle_query_continue(params, res)
                 res["query"][res["query"].keys()[0]].extend(continue_data)
             return res
@@ -236,7 +237,7 @@ class Site(object):
             except (NotImplementedError, ValueError):
                 pass
 
-    def query(self, params, query_continue=True):
+    def query(self, params, query_continue=False):
         """Queries the site's API."""
         with self.api_lock:
             self._query(params, query_continue)
@@ -319,13 +320,34 @@ class Site(object):
                 name = i.findall(item)
                 name = name.strip("'")
                 _tokens[name] = None
-
         return _tokens
 
     def iterator(self, **kwargs):
         """Iterates over result of api query with *kwargs* as arguments
         and returns a generator."""
-        pass
+        result = None
+        if "action" in kwargs.keys():
+            kwargs.pop("action", 0)
+        kwargs["action"] = "query"
+        res = self.query(kwargs)
+        if "warnings" in res:
+            e = "Unknown error occured while attempting iterator query."
+            e += " Got back: {0}".format(res)
+            raise exceptions.APIError(e)
+        if len(res["query"]) > 1:
+            result = {}
+            a = {}
+            b = list(res["query"])
+            for key, val in res["query"].items():
+                a[key] = val
+            while len(b) > 0:
+                key = b.pop(0, False)
+                if not key:
+                    break
+                results[key] = itertools.chain(a[key])
+        elif len(res["query"]) == 1:
+            result = (i for i in res["query"][list(res["query"])[0]])
+        return result 
 
     def __repr__(self):
         """Returns a coanonical string representation of Site."""
