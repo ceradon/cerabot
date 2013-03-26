@@ -352,6 +352,26 @@ class Site(object):
             result = (i for i in res["query"][list(res["query"])[0]])
         return result 
 
+    def name_to_id(self, name):
+        """Returns the associated id to the namespace *name*."""
+        for ns_id, names in self._namespaces.items():
+            if name.lower() in [i.lower() for i in names]:
+                return ns_id
+
+        error = "No such namespace with name {0}."
+        raise exceptiions.APIError(error)
+
+    def id_to_name(self, ns_id, get_all=False):
+        """Returns the associated name to the namespace id *ns_id*."""
+        try:
+            if get_all:
+                return self._namespaces[ns_id]
+            else:
+                return self._namespaces[ns_id][0]
+        except KeyError:
+            error = "No such id with namespace {0}."
+            raise exceptions.APIError(error)
+
     def __repr__(self):
         """Returns a coanonical string representation of Site."""
         res = u"Site(name={0}, base_url={1}, project={2}, lang={3}, "+ \
