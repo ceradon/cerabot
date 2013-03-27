@@ -1,4 +1,6 @@
 import sys
+import chardet
+import mwparserfromhell
 from datetime import datetime
 from cerabot import exceptions
 from dateutil.parser import parse
@@ -18,14 +20,23 @@ class Page(object):
         self._follow_redirects = follow_redirects
 
         self._exists = False
+        self._last_editor = None
         self._is_redirect = False
         self._is_talkpage = False
         self._last_revid = None
         self._last_edited = None
         self._creator = None
         self._fullurl = None
+        self._is_excluded = False
         self._content = None
         self._protection = None
+
+        self._extlinks = []
+        self._templates = []
+        self._links = []
+        self._categories = []
+        self._files = []
+        self._langlinks= {}
 
         self._prefix = None
         self._namespace = 0
@@ -83,7 +94,6 @@ class Page(object):
         self._is_talkpage = self._namespace % 2 == 1
         self._fullurl = result["fullurl"]
         self._last_revid = res["lastrevid"]
-        self._last_edited = parse(result["touched"])
         self._creator = result["revisions"][0]["user"]
 
         #Now, find out what the current user can do to the page:
@@ -109,7 +119,49 @@ class Page(object):
 
     def _load_content(self):
         """Loads the content of the current page."""
-        raise NotImplementedError()
+        query = {"action":"query", "prop":"revisions|langlinks|extlinks", 
+            "titles":self._title, "rvprop":"user|content", "rvdir":"older"}
+        res = self.query(query, query_continue=True)
+        result = res["query"]["page"].values()[0]
+        revisions = result["revisions"][0]
+        langlinks = result["langlinks"]
+        extlinks = result["extlinks"]
+        self._content = revisions["*"].decode()
+        self._last_editor = revisions["user"]
+        self._last_edited = parse(revisions["timestamp"])
+        code = mwparserfromhell.parse(self._content)
+        self._templates = code.filter_templates(recursive=True)
+        self._links = code.filter_links()
+        for link in self._links:
+            title = str(link.title).lower()
+            if title.startswith("category:"):
+                cat = title.split(":")
+                if cat[0] == title:
+                    continue
+                self._categories.append(unicode(link.title))
+
+            elif title.startswith("image:") or title.startswith("file:") or \
+                    title.startswith("media:"):
+                self._files.append(unicode(link.title))
+        for langlink in langlinks:
+            a = langlink["*"]
+            # Language links are in a bunch of different languages
+            # which means a bunch of different encodings. Try to 
+            # find out which encoding it is in using the `chardet`
+            # package and then attempt to decode it.
+            encoding = charder.detect(a)
+            try:
+                decoded_string = a.decode(encoding)
+            except UnicodeDecodeError:
+                # Well, it didn't work... So we will exclude it 
+                # from the list of language lins.
+                continue
+            self._langlinks[langlink["lang"]] = decoded_string
+
+        for extlink in extlinks:
+            self._extlinks.append(extlink["*"])
+
+    return
 
     @property
     def title(self):
@@ -154,6 +206,25 @@ class Page(object):
     @property
     def namespace(self):
         return self._namespace
+
+    @property
+    def templates(self):
+        return self._templates
+
+    def extlinks(self):
+        return self._extlinks
+
+    @property
+    def links(self):
+        retirn self._links
+
+    @property
+    def categories(self):
+        return self._categories
+
+    @property
+    def files(self):
+        return self._files
 
     def __repr__(self):
         """Return a canonical string representation of Page."""
