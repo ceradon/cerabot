@@ -127,7 +127,7 @@ class Site(object):
         except (TypeError, ValueError, KeyError):
             if "continue" in res and query_continue:
                 continue_data = self._handle_query_continue(params, res)
-                res["query"][res["query"].keys()[0]].extend(continue_data)
+                res = res["query"][list(res["query"])[0]].extend(continue_data)
             return res
         
         if code == "maxlag":
@@ -190,12 +190,12 @@ class Site(object):
         while "continue" in data:
             query = deepcopy(request)
             query.update(last_continue)
-            response = self._query(query)
-            last_continue = response["continue"]
+            res = self._query(query)
+            last_continue = res["continue"]
             if not all_data:
-                all_data = response["query"][list(x["query"])[0]]
+                all_data = res["query"][list(res["query"])[0]]
             else:
-                all_data[0].append(response["query"][list(x["query"])[0]])
+                all_data[0].append(res["query"][list(["query"])[0]])
         return all_data
 
     def get_page(self, pagename, follow_redirects=False, pageid=None):
