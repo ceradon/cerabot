@@ -308,8 +308,8 @@ class Site(object):
         result = self.query(query)
         res = result["query"]["pages"]
         _tokens = {}
-        i = res["query"]["pages"].keys()[0]
-        possible_tokens = res["query"]["pages"][i]
+        c = res.keys()[0]
+        possible_tokens = res[c]
         for key, val in possible_tokens.items():
             if key.endswith("token"):
                 name = key.find("token")
@@ -317,10 +317,9 @@ class Site(object):
                 args.pop(name)
         
         if "warnings" in result:
-            if len(args) > 1:
-                a = result["warnings"]["info"]["*"].split("\n")
-            else:
-                a = [result["warnings"]["info"]["*"]]
+            a = result["warnings"]["info"]["*"].split("\n")
+            if len(a) > 1:
+                a = [b for b in a if b.lower().startswith("action")]
             for item in a:
                 name = i.findall(item)
                 name = name.strip("'")
