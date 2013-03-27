@@ -36,7 +36,7 @@ class Page(object):
         self._links = []
         self._categories = []
         self._files = []
-        self._langlinks= {}
+        self._langlinks = {}
 
         self._prefix = None
         self._namespace = 0
