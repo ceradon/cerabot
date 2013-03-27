@@ -276,11 +276,12 @@ class Site(object):
 
     def login(self, login):
         """Public method for logging in to the API."""
-        if not login and self._login:
-            login = self._login
-        else:
-            e = "No login data ptovided."
-            raise exceptions.APILoginError(e)
+        if not login:
+            if self._login[0]:
+                login = self._login
+            else:
+                e = "No login data or insufficient data provided."
+                raise exceptions.APILoginError(e)
         if type(login) == tuple:
             self._login(login)
         else:
