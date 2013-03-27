@@ -2,6 +2,7 @@ import re
 import sys
 import oursql
 from os import path
+from threading import Lock
 from cerabot import exceptions
 
 class Database(object):
@@ -12,6 +13,7 @@ class Database(object):
     def __init__(self, bot, db_name, host=None, port=None,
             user=None, passwd=None):
         self._bot = bot
+        self._sql_lock = Lock()
         self._logger = self._bot.logger
         self._config = self._bot.config["sql"]
         self._db_name = db_name
@@ -48,37 +50,11 @@ class Database(object):
                     return False
         return True
 
-    def select(self, *args **kwargs):
-        """Selects data from *table* in the database we have connected
-        to, with arguments *args*."""
-        results = []
-        statement = "SELECT {0} FROM {1}".format(tuple(args), kwargs["table"])
-        if kwargs["where"]:
-            try:
-                statement += "WHERE {0} = {1}".format(kwargs["where"][0], 
-                    kwargs["where"][1])
-            except IndexError:
-                raise exceptions.SQLError("`where` must be a tuple or list")
-        query = self._query(statement.replace("'", ""))
-        if not query:
-            raise exceptions.SQLError("`SELECT` query could not be completed.")
-        while True:
-            results.append(self._cursor.fetchone())
-        if generator:
-            return (i for i in results)
-        else:
-            return results
-
-    def insert(self, table, values, specify):
-        """Inserts *values* into *table*."""
-        strt, end = "INSERT INTO {0} {1}", "VALUES {0}"
-        strt = strt.format(table, tuple(specify))
-        end = end.format(tuple(values))
-        statement = strt + end
-        query = self._query(statement.replace("'", ""))
-        if not query:
-            raise exceptions.SQLError("`INSERT` query could not be completed.")
-        return
+    def query(self, query, params=()):
+        """Queries the database."""
+        with self._sql_lock:
+            x = self._query(query, params)
+        return x
 
     def read_password_from_default_file(self):
         """Reads the password to the database from a .my.cnf file."""
