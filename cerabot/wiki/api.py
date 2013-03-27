@@ -314,7 +314,7 @@ class Site(object):
             if key.endswith("token"):
                 name = key[:key.find("token")]
                 _tokens[name] = val
-                args.pop(name)
+                args.pop(args,index(name))
         
         if "warnings" in result:
             a = result["warnings"]["info"]["*"].split("\n")
