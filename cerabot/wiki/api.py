@@ -33,7 +33,7 @@ class Site(object):
     def __init__(self, name=None, base_url="http://en.wikipedia.org",
             project=None, lang=None, namespaces={}, login=(None, None),
             secure=False, config=None, user_agent=None, article_path=None,
-            script_path="/w/"):
+            script_path=None):
         self._name = name
         if not project and not lang:
             self._base_url = base_url
@@ -46,10 +46,8 @@ class Site(object):
                     self._project)
             if secure:
                 self._base_url = self._base_url.replace("http://", "https://")
-        if article_path:
-            self._artcle_path = article_path
-        if script_path:
-            self._script_path = script_path
+        self._artcle_path = article_path
+        self._script_path = script_path
         self._namespaces = namespaces
         if config:
             self._config = config
