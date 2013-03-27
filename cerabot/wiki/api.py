@@ -312,7 +312,7 @@ class Site(object):
         possible_tokens = res[c]
         for key, val in possible_tokens.items():
             if key.endswith("token"):
-                name = key.find("token")
+                name = key[:key.find("token")]
                 _tokens[name] = val
                 args.pop(name)
         
@@ -322,7 +322,7 @@ class Site(object):
                 a = [b for b in a if b.lower().startswith("action")]
             for item in a:
                 name = i.findall(item)
-                name = name.strip("'")
+                name = name[0].strip("'")
                 _tokens[name] = None
         return _tokens
 
