@@ -30,7 +30,7 @@ class Site(object):
               "maxlag":10,
               "max_retries":3}
 
-    def __init__(self, name=None, base_url="http://en.wikipedia.org",
+    def __init__(self, name=None, base_url="//en.wikipedia.org",
             project=None, lang=None, namespaces={}, login=(None, None),
             secure=False, config=None, user_agent=None, article_path=None,
             script_path="/w/"):
@@ -44,8 +44,6 @@ class Site(object):
             self._project = project
             self._base_url = "http://{0!r}.{1!r}".format(self._lang,
                     self._project)
-            if secure:
-                self._base_url = self._base_url.replace("http://", "https://")
         self._article_path = article_path
         self._script_path = script_path
         self._namespaces = namespaces
@@ -84,6 +82,7 @@ class Site(object):
 
     def _query(self, params, query_continue=False, tries=0, idle=5):
         """Queries the site's API."""
+        
         last_query = time.time() - self._last_query_time
         if last_query < self._throttle:
             throttle = self._throttle - last_query
@@ -92,7 +91,8 @@ class Site(object):
         params.setdefault("maxlag", self._maxlag)
         params.setdefault("format", "json")
         params["continue"] = ""
-        url = ''.join((self._base_url, self._script_path, "api.php"))
+        protocol = "https:" if self._secure else "http:"
+        url = ''.join((protocol, self._base_url, self._script_path, "/api.php"))
         data = self.urlencode(params)
         try:
             reply = self.opener.open(url, data)
