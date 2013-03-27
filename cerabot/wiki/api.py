@@ -308,7 +308,9 @@ class Site(object):
         result = self.query(query)
         res = result["query"]["pages"]
         _tokens = {}
-        for key, val in res[0][1][list(x[0][1])[0]].items():
+        i = res["query"]["pages"].keys()[0]
+        possible_tokens = res["query"]["pages"][i]
+        for key, val in possible_tokens.items():
             if key.endswith("token"):
                 name = key.find("token")
                 _tokens[name] = val
