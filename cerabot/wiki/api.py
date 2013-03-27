@@ -46,7 +46,7 @@ class Site(object):
                     self._project)
             if secure:
                 self._base_url = self._base_url.replace("http://", "https://")
-        self._artcle_path = article_path
+        self._article_path = article_path
         self._script_path = script_path
         self._namespaces = namespaces
         if config:
