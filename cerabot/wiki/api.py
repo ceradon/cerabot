@@ -147,7 +147,7 @@ class Site(object):
     def _load(self, force=False):
         """Loads the sites attributes. Called automatically on initiation."""
         attrs = [self._name, self._project, self._lang, self._base_url,
-                self._path]
+                self._script_path, self._article_path]
         query = {"action":"query", "meta":"siteinfo", "siprop":"general"}
 
         if not self._namespaces or force:
