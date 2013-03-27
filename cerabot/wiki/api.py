@@ -53,6 +53,7 @@ class Site(object):
             self._config = self.config
         self._login_data = login
         self._secure = secure
+        self._tokens = None
         if user_agent:
             self._user_agent = user_agent
         else:
@@ -314,7 +315,7 @@ class Site(object):
             if key.endswith("token"):
                 name = key[:key.find("token")]
                 _tokens[name] = val
-                args.pop(args,index(name))
+                args.pop(args.index(name))
         
         if "warnings" in result:
             a = result["warnings"]["info"]["*"].split("\n")
@@ -324,6 +325,7 @@ class Site(object):
                 name = i.findall(item)
                 name = name[0].strip("'")
                 _tokens[name] = None
+        self._tokens = _tokens
         return _tokens
 
     def iterator(self, **kwargs):
