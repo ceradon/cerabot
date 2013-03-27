@@ -357,7 +357,7 @@ class Site(object):
                 return ns_id
 
         error = "No such namespace with name {0}."
-        raise exceptiions.APIError(error)
+        raise exceptions.APIError(error)
 
     def id_to_name(self, ns_id, get_all=False):
         """Returns the associated name to the namespace id *ns_id*."""
