@@ -302,6 +302,16 @@ class Site(object):
                       "options", "patrol", "protect", "unblock", "watch"]
         if not args:
             args = valid_args
+        if self._tokens:
+            m = {}
+            for token in args:
+                try:
+                    m[token] = self._tokens[token]
+                except IndexError:
+                    m[token] = None
+                    continue
+            return m
+
         if not type(args) == list:
             return
         query = {"action":"query", "prop":"info", "titles":"Main Page",
