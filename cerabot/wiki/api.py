@@ -241,7 +241,8 @@ class Site(object):
     def query(self, params, query_continue=False):
         """Queries the site's API."""
         with self.api_lock:
-            self._query(params, query_continue)
+            i = self._query(params, query_continue)
+        return i
 
     def _login(self, login, token=None, attempts=0):
         """Logs into the site's API."""
