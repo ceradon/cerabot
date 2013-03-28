@@ -53,7 +53,7 @@ class Site(object):
             self._config = self.config
         self._login_data = login
         self._secure = secure
-        self._tokens = None
+        self._tokens = {}
         if user_agent:
             self._user_agent = user_agent
         else:
@@ -335,7 +335,7 @@ class Site(object):
                 name = i.findall(item)
                 name = name[0].strip("'")
                 _tokens[name] = None
-        self._tokens = _tokens
+        self._tokens.update(_tokens)
         return _tokens
 
     def iterator(self, **kwargs):
