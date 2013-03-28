@@ -161,6 +161,18 @@ class Page(object):
         for extlink in extlinks:
             self._extlinks.append(extlink["*"])
 
+        # Find out if we are allowed to edit the page or not.
+        user = self.site.get_username()
+        regex = "\{\{\s*(no)?bots\s*\|?((deny|allow)=(.*?))?\}\}"
+        re_compile = re.search(regex, self._content)
+        if re_compile.group(1):
+            self._is_excluded = True
+        if user.lower() in re_compile.group(4).lower():
+            if re_compile.group(3) == "allow":
+                self._is_excluded = False
+            if re_compile.group(3) == "deny":
+                self._is_excluded = True
+
     return
 
     @property
@@ -225,6 +237,10 @@ class Page(object):
     @property
     def files(self):
         return self._files
+
+    @property
+    def is_excluded(self):
+        return self._is_excluded
 
     def __repr__(self):
         """Return a canonical string representation of Page."""
