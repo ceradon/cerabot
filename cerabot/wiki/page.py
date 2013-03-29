@@ -188,7 +188,7 @@ class Page(object):
             if re_compile.group(3) == "deny":
                 self._is_excluded = True
 
-    return
+        return
 
     def _edit(self, text, summary, bot, minor, force, section, append, 
               prepend, create):
