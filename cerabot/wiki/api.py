@@ -20,6 +20,8 @@ from urlparse import urlparse
 from platform import python_version as pyv
 from urllib2 import build_opener, HTTPCookieProcessor, URLError
 
+from page import Page
+
 class Site(object):
     """Main point for which interaction with a MediaWiki
     API is made."""
@@ -197,11 +199,11 @@ class Site(object):
                 all_data[0].append(res["query"][list(["query"])[0]])
         return all_data
 
-    def get_page(self, pagename, follow_redirects=False, pageid=None):
+    def get_page(self, title="", pageid=0, follow_redirects=False):
         """Returns an instance of Page for *pagename* with *follow_redirects* 
         and *pageid* as arguments, unless *pagename* is a category, then 
         returns a Cateogry instance."""
-        raise NotImplementedError()
+        return Page(self, title, pageid, follow_redirects)
 
     def get_category(self, catname, follow_redirects=False, pageid=None):
         """Returns an instance of Category for *catname* with *follow_redirects*
