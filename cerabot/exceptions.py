@@ -41,3 +41,34 @@ class SQLError(CerabotError):
 
 class ParserError(CerabotError):
     """Error parsing an IRC line."""
+
+class PageError(CerabotError):
+    """Error while handling a page."""
+
+class EditError(CerabotError):
+    """Error was caught while trying to edit a
+    page."""
+
+class PageExistsError(PageError):
+    """Page does not exist."""
+
+class InvalidPageError(PageError):
+    """Page is invalid."""
+
+class PermissionsError(CerabotError):
+    """The current user doesn't have the abilty to 
+    perfrom an action."""
+
+class SpamDetectedError(EditError):
+    """The API has detected spam in an edit."""
+
+class ContentExceedsError(EditError):
+    """The size of the content sent to the API was
+    larger than allowed by the wiki."""
+
+class FilteredError(CerabotError):
+    """An abuse filter has tripped and rejected
+    our edit."""
+
+class InvalidOptionError(CerabotError):
+    """An option or options provided are invalid."""
