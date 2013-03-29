@@ -514,6 +514,10 @@ class Page(object):
         return self._is_excluded
 
     @property
+    def is_talkpage(self):
+        return self._is_talkpage
+
+    @property
     def redirect_target(self):
         return self._redirect_target
 
