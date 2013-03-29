@@ -139,14 +139,15 @@ class Page(object):
         res = self.site.query(query, query_continue=True)
         result = res["query"]["pages"].values()[0]
         revisions = result["revisions"][0]
-        langlinks = res["query"]["pages"].values()[1]
-        extlinks = res["query"]["pages"].values()[2]
+        langlinks = res.get("query", None).get("pages", None).values()[1]
+        extlinks = res.get("query", None).get("pages", None).values()[2]
         self._content = revisions["*"].decode()
         self._last_editor = revisions["user"]
         self._last_edited = parse(revisions["timestamp"])
         code = mwparserfromhell.parse(self._content)
         self._templates = code.filter_templates(recursive=True)
         self._links = code.filter_links()
+        if langlinks:
         for link in self._links:
             title = str(link.title).lower()
             if title.startswith("category:"):
@@ -155,26 +156,28 @@ class Page(object):
                     continue
                 self._categories.append(unicode(link.title))
 
-            elif title.startswith("image:") or title.startswith("file:") or \
-                    title.startswith("media:"):
+            elif title.startswith("image:") or title.startswith("file:") \
+                    or title.startswith("media:"):
                 self._files.append(unicode(link.title))
-        for langlink in langlinks:
-            a = langlink["*"]
-            # Language links are in a bunch of different languages
-            # which means a bunch of different encodings. Try to 
-            # find out which encoding it is in using the `chardet`
-            # package and then attempt to decode it.
-            encoding = charder.detect(a)
-            try:
-                decoded_string = a.decode(encoding)
-            except UnicodeDecodeError:
-                # Well, it didn't work... So we will exclude it 
-                # from the list of language lins.
-                continue
-            self._langlinks[langlink["lang"]] = decoded_string
+        if langlinks:
+            for langlink in langlinks:
+                a = langlink["*"]
+                # Language links are in a bunch of different languages
+                # which means a bunch of different encodings. Try to 
+                # find out which encoding it is in using the `chardet`
+                # package and then attempt to decode it.
+                encoding = charder.detect(a)
+                try:
+                    decoded_string = a.decode(encoding)
+                except UnicodeDecodeError:
+                    # Well, it didn't work... So we will exclude it 
+                    # from the list of language lins.
+                    continue
+                self._langlinks[langlink["lang"]] = decoded_string
 
-        for extlink in extlinks:
-            self._extlinks.append(extlink["*"])
+        if extlinks:
+            for extlink in extlinks:
+                self._extlinks.append(extlink["*"])
 
         # Find out if we are allowed to edit the page or not.
         user = self.site.get_username()
@@ -187,7 +190,6 @@ class Page(object):
                 self._is_excluded = False
             if re_compile.group(3) == "deny":
                 self._is_excluded = True
-
         return
 
     def _edit(self, text, summary, bot, minor, force, section, append, 
