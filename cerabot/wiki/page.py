@@ -147,9 +147,9 @@ class Page(object):
             extlinks = res["query"]["pages"].values()
         except IndexError:
             extlinks = None
-        self._content = revisions["*"].decode()
+        self._content = revisions[0]["*"].decode()
         self._last_editor = revisions["user"]
-        self._last_edited = parse(revisions["timestamp"])
+        self._last_edited = parse(revisions[0]["timestamp"])
         code = mwparserfromhell.parse(self._content)
         self._templates = code.filter_templates(recursive=True)
         self._links = code.filter_links()
