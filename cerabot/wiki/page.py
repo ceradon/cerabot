@@ -334,7 +334,7 @@ class Page(object):
                           append=False, prepend=False, create=True)
 
     def move(self, target, reason="", *args):
-        """Moves our current page to *target with are reasoning being 
+        """Moves our current page to *target with our reasoning being 
         *reason*.
         """
         self.assert_ability("move")
