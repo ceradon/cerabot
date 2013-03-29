@@ -490,7 +490,7 @@ class Page(object):
 
     @property
     def links(self):
-        retirn self._links
+        return self._links
 
     @property
     def categories(self):
