@@ -147,8 +147,7 @@ class Page(object):
         code = mwparserfromhell.parse(self._content)
         self._templates = code.filter_templates(recursive=True)
         self._links = code.filter_links()
-        if langlinks:
-        for link in self._links:
+        for link in self._links:                
             title = str(link.title).lower()
             if title.startswith("category:"):
                 cat = title.split(":")
