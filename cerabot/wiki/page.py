@@ -533,4 +533,4 @@ class Page(object):
     def __str__(self):
         """Return a prettier string representation of Page."""
         res = "<Page(%s of %s)>"
-        return res % (self._title, str(self.site))
+        return res % (self._title, str(self.site),)
