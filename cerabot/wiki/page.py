@@ -184,6 +184,8 @@ class Page(object):
         user = self.site.get_username()
         regex = "\{\{\s*(no)?bots\s*\|?((deny|allow)=(.*?))?\}\}"
         re_compile = re.search(regex, self._content)
+        if not re_compile:
+            return
         if re_compile.group(1):
             self._is_excluded = True
         if user.lower() in re_compile.group(4).lower():
