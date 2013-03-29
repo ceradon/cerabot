@@ -527,10 +527,10 @@ class Page(object):
 
     def __repr__(self):
         """Return a canonical string representation of Page."""
-        res = "Page(title={0!r}, follow_redirects={1!r}, site={2!r})"
-        return res.format(self._title, self._follow_redirects, self.site)
+        res = "Page(title=%s, follow_redirects=%s, site=%s)"
+        return res % (self._title, self._follow_redirects, self.site)
 
     def __str__(self):
         """Return a prettier string representation of Page."""
-        res = "<Page({0} of {1})>"
-        return res.format(self._title, str(self.site))
+        res = "<Page(%s of %s)>"
+        return res % (self._title, str(self.site))
