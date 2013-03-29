@@ -54,7 +54,7 @@ class Page(object):
             del self._content
             self._load()
 
-    def _load(self):
+    def _load(self, res=None):
         """Loads the attributes of this page."""
         if self._title:
             prefix = self._title.split(":", 1)[0]
