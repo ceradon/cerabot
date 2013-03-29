@@ -61,7 +61,7 @@ class Page(object):
             if prefix != self._title:
                 try:
                     id = self.site.name_to_id(prefix)
-                except excpetions.APIError:
+                except exceptions.APIError:
                     self._namespace = 0
             elif prefix == self._title:
                 self._namespace = 0
@@ -342,7 +342,7 @@ class Page(object):
         if self.namespace < 0:
             ns = self.site.id_to_name(self.namespace)
             error = "Pages in the {0} namespace cannot have talk pages."
-            raise exceptions.InvalidPageError(error)
+            raise exceptions.PageError(error)
 
         if self.is_talkpage:
             namespace = self.namespace - 1
@@ -368,7 +368,7 @@ class Page(object):
         """Get the target of the redirect in the current page's contents."""
         if not self.exists:
             error = "Current page {0} does not exist."
-            raise exceptions.NoPageError(error.format(self.title))
+            raise exceptions.PageExistsError(error.format(self.title))
         re_redirect = r"^\s*\#\s*redirect\s*\[\[(.*?)\]\]"
         content = self.content
         if not self.is_redirect:
@@ -379,7 +379,7 @@ class Page(object):
             self.redirect_target = Page(self.site, page)
         except IndexError:
             error = "Something went wrong. This may be a glitch in MediaWiki."
-            raise exceptions.InvalidPageError(error)
+            raise exceptions.PageError(error)
         return self.redirect_target
 
     def rollback(self):
