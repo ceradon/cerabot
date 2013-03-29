@@ -123,7 +123,7 @@ class Page(object):
 
     def assert_ability(self, action):
         """Asserts whether or not the user can perform *action*."""
-        possible_actions = [i.lower() for i in self._tokens.keys()]:
+        possible_actions = [i.lower() for i in self._tokens.keys()]
         for one in possible_actions:
             if action.lower() == one:
                 return
