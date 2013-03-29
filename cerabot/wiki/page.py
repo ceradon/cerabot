@@ -106,7 +106,7 @@ class Page(object):
         self._is_redirect = "redirect" in result
         self._is_talkpage = self._namespace % 2 == 1
         self._fullurl = result["fullurl"]
-        self._last_revid = a["lastrevid"]
+        self._last_revid = result["lastrevid"]
         self._creator = result["revisions"][0]["user"]
         self._starttimestamp = strftime("%Y-%m-%dT%H:%M:%SZ", gmtime())
 
