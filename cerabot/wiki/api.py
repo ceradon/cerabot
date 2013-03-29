@@ -405,10 +405,10 @@ class Site(object):
         res = u"<Site(site object %s (%s, %s) for site %s"+ \
             " with user %s, config %s and user agent %s."
         if self._login_data[0]:
-            res = res.replace("user %s, ", "")
             res = res % (self._name, self._lang, self._project, self._base_url, 
                 self._login_data[0], unicode(self._config), self._user_agent)
             return res.replace("'", "")
+        res = res.replace("user %s, ", "")
         res = res % (self._name, self._lang, self._project, self._base_url,
             unicode(self._config), self._user_agent)
         return res.replace("'", "")
