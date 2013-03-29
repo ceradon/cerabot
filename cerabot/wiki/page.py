@@ -135,21 +135,17 @@ class Page(object):
     def _load_content(self):
         """Loads the content of the current page."""
         query = {"action":"query", "prop":"revisions|langlinks|extlinks", 
-            "titles":self._title, "rvprop":"user|content", "rvdir":"older"}
+            "titles":self._title, "rvprop":"user|content|timestamp",
+            "rvdir":"older"}
         res = self.site.query(query, query_continue=True)
         result = res["query"]["pages"].values()[0]
         revisions = result["revisions"][0]
-        try:
-            langlinks = res["query"]["pages"].values()[1]
-        except IndexError:
-            langlinks = None
-        try:
-            extlinks = res["query"]["pages"].values()
-        except IndexError:
-            extlinks = None
-        self._content = revisions[0]["*"].decode()
+        i = list(res["query"]["pages"])[0]
+        langlinks = res["query"]["pages"][i].get("langlinks", None)
+        extlinks = res["query"]["pages"][i].get("extlinks", None)
+        self._content = revisions["*"].decode()
         self._last_editor = revisions["user"]
-        self._last_edited = parse(revisions[0]["timestamp"])
+        self._last_edited = parse(revisions["timestamp"])
         code = mwparserfromhell.parse(self._content)
         self._templates = code.filter_templates(recursive=True)
         self._links = code.filter_links()
