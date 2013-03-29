@@ -45,9 +45,9 @@ class Page(object):
         self._prefix = None
         self._namespace = 0
 
-    def load(self):
+    def load(self, res=None):
         """Loads the attributes of the current page."""
-        self._load()
+        self._load(res)
 
         if self._follow_redirects and self.is_redirect:
             self._title = self.get_redirect_target().title
