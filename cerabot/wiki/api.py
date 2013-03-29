@@ -402,7 +402,7 @@ class Site(object):
 
     def __str__(self):
         """Returns a prettier string representation of Site."""
-        res = u"<Site(site object {0} ({1}, {{2}) for site {3}"+ \
+        res = u"<Site(site object {0} ({1}, {2}) for site {3}"+ \
             " with user {4}, config {5} and user agent {6}."
         if not self._login_data[0]:
             res = res.replace("user {4}", "")
