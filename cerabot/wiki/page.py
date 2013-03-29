@@ -77,8 +77,8 @@ class Page(object):
         else:
             error = "No page name or id specified"
             raise exceptions.PageError(error)
-        res = res if res else self.site.query(query, query_continue=False)
-        result = res["query"]["pages"].values()[0]
+        a = res if res else self.site.query(query, query_continue=False)
+        result = a["query"]["pages"].values()[0]
         if "invalid" in result:
             error = "Invalid page title {0}".format(unicode(
                 self._title))
@@ -88,7 +88,7 @@ class Page(object):
         else:
             self._exists = True
 
-        self._title = resilt["title"]
+        self._title = result["title"]
         self._pageid = int(result["pageid"])
         if result.get("protection", None):
             self._protection = {"move": (None, None),
