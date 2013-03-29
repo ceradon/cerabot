@@ -103,6 +103,7 @@ class Page(object):
                     expiry = parse(item["expiry"])
                 self._protection[item["type"]] = level, expiry
 
+        self._namespace = result["ns"]
         self._is_redirect = "redirect" in result
         self._is_talkpage = self._namespace % 2 == 1
         self._fullurl = result["fullurl"]
@@ -144,6 +145,8 @@ class Page(object):
         langlinks = res["query"]["pages"][i].get("langlinks", None)
         extlinks = res["query"]["pages"][i].get("extlinks", None)
         self._content = revisions["*"].decode()
+        b = self._title.split(":")
+        self._prefix = b[0] if not b[0] == self.title else None
         self._last_editor = revisions["user"]
         self._last_edited = parse(revisions["timestamp"])
         code = mwparserfromhell.parse(self._content)
@@ -490,6 +493,7 @@ class Page(object):
     def templates(self):
         return self._templates
 
+    @property
     def extlinks(self):
         return self._extlinks
 
