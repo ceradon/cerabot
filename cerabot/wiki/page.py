@@ -139,8 +139,8 @@ class Page(object):
         res = self.site.query(query, query_continue=True)
         result = res["query"]["pages"].values()[0]
         revisions = result["revisions"][0]
-        langlinks = result["langlinks"]
-        extlinks = result["extlinks"]
+        langlinks = res["query"]["pages"].values()[1]
+        extlinks = res["query"]["pages"].values()[2]
         self._content = revisions["*"].decode()
         self._last_editor = revisions["user"]
         self._last_edited = parse(revisions["timestamp"])
