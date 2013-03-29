@@ -402,10 +402,10 @@ class Site(object):
 
     def __str__(self):
         """Returns a prettier string representation of Site."""
-        res = u"<Site(site object {0} ({1}, {2}) for site {3}"+ \
-            " with user {4}, config {5} and user agent {6}."
+        res = u"<Site(site object %s (%s, %s) for site %s"+ \
+            " with user %s, config %s and user agent %s."
         if not self._login_data[0]:
-            res = res.replace("user {4}", "")
+            res = res.replace("user %s", "")
             return res.format(self._name, self._project, self._base_url,
                 self._login_data[0], unicode(self._config), 
                 self._user_agent)
