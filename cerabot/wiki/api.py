@@ -406,8 +406,8 @@ class Site(object):
             " with user %s, config %s and user agent %s."
         if not self._login_data[0]:
             res = res.replace("user %s", "")
-            return res.format(self._name, self._project, self._base_url,
+            return res % (self._name, self._project, self._base_url,
                 self._login_data[0], unicode(self._config), 
                 self._user_agent)
-        return res.format(self._name, self._project, self._base_url,
+        return res % (self._name, self._project, self._base_url,
             unicode(self._config), self._user_agent)
