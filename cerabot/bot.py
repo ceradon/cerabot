@@ -3,6 +3,7 @@ import sys
 import logging
 import stat
 
+from threading import uniform
 from threading import Thread, Lock
 from os import path, mkdir
 from time import sleep
@@ -115,7 +116,9 @@ class Bot(object):
 
     def get_db(self, db_name):
         """Returns a Database object."""
-        return Database(self, db_name)
+        klass = Database(self, db_name)
+        klass._connect()
+        return klass
 
     def run(self):
         """Starts the bot."""
