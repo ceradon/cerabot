@@ -22,6 +22,8 @@ from urllib2 import build_opener, HTTPCookieProcessor, URLError
 
 from .page import Page
 from .category import Category
+from .user import User
+from .file import File
 
 class Site(object):
     """Main point for which interaction with a MediaWiki
@@ -213,11 +215,11 @@ class Site(object):
 
     def user(self, name=None):
         """Returns an instance of User for *username*."""
-        raise NotImplementedError()
+        return User(name)
 
     def file(self, title, pageid=0, follow_redirects=False):
         """Returns an instance of File for *title* or *pageid*."""
-        raise NotImplementedError()
+        return File(title, pageid, follow_redirects)
 
     @property
     def domain(self):
