@@ -20,7 +20,8 @@ from urlparse import urlparse
 from platform import python_version as pyv
 from urllib2 import build_opener, HTTPCookieProcessor, URLError
 
-from page import Page
+from .page import Page
+from .category import Category
 
 class Site(object):
     """Main point for which interaction with a MediaWiki
@@ -199,19 +200,23 @@ class Site(object):
                 all_data[0].append(res["query"][list(["query"])[0]])
         return all_data
 
-    def get_page(self, title="", pageid=0, follow_redirects=False):
-        """Returns an instance of Page for *pagename* with *follow_redirects* 
-        and *pageid* as arguments, unless *pagename* is a category, then 
+    def page(self, title="", pageid=0, follow_redirects=False):
+        """Returns an instance of Page for *title* with *follow_redirects* 
+        and *pageid* as arguments, unless *title* is a category, then 
         returns a Cateogry instance."""
         return Page(self, title, pageid, follow_redirects)
 
-    def get_category(self, catname, follow_redirects=False, pageid=None):
-        """Returns an instance of Category for *catname* with *follow_redirects*
+    def category(self, title="", pageid=0, follow_redirects=False):
+        """Returns an instance of Category for *title* with *follow_redirects*
         and *pageid* as arguments."""
+        return Category(self, title, pageid, follow_redirects)
+
+    def user(self, name=None):
+        """Returns an instance of User for *username*."""
         raise NotImplementedError()
 
-    def get_user(self, username=None):
-        """Returns an instance of User for *username*."""
+    def file(self, title, pageid=0, follow_redirects=False):
+        """Returns an instance of File for *title* or *pageid*."""
         raise NotImplementedError()
 
     @property
