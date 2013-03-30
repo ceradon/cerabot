@@ -3,7 +3,6 @@ import sys
 import logging
 import stat
 
-from threading import uniform
 from threading import Thread, Lock
 from os import path, mkdir
 from time import sleep
