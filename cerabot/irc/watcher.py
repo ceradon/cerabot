@@ -19,7 +19,7 @@ class Watcher(object):
         """Starts a connection to the recent changes server."""
         self._main_conn = irc.IRC(self._bot, join_startup_chans=False)
         self._rc_conn = irc.IRC(self._bot, rc_watch=True, 
-                _line_parser=self.parser_rc_line)
+                _line_parser=self.parse_rc_line)
         self._main_conn.start_conn()
         self._rc_conn.start_conn()
 
