@@ -13,7 +13,8 @@ __all__ = ["IRC"]
 
 class IRC(connection.Connection):
     """Starts an irc connection from the data in the config."""
-    def __init__(self, bot, rc_watch=False, _line_parser=None):
+    def __init__(self, bot, rc_watch=False, _line_parser=None,
+            join_startup_chans=True):
         """Main frontend component of the IRC module for Cerabot. 
         Loads connection, parses and runscommands when called, 
         imports all commands."""
@@ -21,6 +22,7 @@ class IRC(connection.Connection):
         self._logger = self._bot.logger
         self.settings = self._bot.config
         self._last_conn_check = 0
+        self._join_chans = join_startup_chans
         self._manager = CommandManager(self._bot)
         self._line_parser = _line_parser
         self._nick = self.settings["irc"]["nick"]
@@ -50,7 +52,8 @@ class IRC(connection.Connection):
             self._host = self.settings["irc"]["server"][0]
             self._port = self.settings["irc"]["server"][1]
             super(IRC, self).__init__(self._logger, self._nick, self._passwd,
-                  self._host, self._port, self._real_name, self._ident)
+                  self._host, self._port, self._real_name, self._ident
+                  join_startup_chans=self.join_chans)
 
     def start_conn(self):
         """Connect to irc, loop() over all IRC data, calling _process_line() 
