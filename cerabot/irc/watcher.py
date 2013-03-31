@@ -62,7 +62,7 @@ class Watcher(object):
                 comment=data.comment)
             return a
 
-       if flags == "delete":
+        if flags == "delete":
             event = "deletion"  
         elif flags == "protect":
             event = "protection"
