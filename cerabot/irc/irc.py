@@ -53,7 +53,7 @@ class IRC(connection.Connection):
             self._port = self.settings["irc"]["server"][1]
             super(IRC, self).__init__(self._logger, self._nick, self._passwd,
                   self._host, self._port, self._real_name, self._ident,
-                  join_startup_chans=self.join_chans)
+                  join_startup_chans=self._join_chans)
 
     def start_conn(self):
         """Connect to irc, loop() over all IRC data, calling _process_line() 
