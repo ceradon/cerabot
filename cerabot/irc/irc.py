@@ -52,7 +52,7 @@ class IRC(connection.Connection):
             self._host = self.settings["irc"]["server"][0]
             self._port = self.settings["irc"]["server"][1]
             super(IRC, self).__init__(self._logger, self._nick, self._passwd,
-                  self._host, self._port, self._real_name, self._ident
+                  self._host, self._port, self._real_name, self._ident,
                   join_startup_chans=self.join_chans)
 
     def start_conn(self):
