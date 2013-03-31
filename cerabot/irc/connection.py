@@ -74,7 +74,7 @@ class Connection(object):
             time.sleep(0.85 - last_sent)
         try:
             self.socket.sendall(msg + '\r\n')
-        except secket.error:
+        except socket.error:
             raise excpetions.DeadSocketError()
         else:
             self._last_send = time.time()
