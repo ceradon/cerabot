@@ -127,3 +127,7 @@ class User(object):
         else:
             self._talkpage = Page("User talk:{0}".format(self.user))
         return self._talkpage
+
+    def reload(self):
+        """Forcibly reload all of the current user's attributes."""
+        return self._load_attributes()
