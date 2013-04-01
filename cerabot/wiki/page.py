@@ -145,8 +145,6 @@ class Page(object):
         langlinks = res["query"]["pages"][i].get("langlinks", None)
         extlinks = res["query"]["pages"][i].get("extlinks", None)
         self._content = revisions["*"]
-        encoding = chardet.detect(self._content)
-        self._content = self._content.decode(encoding)
         b = self._title.split(":")
         self._prefix = b[0] if not b[0] == self.title else None
         self._last_editor = revisions["user"]
