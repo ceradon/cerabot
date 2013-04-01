@@ -66,9 +66,12 @@ class ContentExceedsError(EditError):
     """The size of the content sent to the API was
     larger than allowed by the wiki."""
 
-class FilteredError(CerabotError):
+class FilteredError(EditError):
     """An abuse filter has tripped and rejected
     our edit."""
 
 class InvalidOptionError(CerabotError):
     """An option or options provided are invalid."""
+
+class UserError(CerabotError):
+    """Error while dealing with a user."""
