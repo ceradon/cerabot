@@ -75,3 +75,18 @@ class InvalidOptionError(CerabotError):
 
 class UserError(CerabotError):
     """Error while dealing with a user."""
+
+class UserExistsError(UserError):
+    """User exists."""
+
+class APIWarningsError(APIError):
+    """API gave us a warning."""
+
+class AccountCreationError(UserError):
+    """Error while creating an account."""
+
+class UserBlockError(UserError):
+    """Error while blocking a user."""
+
+class UserUnblockError(UserError):
+    """Error while unblocking a user."""
