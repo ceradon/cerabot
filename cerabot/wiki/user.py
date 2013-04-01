@@ -124,7 +124,7 @@ class User(object):
         valid_args = ["anononly", "nocreate", "autoblock", "noemail"]
         args = args - valid_args
         if not args:
-            raise UserBlockedError("No valid arguments specified.")
+            raise exceptions.UserBlockError("No valid arguments specified.")
         token_ = token if token else self._site.tokener(["block"])["block"]
         if not token:
             raise exceptions.PermissionsError("Not permitted to block users.")
@@ -136,7 +136,7 @@ class User(object):
         if "error" in res:
             if res["error"]["code"] == "permissiondenied":
                 raise exceptions.PermissionsError(res["error"]["info"])
-            raise exceptions.UserBlockedError(res["error"]["info"])
+            raise exceptions.UserBlockError(res["error"]["info"])
         return res
 
     def unblock(self, reason=""):
