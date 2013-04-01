@@ -2,6 +2,7 @@ import sys
 from ipaddress import ip_address
 from dateutil.parser import parse
 from cerabot.wiki.page import Page
+from cerabot import exceptions
 
 class User(object):
     """Object representing a single user on the wiki."""
@@ -64,6 +65,92 @@ class User(object):
 
         self._gender = result["gender"]
 
+    def email(self, text, subject, cc=True):
+        if not self._emailable:
+            raise exceptions.UserError("User is not allowed to be emailed.")
+        token = self._site.tokener(["email"])["email"]
+        if not token:
+            raise exceptions.PermissionError("Not permitted to email users.")
+        query = {"action":"emailuser", "target":self.user, "text":text,
+            "subject":subject, "token":token}
+        if cc:
+            query["ccme"] = "true"
+        return self._site.query(query)
+
+    def create(self, password, email, token="", reason="", real=None,
+               attempts=0):
+        """Create an account for our current user."""
+        query = {"action":"createaccount", "name":self.user, "email":email,
+            "reason":reason, "realname":real}
+        if token:
+            query["token"] = token
+        res = self._site.query(query)
+        if res["result"].lower() == "success":
+            return
+        elif res["result"].lower() == "needtoken" and attempts == 0:
+            return self.create(password, email, reason, real, 
+                token=res["token"], attempts=1)
+        elif "error" in res:
+            if res["error"]["code"] in ["blocked", 
+                    "permdenied-createaccount"]:
+                raise exceptions.PermissionsError(res["error"]["info"])
+            elif res["error"]["code"] == "userexists":
+                raise exceptions.UserExistsError(res["error"]["info"])
+            else:
+                raise exceptions.UserError(res["error"]["info"])
+        elif "warning" in res:
+            raise exceptions.APIWarningsError(res["warning"])
+        raise exceptions.AccountCreationError()
+
+    def block(self, expiry, token="", reason="", *args):
+        """Blocks the current user for a period of *expiry* with our
+        reasoning being *reason*. *args* are the arguments to the block.
+        Possible accepted arguments include:
+            * anononly: Blocks the user's IP address(es) from editing, thus
+                        forcing the user to log in or create an account to 
+                        be able to edit.
+            * nocreate: The user's IP address(es) will not be permitted to 
+                        create new user accounts.
+            * autoblock: Automatically blocks the last IP address that the 
+                         user used, and any subsequent IP address that the 
+                         user logs in with.
+            * noemail: Prevents the user from sending emails through 
+                       Special:Emailuser.
+
+        *expiry* is the time that the block will expire. i.e. \"5 months\"
+        or \"3 years\". *expiry* may also be set to \"infinity\", 
+        \"indefinite\" or \"never\" for the block to never expire.
+        """
+        valid_args = ["anononly", "nocreate", "autoblock", "noemail"]
+        args = args - valid_args
+        if not args:
+            raise UserBlockedError("No valid arguments specified.")
+        token_ = token if token else self._site.tokener(["block"])["block"]
+        if not token:
+            raise exceptions.PermissionsError("Not permitted to block users.")
+        query = {"action":"block", "user":self.user, "expiry":expiry, "reason":
+            reason, "token":token_}
+        for arg in args:
+            query[arg] = "true"
+        res = self._site.query(query)
+        if "error" in res:
+            if res["error"]["code"] == "permissiondenied":
+                raise exceptions.PermissionsError(res["error"]["info"])
+            raise exceptions.UserBlockedError(res["error"]["info"])
+        return res
+
+    def unblock(self, reason=""):
+        """Unblocks the current user, with our reasoning being *reason*."""
+        token = self._site.tokener(["unblock"])["unblock"]
+        if not token:
+            raise exceptions.PermissionsError("Not permitted to unblock users")
+        query = {"action":"unblock", "user":self.name, "token":token, "reason":
+            reason}
+        res = self._site.query(query)
+        if "error" in res:
+            raise exceptions.UserUnblockError(res["error"]["info"])
+        return res
+
     @property
     def user(self):
         return sself._user
@@ -117,7 +204,7 @@ class User(object):
         if self._userpage:
             return self._userpage
         else:
-            self._userpage = Page("User:{0}".format(self.user))
+            self._userpage = Page(self._site, "User:{0}".format(self.user))
         return self._userpage
 
     @property
@@ -125,7 +212,8 @@ class User(object):
         if self._talkpage:
             return self._talkpage
         else:
-            self._talkpage = Page("User talk:{0}".format(self.user))
+            talkpage = "User talk:{0}".format(self.user)
+            self._talkpage = Page(self._site, talkpage)
         return self._talkpage
 
     def reload(self):
