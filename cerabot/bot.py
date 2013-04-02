@@ -7,6 +7,7 @@ from threading import Thread, Lock
 from os import path, mkdir
 from time import sleep
 from .utils import flatten
+from cerabot.wiki.manager import TaskManager
 from cerabot import settings
 from cerabot.irc.watcher import Watcher
 from cerabot.irc.irc import IRC
@@ -19,9 +20,11 @@ class Bot(object):
     will need."""
 
     def __init__(self):
+        self._site = Site()
         self._config = settings.Settings().settings
         self._component_lock = Lock()
         self.threads = {"general":[], "commands":[], "tasks":[]}
+        self._tasks = TaskManager(self)
 
         self._logger = None
         self.watcher = None
@@ -142,6 +145,11 @@ class Bot(object):
     def logger(self):
         """Returns the currently setup logging component."""
         return self._logger
+
+    @property
+    def site(self):
+        """Returns the current site object."""
+        return self._site
 
     def stop(self, msg=None):
         if msg:
