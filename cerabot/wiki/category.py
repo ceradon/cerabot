@@ -1,6 +1,7 @@
 import sys
 from cerabot import exceptions
 from .page import Page
+from .file import File
 
 class Category(Page):
     """Object that represents a single category on a wiki."""
@@ -12,21 +13,24 @@ class Category(Page):
         self._files = []
         self._count = {}
 
-    def _load_attributes(self, res=None):
+        self._load_attributes(res)
+
+    def _load_attributes(self, res=None, get_all_members=True):
         """Loads attributes about our current category."""
         query_one = {"action":"query", "generator":"categorymembers",
             "gcmtitle":self.title}
         query_two = {"action":"query", "prop":"categoryinfo", "titles":
             self.title}
-        a = res if res else self.site.query(query_one)
+        if 
+        a = res if res else self.site.query(query_one, 
+            non_stop=get_all_members)
         for cat in a["query"]["pages"].values():
             if cat["ns"] == 14:
                 c = Category(self.site, cat["title"])
                 c.load_attributes()
                 self._subcats.append(c)
             elif cat["ns"] == 6:
-                # TODO: Add a File object once it's done.
-                f = Page(self.site, cat["title"])
+                f = File(self.site, cat["title"])
                 f.load()
                 self._files.append(f)
             else:
