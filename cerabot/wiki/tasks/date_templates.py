@@ -83,7 +83,7 @@ class DateTemplates(Task):
         templates_page = self._site.page("Wikipedia:AutoWikiBrowser/"+ \
                 "Dated templates")
         templates_page.load()
-        text = template_page.content
+        text = templates_page.content
         code = mwparserfromhell.parse(text)
         for template in code.filter_templates():
             if template.name.lower() == "tl":
@@ -102,9 +102,9 @@ class DateTemplates(Task):
                     +len("===Navbox templates===")]
         except Exception:
             pass
-        delimeter = unicode('→')
+        delimeter = '\xe2\x86\x92'\
         for line in section.splitlines():
-            if not delimeter in line:
+            if not delimeter in line.decode():
                 continue
             split = line.split(delimeter)
             if len(split) != 2:
