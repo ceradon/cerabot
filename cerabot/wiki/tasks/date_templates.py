@@ -19,17 +19,21 @@ class DateTemplates(Task):
     @property
     def pages(self):
         if not hasattr(self, "pages"):
-            self.pages = []
-        return self.pages
+            self._pages = None
+        return self._pages
+
+    @pages.setter
+    def pages(self, value):
+        self._pages = value
 
     @property
-    def _to_date(self):
+    def to_date(self):
         if not hasattr(self, "_to_date"):
             self._to_date = []
         return self._to_date
 
     @property
-    def _redirects(self):
+    def redirects(self):
         if not hasattr(self, "_redirects"):
             self._redirects = {}
         return self._redirects
@@ -83,7 +87,7 @@ class DateTemplates(Task):
         code = mwparserfromhell.parse(text)
         for template in code.filter_templates():
             if template.name.lower() == "tl":
-                self._to_date.append(template.get(1).value.lower())
+                self.to_date.append(template.get(1).value.lower())
         
         """Load the redirects to the templates we must date."""
         redirects_page = self._site.page("Wikipedia:AutoWikiBrowser/"+ \
@@ -110,8 +114,8 @@ class DateTemplates(Task):
             for template in code_1.filter_templates():
                 if template.name.lower() == "tl":
                     name = template.get(1).value
-                    self._redirects[name.lower()] = destination
-                    self._redirects[destination.lower()] = destination
+                    self.redirects[name.lower()] = destination
+                    self.redirects[destination.lower()] = destination
 
     def _in_use(self, page):
         """Checks if the page is in use."""
