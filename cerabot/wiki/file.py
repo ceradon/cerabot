@@ -27,7 +27,7 @@ class File(Page):
         self._hashed = result["sha1"]
         self._mime = result["mime"]
         self._description = result["descriptionurl"]
-        self._dimensions = result["height"], result["weight"]
+        self._dimensions = result["height"], result["width"]
 
     def download(self, local=""):
         """Downloads the current image and stores it at
