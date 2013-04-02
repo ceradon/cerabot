@@ -174,7 +174,7 @@ class Page(object):
                 encoding = chardet.detect(a)["encoding"]
                 try:
                     decoded_string = a.decode(encoding)
-                except UnicodeDecodeError:
+                except (UnicodeEncodeError, UnicodeDecodeError):
                     # Well, it didn't work... So we will exclude it 
                     # from the list of language lins.
                     continue
