@@ -316,7 +316,7 @@ class Site(object):
             for token in args:
                 try:
                     m[token] = self._tokens[token]
-                except IndexError:
+                except (KeyError, IndexError):
                     m[token] = None
                     continue
             return m
