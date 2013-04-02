@@ -203,7 +203,7 @@ class Site(object):
                     all_data = res["query"][list(res["query"])[0]]
                 else:
                     all_data.update(res["query"][list(["query"])[0]])
-            count += 1
+            count = count + 1
             data = res
         return all_data
 
