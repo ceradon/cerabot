@@ -179,3 +179,7 @@ class DateTemplates(Task):
             except exceptions.CerabotError as e:
                 print "Exception was raised: {1}".format(e)
                 continue
+
+if __name__ == '__main__':
+    task = DateTemplates()
+    task.run()
