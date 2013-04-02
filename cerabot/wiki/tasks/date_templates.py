@@ -1,13 +1,15 @@
 import re
+import datetime
 import sys
 import time
 import codecs
-import datetime
-from cerabot import bot
+from . import Task
+import mwparserfromhell
 from cerabot import exceptions
-from dateutil import parser 
+from cerabot.wiki.api import Site
+from dateutil.parser import parse
 
-class DateTemplates(bot.Bot):
+class DateTemplates(Task):
     """Bot to date maintenance templates that have none."""
     name = "template_dater"
     task = 1
@@ -16,6 +18,7 @@ class DateTemplates(bot.Bot):
         """Ensures DateTemplates is the child of the
         `Bot` class.
         """
+        self._site = Site()
         self.pages = []
         self._to_date = []
         self._redirects = {}
@@ -51,21 +54,22 @@ class DateTemplates(bot.Bot):
 
     def _load_templates(self):
         """Load the templates we have to date."""
-        templates_page = self.access_page.Page(self.site, 
-                "Wikipedia:AutoWikiBrowser/Dated templates")
-        text = templates_page.getWikiText()
-        code = self.parser.parse(text)
+        templates_page = self._site.page("Wikipedia:AutoWikiBrowser/"+ \
+                "Dated templates")
+        templates_page.load()
+        text = template_page.content
+        code = mwparserfromhell.parse(text)
         for template in code.filter_templates():
             if template.name.lower() == "tl":
-                self._to_date.append(template.get(1)
-                        .value.lower())
+                self._to_date.append(template.get(1).value.lower())
         
         """Load the redirects to the templates we
         must date.
         """
-        redirects_page = self.access_page.Page(self.site, 
-                "Wikipedia:AutoWikiBrowser/Template redirects")
-        text_ = redirects_page.getWikiText()
+        redirects_page = self._site.page("Wikipedia:AutoWikiBrowser/"+ \
+            "Template redirects")
+        redirects_page.load()
+        text_ = redirects_page.content
         try:
             section = text_[text.find(
                     "===Maintenance templates===")
@@ -80,8 +84,8 @@ class DateTemplates(bot.Bot):
             split = line.split('→')
             if len(split) != 2:
                 continue
-            code_1 = self.parser.parse(split[0])
-            code_2 = self.parser.parse(split[1])
+            code_1 = mwparserfromhell.parse(split[0])
+            code_2 = mwparserfromhell.parse(split[1])
             destination = code_2.filter_templates()[0].get(1).value
             for template in code_1.filter_templates():
                 if template.name.lower() == "tl":
@@ -92,7 +96,7 @@ class DateTemplates(bot.Bot):
 
     def _in_use(self, page):
         """Checks if the page is in use."""
-        code = self.parser.parse(page.getWikiText())
+        code = mwparserfromhell.parse(page.content)
         templates = code.filter_templates()
         for template in templates:
             if 'in use' in template.lower():
@@ -101,13 +105,12 @@ class DateTemplates(bot.Bot):
 
     def _generate_pages(self):
         """Generates a list of all pages to date."""
-        category_object = self.access_category.Category(self.site, 
-                "Category:Wikipedia maintenance categories sorted by month")
-        members = category_object.getAllMembers(titleonly=True, 
-                                                namespaces=[14])
+        i = "Category:Wikipedia maintenance categories sorted by month"
+        categoryobj = self._site.category(i)
+        categoryobj.load_attributes(get_all_members=True)
         for item in members:
-            item_object = self.access_category.Category(self.site, item)
-            for page in item_object.getAllMembers(namespaces=[0]):
+            itemobj = self._site.category(item.title)
+            for page in itemobj.load_attributes(get_all_members=True):
                 yield page
         return
 
@@ -116,29 +119,16 @@ class DateTemplates(bot.Bot):
         self._load_templates()
 
     def is_dormant(self, page):
-        timestamp = self.edit_time(page.title)
+        timestamp = page.last_edited
         delta = datetime.datetime.now() - timestamp
         result = delta > datetime.timedelta(seconds=600)
         return result
 
-    def handle_invalid_date(self, template):
-        return = None
-        for parameter in template.params:
-            try:
-                i = parser.parse(parameter.value, fuzzy=True)
-            except ValueError:
-                continue
-            date = parser.parse(unicode(i))
-            years = datetime.date.today().year - 2
-            if date.year <= years:
-                template.add("date", datetime.datetime.today()
-                        .strftime("%B %Y"))
-
     def run_bot(self, page=None):
         summary = {}
         if page:
-            text = page.getWikiText()
-            code = self.parser.parse(text)
+            text = page.content
+            code = mwparserfromhell.parse(text)
             templates = code.filter_templates(recursive=True)
             for template in templates:
                 name = template.name.lower().strip()
@@ -161,14 +151,14 @@ class DateTemplates(bot.Bot):
     def run(self):
         for page in self.pages:
             print "[["+page.title+"]]"
-            if page.isRedir():
+            if page.is_redirect:
                 continue
             if self._in_use(page):
                 print "Page "+page.title+" is in use."
                 continue
             if not self.is_dormant(page):
                 continue
-            if not self.check_exclusion(page):
+            if not page.is_excluded:
                 continue
             newtext, msg = self.run_bot(page)
             if not msg:
@@ -186,10 +176,6 @@ class DateTemplates(bot.Bot):
                     out = "Edit failed for some reason\n "+ \
                             "Here is the data the API sent us: {api_data}"
                     print out.format(api_data=res)
-            except self.access_wiki.WikiError as e:
+            except exceptions.CerabotError as e:
                 print "Exception was raised: {1}".format(e)
                 continue
-
-if __name__ == '__main__':
-    bot = DateTemplates()
-    bot.run()
