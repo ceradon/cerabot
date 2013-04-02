@@ -169,21 +169,7 @@ class Page(object):
                 self._files.append(unicode(link.title))
         if langlinks:
             for langlink in langlinks:
-                a = langlink["*"]
-                # Language links are in a bunch of different languages
-                # which means a bunch of different encodings. Try to 
-                # find out which encoding it is in using the `chardet`
-                # package and then attempt to decode it.
-                try:
-                    encoding = chardet.detect(a)["encoding"]
-                    decoded_string = a.decode(encoding)
-                except (UnicodeEncodeError, UnicodeDecodeError):
-                    # Well, it didn't work... So we will include the  
-                    # original in the list and pretend everything is 
-                    # OK! 8)
-                    self._langlinks[langlink["lang"]] = a
-                    continue
-                self._langlinks[langlink["lang"]] = decoded_string
+                self._langlinks[langlink["lang"]] = langlink["*"]
 
         if extlinks:
             for extlink in extlinks:
