@@ -131,7 +131,7 @@ class Site(object):
         except (TypeError, ValueError, KeyError):
             if "continue" in res and query_continue:
                 continue_data = self._handle_query_continue(params, res)
-                res["query"][list(res["query"])[0]].update(continue_data)
+                res.update(continue_data)
             return res
         
         if code == "maxlag":
@@ -189,7 +189,7 @@ class Site(object):
 
     def _handle_query_continue(self, request, data, max_continues=5):
         """Handle \'query-continues\' in API queries."""
-        all_data = []
+        all_data = {}
         count = 0
         last_continue = {}
         while "continue" in data and count < max_continues:
@@ -200,14 +200,15 @@ class Site(object):
                 last_continue = res["continue"]
             try:
                 if not all_data:
-                    all_data = res["query"][list(res["query"])[0]]
+                    all_data = res
                 else:
-                    all_data.update(res["query"][list(res["query"])[0]])
+                    all_data.update(res)
             except (KeyError, IndexError):
                 pass
             count += 1
             data = res
-        return all_data
+        data.update(all_data)
+        return data
 
     def page(self, title="", pageid=0, follow_redirects=False):
         """Returns an instance of Page for *title* with *follow_redirects* 
