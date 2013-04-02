@@ -8,7 +8,7 @@ class Task(object):
     def __init__(self, bot):
         """Constructor for new classes."""
         self._bot = bot
-        self.site = self._bot.site
+        self._site = self._bot.site
         self.summary = self._bot.config["wiki"]["summary"]
         self.setup()
 
