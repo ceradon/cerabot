@@ -201,7 +201,7 @@ class Site(object):
             if not all_data:
                 all_data = res["query"][list(res["query"])[0]]
             else:
-                all_data.append(res["query"][list(["query"])[0]])
+                all_data.update(res["query"][list(["query"])[0]])
             data = res
         return all_data
 
