@@ -10,21 +10,41 @@ from cerabot.wiki.api import Site
 from dateutil.parser import parse
 
 class DateTemplates(Task):
-    """Bot to date maintenance templates that have none."""
+    """Bot to add dates to maintenance templates that have none."""
     name = "template_dater"
     task = 1
 
-    def __init__(self):
-        """Ensures DateTemplates is the child of the
-        `Bot` class.
-        """
-        self._site = Site()
-        self.pages = []
-        self._to_date = []
-        self._redirects = {}
-        self.year = datetime.datetime.today().strftime('%Y')
-        self.month = datetime.datetime.today().strftime('%B')
-        self.correct_dates = {
+    @property
+    def pages(self):
+        if not hasattr(self, "pages"):
+            self.pages = []
+        return self.pages
+
+    @property
+    def _to_date(self):
+        if not hasattr(self, "_to_date"):
+            self._to_date = []
+        return self._to_date
+
+    @property
+    def _redirects(self):
+        if not hasattr(self, "_redirects"):
+            self._redirects = {}
+        return self._redirects
+
+    @property
+    def year(self):
+        year = datetime.datetime.today().strftime('%Y')
+        return year
+
+    @property
+    def month(self):
+        month = datetime.datetime.today().strftime('%B')
+        return month
+
+    @property
+    def correct_dates(self):
+        correct_dates = {
             'january':'January',
             'jan':'January',
             'february':'February',
@@ -50,7 +70,7 @@ class DateTemplates(Task):
             'december':'December',
             'dec':'December'
         }
-        super(DateTemplates, self).__init__()
+        return correct_dates
 
     def _load_templates(self):
         """Load the templates we have to date."""
@@ -63,9 +83,7 @@ class DateTemplates(Task):
             if template.name.lower() == "tl":
                 self._to_date.append(template.get(1).value.lower())
         
-        """Load the redirects to the templates we
-        must date.
-        """
+        """Load the redirects to the templates we must date."""
         redirects_page = self._site.page("Wikipedia:AutoWikiBrowser/"+ \
             "Template redirects")
         redirects_page.load()
@@ -92,7 +110,6 @@ class DateTemplates(Task):
                     name = template.get(1).value
                     self._redirects[name.lower()] = destination
                     self._redirects[destination.lower()] = destination
-        return
 
     def _in_use(self, page):
         """Checks if the page is in use."""
@@ -177,9 +194,7 @@ class DateTemplates(Task):
                             "Here is the data the API sent us: {api_data}"
                     print out.format(api_data=res)
             except exceptions.CerabotError as e:
-                print "Exception was raised: {1}".format(e)
+                msg = "Exception was raised: {1}"
+                self._logger.warn(msg.format(e.message))
                 continue
-
-if __name__ == '__main__':
-    task = DateTemplates()
-    task.run()
+        return
