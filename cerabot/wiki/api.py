@@ -189,6 +189,7 @@ class Site(object):
 
     def _handle_query_continue(self, request, data):
         """Handle \'query-continues\' in API queries."""
+        all_data = None
         count = 0
         last_continue = {}
         while "continue" in data:
