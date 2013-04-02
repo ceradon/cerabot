@@ -196,7 +196,7 @@ class Site(object):
             query = deepcopy(request)
             query.update(last_continue)
             res = self._query(query)
-            if "continue in res:
+            if "continue" in res:
                 last_continue = res["continue"]
             if not all_data:
                 all_data = res["query"][list(res["query"])[0]]
