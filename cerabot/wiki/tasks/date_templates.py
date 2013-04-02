@@ -1,9 +1,11 @@
+#! /usr/bin/env python
+# -*- coding: utf-8  -*-
 import re
 import datetime
 import sys
 import time
 import codecs
-from . import Task
+from cerabot.wiki.tasks import Task
 import mwparserfromhell
 from cerabot import exceptions
 from cerabot.wiki.api import Site
