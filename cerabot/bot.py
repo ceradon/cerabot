@@ -122,6 +122,10 @@ class Bot(object):
         klass._connect()
         return klass
 
+    def _start_task(self, task_name, **kwargs):
+        """Starts *task_name* with the arguments *kwargs*."""
+        return self._tasks.start(task_name, **kwargs)
+
     def run(self):
         """Starts the bot."""
         self._start_logging_component()
