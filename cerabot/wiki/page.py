@@ -174,8 +174,8 @@ class Page(object):
                 # which means a bunch of different encodings. Try to 
                 # find out which encoding it is in using the `chardet`
                 # package and then attempt to decode it.
-                encoding = chardet.detect(a)["encoding"]
                 try:
+                    encoding = chardet.detect(a)["encoding"]
                     decoded_string = a.decode(encoding)
                 except (UnicodeEncodeError, UnicodeDecodeError):
                     # Well, it didn't work... So we will include the  
