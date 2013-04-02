@@ -18,7 +18,7 @@ class User(object):
         """Loads all attributes relating to our current user."""
         props = "blockinfo|groups|rights|editcount|registration|emailable|gender"
         query = {"action":"query", "list":"users", "ususers":self._user,
-            "usprops":props}
+            "usprop":props}
         res = self._site.query(query)
         result = res["query"]["users"][0]
 
