@@ -1,4 +1,4 @@
-from wikitools import page
+from cerabot.wiki import page
 
 class Task(object):
     """Base class for all of Cerabot's tasks."""
@@ -8,6 +8,7 @@ class Task(object):
     def __init__(self, bot):
         """Constructor for new classes."""
         self._bot = bot
+        self.site = self._bot.site
         self.summary = self._bot.config["wiki"]["summary"]
         self.setup()
 
@@ -30,7 +31,7 @@ class Task(object):
         run_page = self._bot.config["wiki"]["run_base"]
         run_page = run_page.format(task=self.task)
         page_ = page.Page(self.site, run_page)
-        text = page_.getWikiText()
+        text = page_.content
         if not text.lower() == 'yes':
             raise exceptions.RunPageDisabledError("Run page is disabled.")
         else:
