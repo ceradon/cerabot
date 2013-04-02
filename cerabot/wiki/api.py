@@ -196,11 +196,13 @@ class Site(object):
             query = deepcopy(request)
             query.update(last_continue)
             res = self._query(query)
-            last_continue = res["continue"]
+            if "continue in res:
+                last_continue = res["continue"]
             if not all_data:
                 all_data = res["query"][list(res["query"])[0]]
             else:
                 all_data[0].append(res["query"][list(["query"])[0]])
+            data = res
         return all_data
 
     def page(self, title="", pageid=0, follow_redirects=False):
