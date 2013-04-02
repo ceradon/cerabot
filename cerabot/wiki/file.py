@@ -11,14 +11,15 @@ class File(Page):
     def load_attributes(self, res=None):
         """Loads all attributes of the current file."""
         query = {"action":"query", "prop":"imageinfo", "iiprop":
-            "timestamp|user|url|size|sha1|mime"}
+            "timestamp|user|url|size|sha1|mime", "titles":self.title}
         res = self.site.query(query)
+        res = res["query"]["pages"][list(res["query"]["pages"])[0]]
         super(File, self).load()
-        self._repository = res["imagerepository"]
         try:
             result = res["imageinfo"][0]
         except (KeyError, IndexError):
             return
+        self._repository = res["imagerepository"]
         self._timestamp = parse(result["timestamp"])
         self._user = result["user"] # TODO: Make a User clase
         self._size = result["size"]
