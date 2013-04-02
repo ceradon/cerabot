@@ -86,7 +86,8 @@ class Site(object):
             args.append(key + "=" + val)
         return "&".join(args)
 
-    def _query(self, params, query_continue=False, tries=0, idle=5):
+    def _query(self, params, query_continue=False, tries=0, idle=5, 
+            non_stop=False):
         """Queries the site's API."""
         
         last_query = time.time() - self._last_query_time
@@ -130,7 +131,8 @@ class Site(object):
             info = res["error"]["info"]
         except (TypeError, ValueError, KeyError):
             if "continue" in res and query_continue:
-                continue_data = self._handle_query_continue(params, res)
+                continue_data = self._handle_query_continue(params, res, 
+                    max_continue=5 if not non_stop else "max")
                 res.update(continue_data)
             return res
         
@@ -192,6 +194,9 @@ class Site(object):
         all_data = {}
         count = 0
         last_continue = {}
+        if max_continues == "max":
+            # I solemnly doubt there will ever be this many continues
+            max_continues = 10000
         while "continue" in data and count < max_continues:
             query = deepcopy(request)
             query.update(last_continue)
