@@ -44,11 +44,9 @@ class Task(object):
         """
         default = "Automated edit by [[User:Cerabot]]"
         if not comment:
-            return self.summary.format(task=self.task,  
-                    comment=default)
+            return self.summary.format(task=self.task, comment=default)
         else:
-            return self.summary.format(task=self.task, 
-                    comment=comment)
+            return self.summary.format(task=self.task, comment=comment)
 
     def __repr__(self):
         res = u"Task(name={0}, task={1})"
