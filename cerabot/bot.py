@@ -149,7 +149,7 @@ class Bot(object):
     def logger(self):
         """Returns the currently setup logging component."""
         if self._logger is None:
-            self._start_logging_components()
+            self._start_logging_component()
         return self._logger
 
     @property
