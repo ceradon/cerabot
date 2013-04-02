@@ -176,7 +176,7 @@ class Page(object):
                     decoded_string = a.decode(encoding)
                 except (UnicodeEncodeError, UnicodeDecodeError):
                     # Well, it didn't work... So we will exclude it 
-                    # from the list of language lins.
+                    # from the list of language links.
                     continue
                 self._langlinks[langlink["lang"]] = decoded_string
 
