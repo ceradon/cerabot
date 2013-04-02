@@ -145,7 +145,10 @@ class Page(object):
         langlinks = res["query"]["pages"][i].get("langlinks", None)
         extlinks = res["query"]["pages"][i].get("extlinks", None)
         content = revisions["*"]
-        self._content = content.decode()
+        try:
+            self._content = content.decode()
+        except Exception:
+            self._content = content
         b = self._title.split(":")
         self._prefix = b[0] if not b[0] == self.title else None
         self._last_editor = revisions["user"]
@@ -175,8 +178,10 @@ class Page(object):
                 try:
                     decoded_string = a.decode(encoding)
                 except (UnicodeEncodeError, UnicodeDecodeError):
-                    # Well, it didn't work... So we will exclude it 
-                    # from the list of language links.
+                    # Well, it didn't work... So we will include the  
+                    # original in the list and pretend everything is 
+                    # OK! 8)
+                    self._langlinks[langlink["lang"]] = a
                     continue
                 self._langlinks[langlink["lang"]] = decoded_string
 
