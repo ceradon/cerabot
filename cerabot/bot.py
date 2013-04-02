@@ -20,7 +20,6 @@ class Bot(object):
     will need."""
 
     def __init__(self):
-        self._site = Site()
         self._config = settings.Settings().settings
         self._component_lock = Lock()
         self.threads = {"general":[], "commands":[], "tasks":[]}
@@ -28,7 +27,7 @@ class Bot(object):
         self._logger = None
         self.watcher = None
         self.irc = None
-        self.site = None
+        self._site = Site()
         self.keep_running = True
 
         self._tasks = TaskManager(self)
