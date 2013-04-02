@@ -160,7 +160,7 @@ class User(object):
         return self._userid
 
     @property
-    def exists(selF):
+    def exists(self):
         return self._exists
 
     @property
