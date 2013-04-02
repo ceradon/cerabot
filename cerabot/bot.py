@@ -24,13 +24,14 @@ class Bot(object):
         self._config = settings.Settings().settings
         self._component_lock = Lock()
         self.threads = {"general":[], "commands":[], "tasks":[]}
-        self._tasks = TaskManager(self)
 
         self._logger = None
         self.watcher = None
         self.irc = None
         self.site = None
         self.keep_running = True
+
+        self._tasks = TaskManager(self)
 
     def start_component(self, name, klass):
         """Starts component *kalss* and fills *name* up with the
@@ -148,6 +149,8 @@ class Bot(object):
     @property
     def logger(self):
         """Returns the currently setup logging component."""
+        if self._logger is None:
+            self._start_logging_components()
         return self._logger
 
     @property
