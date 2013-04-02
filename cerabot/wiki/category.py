@@ -6,7 +6,7 @@ class Category(Page):
     """Object that represents a single category on a wiki."""
 
     def load_attributes(self, res=None):
-        super().load(res)
+        super(Category, self).load(res)
         self._members = []
         self._subcats = []
         self._files = []
