@@ -153,7 +153,7 @@ class User(object):
 
     @property
     def user(self):
-        return sself._user
+        return self._user
 
     @property
     def userid(self):
