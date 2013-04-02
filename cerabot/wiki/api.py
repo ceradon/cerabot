@@ -187,21 +187,23 @@ class Site(object):
         self._script_path = result["scriptpath"]
         self._article_path = result["articlepath"]
 
-    def _handle_query_continue(self, request, data):
+    def _handle_query_continue(self, request, data, max_continues=5):
         """Handle \'query-continues\' in API queries."""
         all_data = []
         count = 0
         last_continue = {}
-        while "continue" in data:
+        while "continue" in data and count < max_continues:
             query = deepcopy(request)
             query.update(last_continue)
             res = self._query(query)
             if "continue" in res:
                 last_continue = res["continue"]
-            if not all_data:
-                all_data = res["query"][list(res["query"])[0]]
-            else:
-                all_data.update(res["query"][list(["query"])[0]])
+            try:
+                if not all_data:
+                    all_data = res["query"][list(res["query"])[0]]
+                else:
+                    all_data.update(res["query"][list(["query"])[0]])
+            count += 1
             data = res
         return all_data
 
