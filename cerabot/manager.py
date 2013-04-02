@@ -50,6 +50,10 @@ class _Manager(object):
             else:
                 continue
 
+    def get(self, key):
+        """Returns an instance of the resource *key*."""
+        return self._resources[key]
+        
     @property
     def name(self):
         """Name of the resource; either 'commands' or 'tasks'."""
