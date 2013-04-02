@@ -102,10 +102,11 @@ class DateTemplates(Task):
                     +len("===Navbox templates===")]
         except Exception:
             pass
+        delimeter = unicode('→')
         for line in section.splitlines():
-            if not '→' in line:
+            if not delimeter in line:
                 continue
-            split = line.split('→')
+            split = line.split(delimeter)
             if len(split) != 2:
                 continue
             code_1 = mwparserfromhell.parse(split[0])
