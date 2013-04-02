@@ -13,7 +13,7 @@ class File(Page):
         query = {"action":"query", "prop":"imageinfo", "iiprop":
             "timestamp|user|url|size|sha1|mime"}
         res = self.site.query(query)
-        super().load()
+        super(File, self).load()
         self._repository = res["imagerepository"]
         try:
             result = res["imageinfo"][0]
