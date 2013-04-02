@@ -21,7 +21,6 @@ class Category(Page):
             "gcmtitle":self.title}
         query_two = {"action":"query", "prop":"categoryinfo", "titles":
             self.title}
-        if 
         a = res if res else self.site.query(query_one, 
             non_stop=get_all_members)
         for cat in a["query"]["pages"].values():
