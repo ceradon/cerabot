@@ -6,7 +6,7 @@ from .file import File
 class Category(Page):
     """Object that represents a single category on a wiki."""
 
-    def load_attributes(self, res=None, get_all_members):
+    def load_attributes(self, res=None, get_all_members=False):
         super(Category, self).load(res)
         self._members = []
         self._subcats = []
@@ -15,7 +15,7 @@ class Category(Page):
 
         self._load_attributes(res, get_all_members)
 
-    def _load_attributes(self, res=None, get_all_members=True):
+    def _load_attributes(self, res=None, get_all_members=False):
         """Loads attributes about our current category."""
         query_one = {"action":"query", "generator":"categorymembers",
             "gcmtitle":self.title}
