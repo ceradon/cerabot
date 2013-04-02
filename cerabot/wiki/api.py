@@ -131,7 +131,7 @@ class Site(object):
         except (TypeError, ValueError, KeyError):
             if "continue" in res and query_continue:
                 continue_data = self._handle_query_continue(params, res)
-                res = res["query"][list(res["query"])[0]].update(continue_data)
+                res["query"][list(res["query"])[0]].update(continue_data)
             return res
         
         if code == "maxlag":
