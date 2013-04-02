@@ -16,7 +16,7 @@ class Category(Page):
         """Loads attributes about our current category."""
         query_one = {"action":"query", "generator":"categorymembers",
             "gcmtitle":self.title}
-        query_two = {"action":"query", "prop":"categoryinfo", "title":
+        query_two = {"action":"query", "prop":"categoryinfo", "titles":
             self.title}
         a = res if res else self.site.query(query_one)
         for cat in a["query"]["pages"].values():
