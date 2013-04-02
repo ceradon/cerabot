@@ -6,14 +6,14 @@ from .file import File
 class Category(Page):
     """Object that represents a single category on a wiki."""
 
-    def load_attributes(self, res=None):
+    def load_attributes(self, res=None, get_all_members):
         super(Category, self).load(res)
         self._members = []
         self._subcats = []
         self._files = []
         self._count = {}
 
-        self._load_attributes(res)
+        self._load_attributes(res, get_all_members)
 
     def _load_attributes(self, res=None, get_all_members=True):
         """Loads attributes about our current category."""
