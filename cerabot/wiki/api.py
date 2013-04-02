@@ -202,8 +202,10 @@ class Site(object):
                 if not all_data:
                     all_data = res["query"][list(res["query"])[0]]
                 else:
-                    all_data.update(res["query"][list(["query"])[0]])
-            count = count + 1
+                    all_data.update(res["query"][list(res["query"])[0]])
+            except (KeyError, IndexError):
+                pass
+            count += 1
             data = res
         return all_data
 
