@@ -21,9 +21,9 @@ class TaskManager(_Manager):
         """Run a particular task, catching and logging any errors."""
         try:
             if kwargs:
-                task.run(self._bot, **kwargs)
+                task.run(**kwargs)
             else:
-                task.run(self._bot)
+                task.run()
         except Exception as e:
             error = "Task '{0}' threw an exception and had to stop: {1}"
             self._logger.exception(error.format(task.name, e.message))
@@ -31,7 +31,7 @@ class TaskManager(_Manager):
             log = "Task '{0}' was completed successfully"
             self._logger.info(log.format(task.name))
 
-    def start(self, task, **kwargs):
+    def start(self, task_name, **kwargs):
         """Starts a particular task, placing the task in a daemon thread
         and returning the thread."""
         msg = "Attempting to start task {0}"
@@ -39,13 +39,14 @@ class TaskManager(_Manager):
 
         try:
             taskobj = self.get(task_name)
+            taskobj.setup()
         except KeyError:
             msg = "Task {0} does not exist."
             self._logger.error(msg.format(task_name))
 
         thread = Thread(target=self._wrap_call, args=(taskobj,), kwargs=kwargs)
         start = strftime("%b %d %H:%M:%S")
-        thread.name = "task:{0} ({1})".format(task.name, start)
+        thread.name = "task:{0} ({1})".format(taskobj.name, start)
         thread.daemon = True
         thread.start()
         return thread
