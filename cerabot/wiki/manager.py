@@ -21,9 +21,9 @@ class TaskManager(_Manager):
         """Run a particular task, catching and logging any errors."""
         try:
             if kwargs:
-                task.run(self._bot, **kwargs)
+                task.run(**kwargs)
             else:
-                task.run(self._bot)
+                task.run()
         except Exception as e:
             error = "Task '{0}' threw an exception and had to stop: {1}"
             self._logger.exception(error.format(task.name, e.message))
