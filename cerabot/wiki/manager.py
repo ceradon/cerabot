@@ -39,13 +39,14 @@ class TaskManager(_Manager):
 
         try:
             taskobj = self.get(task_name)
+            taskobj.setup()
         except KeyError:
             msg = "Task {0} does not exist."
             self._logger.error(msg.format(task_name))
 
         thread = Thread(target=self._wrap_call, args=(taskobj,), kwargs=kwargs)
         start = strftime("%b %d %H:%M:%S")
-        thread.name = "task:{0} ({1})".format(task.name, start)
+        thread.name = "task:{0} ({1})".format(taskobj.name, start)
         thread.daemon = True
         thread.start()
         return thread
