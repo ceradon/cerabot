@@ -89,7 +89,6 @@ class Site(object):
     def _query(self, params, query_continue=False, tries=0, idle=5, 
             non_stop=False):
         """Queries the site's API."""
-        
         last_query = time.time() - self._last_query_time
         if last_query < self._throttle:
             throttle = self._throttle - last_query
@@ -261,10 +260,10 @@ class Site(object):
             except (NotImplementedError, ValueError):
                 pass
 
-    def query(self, params, query_continue=False):
+    def query(self, params, query_continue=False, non_stop=False
         """Queries the site's API."""
         with self.api_lock:
-            i = self._query(params, query_continue)
+            i = self._query(params, query_continue, non_stop=non_stop)
         return i
 
     def _login(self, login, token=None, attempts=0):
