@@ -131,7 +131,7 @@ class Site(object):
         except (TypeError, ValueError, KeyError):
             if "continue" in res and query_continue:
                 continue_data = self._handle_query_continue(params, res, 
-                    max_continue=5 if not non_stop else "max")
+                    max_continues=5 if not non_stop else "max")
                 res.update(continue_data)
             return res
         
