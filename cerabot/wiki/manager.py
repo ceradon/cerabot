@@ -31,7 +31,7 @@ class TaskManager(_Manager):
             log = "Task '{0}' was completed successfully"
             self._logger.info(log.format(task.name))
 
-    def start(self, task, **kwargs):
+    def start(self, task_name, **kwargs):
         """Starts a particular task, placing the task in a daemon thread
         and returning the thread."""
         msg = "Attempting to start task {0}"
