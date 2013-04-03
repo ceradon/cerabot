@@ -260,7 +260,7 @@ class Site(object):
             except (NotImplementedError, ValueError):
                 pass
 
-    def query(self, params, query_continue=False, non_stop=False
+    def query(self, params, query_continue=False, non_stop=False):
         """Queries the site's API."""
         with self.api_lock:
             i = self._query(params, query_continue, non_stop=non_stop)
