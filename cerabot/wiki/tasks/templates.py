@@ -26,7 +26,7 @@ class TemplateDater(Task):
     def load_templates(self):
         page = "Wikipedia:AutoWikiBrowser/Dated templates"
         templates = self._site.page(page)
-        templates.load_attributes()
+        templates.load()
         content = templates.content
         code = mwparserfromhell.parse(content)
         # Firstly, we need to load all of the actual names
@@ -44,18 +44,17 @@ class TemplateDater(Task):
         # listed need to be loaded, for the sake of proficiency.
         page = "Wikipedia:AutoWikiBrowser/Template redirects"
         redirects = self._site.page(page)
-        redirects.load_attributes()
+        redirects.load()
         content = redirects.content
-        section = text_[text.find(
+        section = content[content.find(
                     "===Maintenance templates===")
                     +len("===Maintenance templates==="):
-                    text_.find("===Navbox templates===")
+                    content.find("===Navbox templates===")
                     +len("===Navbox templates===")]
-        a = '→'
-        delimeter = a.decode()
+        delimeter = u'→'
         lines = section.split("\n")
         for line in lines:
-            if not delimeter in line.decode():
+            if not delimeter in unicode(line):
                 continue
             split = line.split(delimeter)
             if len(split) != 2:
@@ -105,7 +104,7 @@ class TemplateDater(Task):
 
     @property
     def templates(self):
-        if not hasattr(self, "_to_date"):
+        if not hasattr(self, "_templates"):
             self._templates = []
         return self._templates
 
