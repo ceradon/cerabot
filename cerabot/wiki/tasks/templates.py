@@ -24,6 +24,7 @@ class TemplateDater(Task):
     def load_templates(self):
         page = "Wikipedia:AutoWikiBrowser/Dated templates"
         templates = self._site.page(page)
+        templates.load_attributes()
         content = templates.content
         code = mwparserfromhell.parse(content)
         # Firstly, we need to load all of the actual names
@@ -36,10 +37,12 @@ class TemplateDater(Task):
                 self.templates.append(t)
             else:
                 continue
+
         # Afterwards, all redirects to the above templates we've
         # listed need to be loaded, for the sake of proficiency.
         page = "Wikipedia:AutoWikiBrowser/Template redirects"
         redirects = self._site.page(page)
+        redirects.load_attributes()
         content = redirects.content
         section = text_[text.find(
                     "===Maintenance templates===")
