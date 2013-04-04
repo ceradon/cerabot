@@ -23,7 +23,11 @@ class Category(Page):
             self.title}
         a = res if res else self.site.query(query_one, 
             non_stop=get_all_members)
-        for cat in a["query"]["pages"].values():
+        try:
+            data = a["query"]["pages"].values()
+        except IndexError:
+            data = []
+        for cat in data:
             if cat["ns"] == 14:
                 c = Category(self.site, cat["title"])
                 c.load_attributes()
