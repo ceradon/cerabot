@@ -1,3 +1,5 @@
+#!usr/bin/python
+# -*- coding: utf-8 -*-
 import sys
 import mwparserfromhell
 from dateutil.parser import parse
