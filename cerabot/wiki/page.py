@@ -138,7 +138,8 @@ class Page(object):
         query = {"action":"query", "prop":"revisions|langlinks|extlinks", 
             "titles":self._title, "rvprop":"user|content|timestamp",
             "rvdir":"older"}
-        res = self.site.query(query, query_continue=True)
+        res = self.site.query(query, query_continue=True, 
+                prefix=("rv", "ll", "el"))
         result = res["query"]["pages"].values()[0]
         revisions = result["revisions"][0]
         i = list(res["query"]["pages"])[0]
