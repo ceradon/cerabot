@@ -86,7 +86,7 @@ class Site(object):
             args.append(key + "=" + val)
         return "&".join(args)
 
-    def _query(self, params, query_continue=False, tries=0, idle=5, 
+    def _query(self, params, prefix, query_continue=False, tries=0, idle=5, 
             non_stop=False):
         """Queries the site's API."""
         last_query = time.time() - self._last_query_time
