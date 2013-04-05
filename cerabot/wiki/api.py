@@ -86,8 +86,8 @@ class Site(object):
             args.append(key + "=" + val)
         return "&".join(args)
 
-    def _query(self, params, prefix, query_continue=False, tries=0, idle=5, 
-            non_stop=False):
+    def _query(self, params, query_continue=False, tries=0, idle=5, 
+            non_stop=False, prefix=None):
         """Queries the site's API."""
         last_query = time.time() - self._last_query_time
         if last_query < self._throttle:
@@ -97,6 +97,10 @@ class Site(object):
         params.setdefault("maxlag", self._maxlag)
         params.setdefault("format", "json")
         params["continue"] = ""
+        try:
+            params[prefix + "limit"] = "max"
+        except TypeError:
+            pass
         protocol = "https:" if self._secure else "http:"
         url = ''.join((protocol, self._base_url, self._script_path, "/api.php"))
         data = self.urlencode(params)
