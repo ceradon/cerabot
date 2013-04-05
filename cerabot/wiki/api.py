@@ -268,10 +268,12 @@ class Site(object):
             except (NotImplementedError, ValueError):
                 pass
 
-    def query(self, params, query_continue=False, non_stop=False):
+    def query(self, params, query_continue=False, non_stop=False, 
+            prefix=None):
         """Queries the site's API."""
         with self.api_lock:
-            i = self._query(params, query_continue, non_stop=non_stop)
+            i = self._query(params, query_continue, non_stop=non_stop,
+                prefix=prefix)
         return i
 
     def _login(self, login, token=None, attempts=0):
