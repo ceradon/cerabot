@@ -25,7 +25,7 @@ class Category(Page):
             non_stop=get_all_members)
         try:
             data = a["query"]["pages"].values()
-        except IndexError:
+        except (TypeError, IndexError, KeyError):
             data = []
         for cat in data:
             if cat["ns"] == 14:
