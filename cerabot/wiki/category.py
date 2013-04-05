@@ -30,15 +30,12 @@ class Category(Page):
         for cat in data:
             if cat["ns"] == 14:
                 c = Category(self.site, cat["title"])
-                c.load_attributes()
                 self._subcats.append(c)
             elif cat["ns"] == 6:
                 f = File(self.site, cat["title"])
-                f.load()
                 self._files.append(f)
             else:
                 p = Page(self.site, cat["title"])
-                p.load()
                 self._members.append(p)
         a = self.site.query(query_two)
         result = a["query"]["pages"].values()[0]["categoryinfo"]
