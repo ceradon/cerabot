@@ -43,6 +43,7 @@ class TaskManager(_Manager):
         except KeyError:
             msg = "Task {0} does not exist."
             self._logger.error(msg.format(task_name))
+            return
 
         thread = Thread(target=self._wrap_call, args=(taskobj,), kwargs=kwargs)
         start = strftime("%b %d %H:%M:%S")
