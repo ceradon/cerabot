@@ -21,7 +21,7 @@ class Category(Page):
             "gcmtitle":self.title}
         query_two = {"action":"query", "prop":"categoryinfo", "titles":
             self.title}
-        a = res if res else self.site.query(query_one, 
+        a = res if res else self.site.query(query_one, prefix="gcm",
             non_stop=get_all_members)
         try:
             data = a["query"]["pages"].values()
