@@ -98,7 +98,11 @@ class Site(object):
         params.setdefault("format", "json")
         params["continue"] = ""
         try:
-            params[prefix + "limit"] = "max"
+            if type(prefix).__name__ in ["tuple", "list"]:
+                for p in prefix:
+                    params[p + "limit"] = "max"
+            else:
+                params[prefix + "limit"] = "max"
         except TypeError:
             pass
         protocol = "https:" if self._secure else "http:"
