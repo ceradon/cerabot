@@ -3,7 +3,7 @@
 import sys
 import mwparserfromhell
 from dateutil.parser import parse
-from datetime import datetime
+from datetime import datetime, timedelta
 from cerabot.wiki.tasks import Task
 
 class TemplateDater(Task):
@@ -78,11 +78,13 @@ class TemplateDater(Task):
         categoryobj.load_attributes(get_all_members=True)
         for item in categoryobj.subcats:
             item.load_attributes(get_all_members=True)
-            for page in item.members:
-                page.load()
-                if page.namespace != 0:
+            for page in item.members
+                prefix = page.title.split(":")
+                if len(prefix) == 1:
+                    page.load()
+                    self.pages.append(page)
+                else:
                     continue
-                self.pages.append(page)
         return
 
     def _in_use(self, page):
@@ -96,8 +98,8 @@ class TemplateDater(Task):
 
     def is_dormant(self, page):
         timestamp = page.last_edited
-        delta = datetime.datetime.now() - timestamp
-        result = delta > datetime.timedelta(seconds=600)
+        delta = datetime.now() - timestamp
+        result = delta > timedelta(seconds=600)
         return result
 
     @property
@@ -204,7 +206,7 @@ class TemplateDater(Task):
                 continue
             if not self.is_dormant(page):
                 continue
-            if not page.is_excluded:
+            if page.is_excluded:
                 continue
             newtext, msg = self.run_bot(page)
             if not msg:
