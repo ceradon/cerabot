@@ -163,9 +163,13 @@ class TemplateDater(Task):
                 new_name = self._redirects[name]
                 if new_name.lower() != name:
                     template.name = new_name
-            if template.name.lower() in self._to_date:
-                if not template.has_param("date"):
-                    template.add('date', datetime.datetime.today()
+            if template.name.lower() in self.templates:
+                if not template.has_param("date") or template.has_param("Date"):
+                    if template.has_param("Date"):
+                        value = template.get("Date").value
+                        template.remove("Date")
+                        template.add("date", value)
+                    template.add("date", datetime.datetime.today()
                             .strftime('%B %Y'))
                     if template.name.lower() in summary.keys():
                         summary[template.name.lower()] += 1
@@ -210,7 +214,7 @@ class TemplateDater(Task):
                 continue
             if page.is_excluded:
                 continue
-            newtext, msg = self.run_bot(page)
+            newtext, msg = self.handle_page(page)
             if not msg:
                 continue
             try:
