@@ -1,6 +1,5 @@
 import re
 import sys
-import chardet
 import mwparserfromhell
 from time import strftime, gmtime
 from hashlib import md5
