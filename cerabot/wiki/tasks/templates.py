@@ -78,6 +78,8 @@ class TemplateDater(Task):
         categoryobj.load_attributes(get_all_members=True)
         for item in categoryobj.subcats:
             item.load_attributes(get_all_members=True)
+            if item.is_empty:
+                continue
             for page in item.members:
                 prefix = page.title.split(":")
                 if len(prefix) == 1:
