@@ -77,12 +77,10 @@ class TemplateDater(Task):
         categoryobj = self._site.category(i)
         categoryobj.load_attributes(get_all_members=True)
         for item in categoryobj.subcats:
-            itemobj = self._site.category(item.title)
-            itemobj.load_attributes(get_all_members=True)
-            for page in itemobj.members:
+            item.load_attributes(get_all_members=True)
+            for page in item.members:
                 page.load()
                 self.pages.append(page)
-            break
         return
 
     def _in_use(self, page):
