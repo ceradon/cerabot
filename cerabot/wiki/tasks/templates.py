@@ -80,6 +80,8 @@ class TemplateDater(Task):
             item.load_attributes(get_all_members=True)
             for page in item.members:
                 page.load()
+                if page.namespace != 0:
+                    continue
                 self.pages.append(page)
         return
 
