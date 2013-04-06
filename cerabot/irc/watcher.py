@@ -1,6 +1,6 @@
 import re
 import sys
-from cerabt.irc.irc import IRC
+from cerabot.irc.irc import IRC
 import cerabot.irc.parser as d
 from cerabot.irc.rc import RC
 from cerabot.irc.connection import Connection
