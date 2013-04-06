@@ -15,12 +15,16 @@ Authors
 Operation
 ---------
 
-Cerabot operates with two components (an IRC component (```cerabot/irc/```); and a Wiki component (```cerabot/wiki```).
-Both are able to run independantly of each other. The IRC component connects to an IRC server (i.e. ```chat.freenode.net``` or 
-```irc.efnet.net```) and are able to interact with other users connected to the server and are in a channel they are in.
-Cerabot can also run commands from the IRC server. The default command triggers for IRC commands are ```!``` and ```.```,
- however, this can be changed by editing self._triggers in the Parser class (```cerabot/irc/parser.py```, line 19). Custom IRC
- commands can be added to the ```irc/commands/``` directory. Here is a simple template for commands:
+Cerabot operates with two components: an IRC component (```cerabot/irc/```); and a Wiki component (```cerabot/wiki```).
+Both are able to run independantly of each other. 
+
+IRC
+===
+The IRC component connects to an IRC server (i.e. ```chat.freenode.net``` or ```irc.efnet.net```) and are able to interact with 
+other users connected to the server and are in a channel they are in. Cerabot can also run commands from the IRC server. The default 
+command triggers for IRC commands are ```!``` and ```.```, however, this can be changed by editing self._triggers in the Parser class 
+(```cerabot/irc/parser.py```, line 19). Custom IRC commands can be added to the ```irc/commands/``` directory. Here is a simple template 
+for commands:
 
     #!/usr/bin/python
     # -*- coding: utf-8 -*-
@@ -75,3 +79,9 @@ wiki API actions (i.e. Changing user preferences, etc.); ```Site.name_to_id``` a
 name to it's id and vice versa; and ```Site.login``` and ```Site.logout``` to login and out of a wiki account. Use ```Site.query``` to
 get a raw API data back from a query. ```Site.page```, ```Site.category```, ```Site.file``` and ```Site.user``` can be used to return an
 object of ```Page```, ```Category```, ```File``` and ```User```, respectively.
+
+Requirements
+============
+* [oursql 0.9.3.1](https://pypi.python.org/pypi/oursql)
+* [python-dateutil[(http://labix.org/python-dateutil)
+* [isbn_hyphenate 1.0.1](https://pypi.python.org/pypi/isbn_hyphenate/1.0.1) (Used by ```cerabot/tasks/isbn.py```)
