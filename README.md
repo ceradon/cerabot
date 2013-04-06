@@ -83,5 +83,5 @@ object of ```Page```, ```Category```, ```File``` and ```User```, respectively.
 Requirements
 ============
 * [oursql 0.9.3.1](https://pypi.python.org/pypi/oursql)
-* [python-dateutil[(http://labix.org/python-dateutil)
+* [python-dateutil](http://labix.org/python-dateutil)
 * [isbn_hyphenate 1.0.1](https://pypi.python.org/pypi/isbn_hyphenate/1.0.1) (Used by ```cerabot/tasks/isbn.py```)
