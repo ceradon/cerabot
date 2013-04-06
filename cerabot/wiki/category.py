@@ -12,6 +12,7 @@ class Category(Page):
         self._subcats = []
         self._files = []
         self._count = {}
+        self._is_empty = False
 
         self._load_attributes(res, get_all_members)
 
@@ -44,6 +45,9 @@ class Category(Page):
                             "files":result["files"],
                             "subcats":result["subcats"]
                         })
+        size = len(self._subcats) + len(self._members) + len(self._files)
+        if size == 0:
+            self._is_empty = True
 
     @property
     def members(self):
@@ -60,6 +64,10 @@ class Category(Page):
     @property
     def categories(self):
         return self._subcats
+
+    @property
+    def is_empty(self):
+        return self._is_empty
 
     def size(self, member_type):
         """Gets the amount of *member_type* in our category."""
