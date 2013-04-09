@@ -47,13 +47,12 @@ class TemplateDater(Task):
         redirects = self._site.page(page)
         redirects.load()
         content = redirects.content
-        section = content[content.find(
-                    "===Maintenance templates===")
-                    +len("===Maintenance templates==="):
-                    content.find("===Navbox templates===")
-                    +len("===Navbox templates===")]
+        a = content.find("===Maintenance templates===")
+        a += len("===Maintenance templates===")
+        b = content.find("===Navbox templates===")
+        section = content[a:b)]
         delimeter = u'→'
-        lines = section.split("\n")
+        lines = section.splitlines()
         for line in lines:
             if not delimeter in unicode(line):
                 continue
