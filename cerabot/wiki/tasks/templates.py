@@ -100,6 +100,8 @@ class TemplateDater(Task):
 
     def is_dormant(self, page):
         timestamp = page.last_edited
+        # Make sure it's naive:
+        timestamp.replace(tzinfo=None)
         delta = datetime.now() - timestamp
         result = delta > timedelta(seconds=600)
         return result
