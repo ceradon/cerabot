@@ -50,7 +50,7 @@ class TemplateDater(Task):
         a = content.find("===Maintenance templates===")
         a += len("===Maintenance templates===")
         b = content.find("===Navbox templates===")
-        section = content[a:b)]
+        section = content[a:b]
         delimeter = u'→'
         lines = section.splitlines()
         for line in lines:
