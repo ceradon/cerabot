@@ -12,10 +12,11 @@ class TaskManager(_Manager):
 
     def __init__(self, bot):
         self._bot = bot
-        self._logger = self._bot.logger
-        super(TaskManager, self).__init__(self._bot, "tasks", Task)
+        self._logger = self._bot.loggerM
         dir = join(dirname(__file__), "tasks")
         self._load_directory(dir)
+
+        super(TaskManager, self).__init__(self._bot, "tasks", Task)
 
     def _wrap_call(self, task, **kwargs):
         """Run a particular task, catching and logging any errors."""
