@@ -63,6 +63,18 @@ class AWBGenFixes():
             'december':'December',
             'dec':'December'
         }
+        self.dates = {}
+        for key, value in self.correct_dates.iteritems():
+            if key.isdigit():
+                self.dates[int(key)] = value
+            else: continue
+        self.date_regex = re.compile("(" + 
+            "|".join(self.dates.values()) + ")" +
+            "\s*" +
+            "(19|20)(\d\d)",
+            re.IGNORECASE
+            )
+        print self.date_regex
 
     def load(self, tr=None, dt=None, skip=None):
         self.load_templates(dt=dt)
