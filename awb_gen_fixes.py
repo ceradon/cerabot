@@ -70,8 +70,8 @@ class AWBGenFixes():
             else:
         self.date_regex = re.compile('(' + 
             '|'.join(self.dates.values()) + '|' +
-            '|'.join([x for x in self.correct_dates.keys() if len(x) <= 4 and not x.isdigit()]) 
-            + ')' + '\s*' +
+            '|'.join([x for x in self.correct_dates.keys() if len(x) <= 4 and not x.isdigit()]) +
+            ')' + '\s*' +
             '(19|20)(\d\d)',
             re.IGNORECASE
             )
