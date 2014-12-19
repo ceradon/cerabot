@@ -68,14 +68,13 @@ class AWBGenFixes():
             if key.isdigit():
                 self.dates[int(key)] = [value]
             else:
-        self.date_regex = re.compile("(" + 
-            "|".join(self.dates.values()) + "|" +
-            "|".join([x for x in self.correct_dates.keys() if len(x) <= 4]) + ")" +
-            "\s*" +
-            "(19|20)(\d\d)",
+        self.date_regex = re.compile('(' + 
+            '|'.join(self.dates.values()) + '|' +
+            '|'.join([x for x in self.correct_dates.keys() if len(x) <= 4 and not x.isdigit()]) 
+            + ')' + '\s*' +
+            '(19|20)(\d\d)',
             re.IGNORECASE
             )
-        print self.date_regex.pattern
 
     def load(self, tr=None, dt=None, skip=None):
         self.load_templates(dt=dt)
@@ -154,7 +153,13 @@ class AWBGenFixes():
                     if val.lower() == "date" and val.lower() != param.name:
                         param.name = val
                     val = self.strip_nonalnum(unicode(param.value))
-                    if 
+                    if self.date_regex.match(val):
+                        param.name = "date"
+                        if temp.name.lower() in summary.keys():
+                            summary[temp.name.lower()] += 1
+                        else:
+                            summary[temp.name.lower()] = 1
+                        continue
                 if not temp.has_param('date'):
                     temp.add('date', datetime.datetime.today().strftime('%B %Y'))
                     if temp.name.lower() in summary.keys():
