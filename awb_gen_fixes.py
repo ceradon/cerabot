@@ -43,10 +43,10 @@ class AWBGenFixes():
             '6':'June',
             'june':'June',
             'jun':'June',
-            '7':'July'
+            '7':'July',
             'july':'July',
             'jul':'July',
-            '8':'August'
+            '8':'August',
             'august':'August',
             'aug':'August',
             '9':'September',
@@ -59,7 +59,7 @@ class AWBGenFixes():
             '11':'November',
             'november':'November',
             'nov':'November',
-            '12':'December'
+            '12':'December',
             'december':'December',
             'dec':'December'
         }
@@ -137,9 +137,9 @@ class AWBGenFixes():
                     temp.name = new_name
             if (temp.name.lower() in self.date_these) and date:
                 for param in temp.params:
-                    val = strip_nonalnum(unicode(param.name))
-                    if val.lower() == "date" and val.lower() != param.value:
-                        param.value = val
+                    val = self.strip_nonalnum(unicode(param.name))
+                    if val.lower() == "date" and val.lower() != param.name:
+                        param.name = val
                 if not temp.has_param('date'):
                     temp.add('date', datetime.datetime.today().strftime('%B %Y'))
                     if temp.name.lower() in summary.keys():
@@ -181,7 +181,7 @@ class AWBGenFixes():
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
 
-    def strip_nonalnum(word):
+    def strip_nonalnum(self, word):
         for start, c in enumerate(word):
             if c.isalnum():
                break
