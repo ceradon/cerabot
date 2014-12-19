@@ -138,8 +138,7 @@ class AWBGenFixes():
             if (temp.name.lower() in self.date_these) and date:
                 for param in temp.params:
                     val = strip_nonalnum(unicode(param.name))
-                    if val.lower() == "date":
-                        
+                    if val.lower() == "date" and val.lower() != param.value:
                         param.value = val
                 if not temp.has_param('date'):
                     temp.add('date', datetime.datetime.today().strftime('%B %Y'))
