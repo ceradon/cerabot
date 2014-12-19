@@ -8,6 +8,7 @@ import re
 import datetime
 import pywikibot
 import mwparserfromhell
+from dateutil.parser import parse
 #compile a bunch of regular expressions for gen fixes
 APIPEA=re.compile('\[\[(?P<link>.*?)\|(?P=link)\]\]')
 #BRS=re.compile('<(\\|)br(\.|\\)>', re.IGNORECASE)
@@ -21,32 +22,44 @@ class AWBGenFixes():
         self.date_these = []
         self.redirects = {}
         self.skip_list = []
-        self.bad_date = re.compile('[Dd]ate[^=](.*)')
+        self.bad_date = re.compile(r"^\W+|\W+$")
         self.year = datetime.datetime.today().strftime('%Y')
         self.month = datetime.datetime.today().strftime('%B')
         self.correct_dates = {
+            '1': 'January',
             'january':'January',
             'jan':'January',
+            '2':'February',
             'february':'February',
             'feb':'February',
+            '3':'March',
             'march':'March',
             'mar':'March',
+            '4':'April',
             'april':'April',
             'apr':'April',
+            '5':'May',
             'may':'May',
+            '6':'June',
             'june':'June',
             'jun':'June',
+            '7':'July'
             'july':'July',
             'jul':'July',
+            '8':'August'
             'august':'August',
             'aug':'August',
+            '9':'September',
             'september':'September',
             'sep':'September',
             'sept':'September',
+            '10':'October',
             'october':'October',
             'oct':'October',
+            '11':'November',
             'november':'November',
             'nov':'November',
+            '12':'December'
             'december':'December',
             'dec':'December'
         }
@@ -90,8 +103,8 @@ class AWBGenFixes():
             split = line.split('→')
             if len(split) != 2:
                 continue
-            code1=mwparserfromhell.parse(split[0])
-            code2=mwparserfromhell.parse(split[1])
+            code1 = mwparserfromhell.parse(split[0])
+            code2 = mwparserfromhell.parse(split[1])
             destination = code2.filter_templates()[0].get(1).value #ehhhh
             for temp in code1.filter_templates():
                 if temp.name.lower() == 'tl':
@@ -114,14 +127,20 @@ class AWBGenFixes():
         if fixes:
             text = self.all_fixes(text)
         code = mwparserfromhell.parse(text)
-        summary= {}
+        summary = {}
         for temp in code.filter_templates(recursive=True):
             name = temp.name.lower().strip()
             if name in self.redirects.keys():
                 new_name = self.redirects[name]
-                if new_name.lower() != name: #prevents from capitalizing the first letter needlessly
+                # Prevents from capitalizing the first letter needlessly
+                if new_name.lower() != name: 
                     temp.name = new_name
             if (temp.name.lower() in self.date_these) and date:
+                for param in temp.params:
+                    val = strip_nonalnum(unicode(param.name))
+                    if val.lower() == "date":
+                        
+                        param.value = val
                 if not temp.has_param('date'):
                     temp.add('date', datetime.datetime.today().strftime('%B %Y'))
                     if temp.name.lower() in summary.keys():
@@ -129,21 +148,30 @@ class AWBGenFixes():
                     else:
                         summary[temp.name.lower()] = 1
                 else:
-                    old_date = temp.get('date').value
-                    date = temp.get('date').value.lower()
-                    month = date.split()[0]
-                    year = date.split()[1]
-                    if month in self.correct_dates.keys():
-                        month = self.correct_dates[month]
-                    if 'currentmonthname' in month.lower():
-                        month = self.month
-                    if 'currentyear' in year.lower():
-                        year = self.year
-                    months = map(lambda x: x.lower(), self.correct_dates.values())
-                    if not month.lower() in months:
-                        month = self.month
-                    new_date = month+' '+year
-                    if old_date != new_date:
+                    old_date = str(temp.get('date').value)
+                    try:
+                        date = parse(old_date)
+                    except ValueError:
+                        continue
+                    month = date.month
+                    year = date.year
+                    day = date.day
+                    if month:
+                        if month in self.correct_dates.keys():
+                            monthstring = self.correct_dates[month]
+                        else: pass
+                    else:
+                        monthstring = self.month
+                    if year:
+                        yearstring = str(year)
+                    else:
+                        yearstring = self.year
+                    if 'currentmonthname' in old_date:
+                        monthstring = self.month
+                    if 'currentyear' in old_date:
+                        yearstring = self.year
+                    new_date = monthstring + " " + yearstring
+                    if old_date.lower() != new_date.lower():
                         temp.get('date').value = new_date
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
@@ -154,6 +182,14 @@ class AWBGenFixes():
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
 
+    def strip_nonalnum(word):
+        for start, c in enumerate(word):
+            if c.isalnum():
+               break
+        for end, c in enumerate(word[::-1]):
+            if c.isalnum():
+               break
+        return word[start:len(word) - end]
 
     def all_fixes(self,text):
         text = self.a_pipe_a(text)
