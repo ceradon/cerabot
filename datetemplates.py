@@ -14,9 +14,10 @@ class DateBot():
         self.AWB = awb_gen_fixes.AWBGenFixes(self.site)
         self.stop_page = pywikibot.Page(self.site, 'User:Cerabot/Run/Task 1')
         self.summary_end = '. ([[User:Cerabot/Run/Task 1|bot]])'
+        
     def run(self):
         self.AWB.load()
-        for page in self.gen():
+        for page in list(set(self.gen())):
             self.do_page(page)
 
     def check_run_page(self):
@@ -33,11 +34,11 @@ class DateBot():
     def is_dormant(self, page):
         """
         Checks if a page hasn't been
-        edited for the past 30 minutes
+        edited for the past 10 minutes
         """
         last = page.editTime()
         dt = pywikibot.Timestamp.fromISOformat(last)
-        return datetime.datetime.now() - dt > datetime.timedelta(hours=1)
+        return datetime.datetime.now() - dt > datetime.timedelta(minutes=10)
 
     def do_page(self, page):
         print page
