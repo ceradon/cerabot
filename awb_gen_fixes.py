@@ -157,8 +157,9 @@ class AWBGenFixes():
                     day = date.day
                     if month:
                         if month in self.correct_dates.keys():
-                            monthstring = self.correct_dates[month]
-                        else: pass
+                            monthstring = self.correct_dates[str(month)]
+                        else: 
+                            monthstring = self.correct_dates[str(month)]
                     else:
                         monthstring = self.month
                     if year:
