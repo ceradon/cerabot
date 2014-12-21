@@ -9,12 +9,13 @@ import datetime
 import pywikibot
 import mwparserfromhell
 from dateutil.parser import parse
-#compile a bunch of regular expressions for gen fixes
-APIPEA=re.compile('\[\[(?P<link>.*?)\|(?P=link)\]\]')
-#BRS=re.compile('<(\\|)br(\.|\\)>', re.IGNORECASE)
-DOUBLEPIPE=re.compile('\[\[(.*?)\|\|(.*?)\]\]')
-BROKENLINKS1=re.compile(re.escape('http::/'), re.IGNORECASE)
-BROKENLINKS2=re.compile(re.escape('http://http://'), re.IGNORECASE)
+
+# Compile a bunch of regular expressions for gen fixes
+APIPEA = re.compile('\[\[(?P<link>.*?)\|(?P=link)\]\]')
+BRS = re.compile('<(\\|)br(\.|\\)>', re.IGNORECASE)
+DOUBLEPIPE = re.compile('\[\[(.*?)\|\|(.*?)\]\]')
+BROKENLINKS1 = re.compile(re.escape('http::/'), re.IGNORECASE)
+BROKENLINKS2 = re.compile(re.escape('http://http://'), re.IGNORECASE)
 
 class AWBGenFixes():
     def __init__(self, site):
@@ -66,7 +67,7 @@ class AWBGenFixes():
         self.dates = {}
         for key, value in self.correct_dates.iteritems():
             if key.isdigit():
-                self.dates[int(key)] = [value]
+                self.dates[int(key)] = value
             else:
         self.date_regex = re.compile('(' + 
             '|'.join(self.dates.values()) + '|' +
@@ -150,24 +151,33 @@ class AWBGenFixes():
             if (temp.name.lower() in self.date_these) and date:
                 for param in temp.params:
                     val = self.strip_nonalnum(unicode(param.name))
-                    if val.lower() == "date" and val.lower() != param.name:
+                    if val.lower() == "date" and val.lower() != unicode(param.name).lower():
                         param.name = val
-                    val = self.strip_nonalnum(unicode(param.value))
-                    if self.date_regex.match(val):
-                        param.name = "date"
-                        if temp.name.lower() in summary.keys():
-                            summary[temp.name.lower()] += 1
-                        else:
-                            summary[temp.name.lower()] = 1
-                        continue
+                    v = self.strip_nonalnum(unicode(param.name).strip())
+                    if not unicode(param.value) and v == "date":
+                        param.name = v
+                        param.value = self.month + " " + self.year
+                    if unicode(param.name).isdigit() and unicode(param.value):
+                        a = self.date_regex.match(unicode(param.value).strip())
+                        if a:
+                            if a.group(1) in self.correct_dates.keys():
+                                monthstring = self.correct_dates[a.group(1).lower()]
+                            else:
+                                monthstring = a.group(1)
+                            if not a.group(2) or not group(3):
+                                yearstring = self.year
+                            else:
+                                yearstring = a.group(2) + a.group(3)
+                            new_date = monthstring + " " + yearstring
+                        else: pass
                 if not temp.has_param('date'):
-                    temp.add('date', datetime.datetime.today().strftime('%B %Y'))
+                    temp.add('date', self.month + " " + self.year)
                     if temp.name.lower() in summary.keys():
                         summary[temp.name.lower()] += 1
                     else:
                         summary[temp.name.lower()] = 1
                 else:
-                    old_date = str(temp.get('date').value)
+                    old_date = str(temp.get('date').value).lower()
                     try:
                         date = parse(old_date)
                     except ValueError:
@@ -176,10 +186,7 @@ class AWBGenFixes():
                     year = date.year
                     day = date.day
                     if month:
-                        if month in self.correct_dates.keys():
-                            monthstring = self.correct_dates[str(month)]
-                        else: 
-                            monthstring = self.correct_dates[str(month)]
+                        monthstring = self.correct_dates[str(month)]
                     else:
                         monthstring = self.month
                     if year:
@@ -191,7 +198,7 @@ class AWBGenFixes():
                     if 'currentyear' in old_date:
                         yearstring = self.year
                     new_date = monthstring + " " + yearstring
-                    if old_date.lower() != new_date.lower():
+                    if old_date != new_date.lower():
                         temp.get('date').value = new_date
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
