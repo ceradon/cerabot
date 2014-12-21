@@ -12,7 +12,7 @@ from dateutil.parser import parse
 
 # Compile a bunch of regular expressions for gen fixes
 APIPEA = re.compile('\[\[(?P<link>.*?)\|(?P=link)\]\]')
-BRS = re.compile('<(\\|)br(\.|\\)>', re.IGNORECASE)
+#BRS = re.compile('<(\\|)br(\.|\\)>', re.IGNORECASE)
 DOUBLEPIPE = re.compile('\[\[(.*?)\|\|(.*?)\]\]')
 BROKENLINKS1 = re.compile(re.escape('http::/'), re.IGNORECASE)
 BROKENLINKS2 = re.compile(re.escape('http://http://'), re.IGNORECASE)
