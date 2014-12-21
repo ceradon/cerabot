@@ -68,7 +68,7 @@ class AWBGenFixes():
         for key, value in self.correct_dates.iteritems():
             if key.isdigit():
                 self.dates[int(key)] = value
-            else:
+            else: continue
         self.date_regex = re.compile('(' + 
             '|'.join(self.dates.values()) + '|' +
             '|'.join([x for x in self.correct_dates.keys() if len(x) <= 4 and not x.isdigit()]) +
