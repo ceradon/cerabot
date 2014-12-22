@@ -151,8 +151,11 @@ class AWBGenFixes():
             if (temp.name.lower() in self.date_these) and date:
                 done = False
                 changed = False
+                c = False
                 for param in temp.params:
                     v = self.strip_nonalnum(unicode(param.name).strip())
+                    if v == "date":
+                        c = True
                     if unicode(param.value):
                         x = self.strip_nonalnum(unicode(param.value).strip())
                     if unicode(param.name).isdigit() and x == "date":
@@ -189,7 +192,7 @@ class AWBGenFixes():
                             summary[temp.name.lower()] += 1
                         else:
                             summary[temp.name.lower()] = 1
-                if not temp.has_param('date'):
+                if not temp.has_param('date') and not c:
                     temp.add('date', self.month + " " + self.year)
                     if temp.name.lower() in summary.keys():
                         summary[temp.name.lower()] += 1
