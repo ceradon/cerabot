@@ -199,7 +199,12 @@ class AWBGenFixes():
                     else:
                         summary[temp.name.lower()] = 1
                 else:
-                    old_date = str(temp.get('date').value).lower()
+                    if not c:
+                        old_date = str(temp.get('date').value).lower()
+                    else:
+                        for i in temp.params:
+                            if "date" in unicode(i.name):
+                                old_date = i.value
                     try:
                         date = parse(old_date)
                     except ValueError:
