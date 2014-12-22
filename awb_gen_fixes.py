@@ -165,7 +165,6 @@ class AWBGenFixes():
                     if unicode(param.name).isdigit() and unicode(param.value):
                         a = self.date_regex.match(unicode(param.value).strip())
                         if a:
-                            changed = 
                             old_date = a.group(0)
                             if a.group(1) in self.correct_dates.keys():
                                 monthstring = self.correct_dates[a.group(1).lower()]
@@ -185,7 +184,7 @@ class AWBGenFixes():
                         else: pass
                     if changed:
                         done = True
-                        if temp.name.lower() in summary.keys()
+                        if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
                         else:
                             summary[temp.name.lower()] = 1
