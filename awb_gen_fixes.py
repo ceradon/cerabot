@@ -185,7 +185,7 @@ class AWBGenFixes():
                             param.value = monthstring + " " + yearstring
                             changed = True
                         else: pass
-                    if unicode(param.name) == "dated":
+                    if unicode(param.name).strip() == "dated":
                         param.name = "date"
                     if changed:
                         done = True
