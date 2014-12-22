@@ -101,7 +101,6 @@ class AWBGenFixes():
             for pg in t.getReferences(redirectsOnly=True):
                 self.skip_list.append(pg.title(withNamespace=False).lower())
 
-
     def load_redirects(self, tr=None):
         if tr:
             page = tr
@@ -152,33 +151,18 @@ class AWBGenFixes():
             if (temp.name.lower() in self.date_these) and date:
                 done = False
                 for param in temp.params:
-                    changed = False
                     val = self.strip_nonalnum(unicode(param.name))
                     if val.lower() == "date" and val.lower() != unicode(param.name).lower():
-                        changed = True
                         param.name = val
+                        changed = True
                     v = self.strip_nonalnum(unicode(param.name).strip())
                     if not unicode(param.value) and v == "date":
-                        changed = True
                         param.name = v
                         param.value = self.month + " " + self.year
+                        changed = True
                     if unicode(param.name).isdigit() and unicode(param.value):
                         a = self.date_regex.match(unicode(param.value).strip())
                         if a:
-                            old_date = a.group(0)
-                            if a.group(1) in self.correct_dates.keys():
-                                monthstring = self.correct_dates[a.group(1).lower()]
-                            else:
-                                monthstring = a.group(1)
-                            if not a.group(2) or not a.group(3):
-                                yearstring = self.year
-                            else:
-                                yearstring = a.group(2) + a.group(3)
-                            new_date = monthstring + " " + yearstring
-                            if old_date != new_date:
-                                param.value = new_date
-                            else:
-                                param.value = old_date
                             param.name = "date"
                             changed = True
                         else: pass
@@ -188,8 +172,6 @@ class AWBGenFixes():
                             summary[temp.name.lower()] += 1
                         else:
                             summary[temp.name.lower()] = 1
-                if done:
-                    continue
                 if not temp.has_param('date'):
                     temp.add('date', self.month + " " + self.year)
                     if temp.name.lower() in summary.keys():
@@ -219,7 +201,7 @@ class AWBGenFixes():
                         yearstring = self.year
                     new_date = monthstring + " " + yearstring
                     temp.get('date').value = new_date
-                    if old_date != new_date.lower():
+                    if old_date != new_date.lower() and not done:
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
                         else:
