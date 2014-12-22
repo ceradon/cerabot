@@ -135,7 +135,7 @@ class AWBGenFixes():
                 return True
         return False
 
-    def do_page(self, text, fixes=False, date=True):
+    def do_page(self, text, fixes=False, date=True, correct_redirects=False):
         if fixes:
             text = self.all_fixes(text)
         code = mwparserfromhell.parse(text)
@@ -143,7 +143,7 @@ class AWBGenFixes():
         summary = {}
         for temp in code.filter_templates(recursive=True):
             name = temp.name.lower().strip()
-            if name in self.redirects.keys():
+            if name in self.redirects.keys() and correct_redirects:
                 new_name = self.redirects[name]
                 # Prevents from capitalizing the first letter needlessly
                 if new_name.lower() != name: 
