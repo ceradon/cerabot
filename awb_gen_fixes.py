@@ -72,8 +72,8 @@ class AWBGenFixes():
         self.date_regex = re.compile('(' + 
             '|'.join(self.dates.values()) + '|' +
             '|'.join([x for x in self.correct_dates.keys() if len(x) <= 4 and not x.isdigit()]) +
-            ')' + '\s*' +
-            '(19|20)(\d\d)',
+            ')?' + '\s*' +
+            '(19|20)?(\d\d)?',
             re.IGNORECASE
             )
 
@@ -151,18 +151,31 @@ class AWBGenFixes():
             if (temp.name.lower() in self.date_these) and date:
                 done = False
                 for param in temp.params:
-                    val = self.strip_nonalnum(unicode(param.name))
-                    if val.lower() == "date" and val.lower() != unicode(param.name).lower():
-                        param.name = val
-                        changed = True
                     v = self.strip_nonalnum(unicode(param.name).strip())
+                    x = self.strip_nonalnum(unicode(param.value).strip())
+                    if unicode(param.name).isdigit() and x == "date":
+                        param.name = "date"
+                        param.value = self.month + " " + self.year
                     if not unicode(param.value) and v == "date":
                         param.name = v
                         param.value = self.month + " " + self.year
                         changed = True
                     if unicode(param.name).isdigit() and unicode(param.value):
-                        a = self.date_regex.match(unicode(param.value).strip())
+                        a = self.date_regex.match(unicode(param.value))
                         if a:
+                            xmonth, xyear = a.group(1).lower(), a.group(2) + a.group(3)
+                            if xmonth:
+                                if xmonth in self.correct_dates.keys():
+                                    monthstring = self.correct_dates[xmonth]
+                                else:
+                                    monthstring = xmonth.capitalize()
+                            else:
+                                monthstring = self.month
+                            if a.group(2) and a.group(3):
+                                yearstring = xyear
+                            else:
+                                yearstring = self.year
+                            param.value = monthstring + " " + yearstring
                             param.name = "date"
                             changed = True
                         else: pass
