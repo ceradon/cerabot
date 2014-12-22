@@ -200,11 +200,11 @@ class AWBGenFixes():
                         summary[temp.name.lower()] = 1
                 else:
                     if not c:
-                        old_date = str(temp.get('date').value).lower()
+                        a, old_date = "date", str(temp.get('date').value).lower()
                     else:
                         for i in temp.params:
                             if "date" in unicode(i.name):
-                                old_date = i.value
+                                a, old_date = unicode(i.name), unicode(i.value).lower()
                     try:
                         date = parse(old_date)
                     except ValueError:
@@ -225,7 +225,7 @@ class AWBGenFixes():
                     if 'currentyear' in old_date:
                         yearstring = self.year
                     new_date = monthstring + " " + yearstring
-                    temp.get('date').value = new_date
+                    temp.get(a).value = new_date
                     if old_date != new_date.lower() and not done:
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
