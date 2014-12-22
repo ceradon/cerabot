@@ -153,12 +153,13 @@ class AWBGenFixes():
                 changed = False
                 for param in temp.params:
                     v = self.strip_nonalnum(unicode(param.name).strip())
-                    x = self.strip_nonalnum(unicode(param.value).strip())
+                    if unicode(param.value):
+                        x = self.strip_nonalnum(unicode(param.value).strip())
                     if unicode(param.name).isdigit() and x == "date":
                         param.name = "date"
                         param.value = self.month + " " + self.year
                     if not unicode(param.value) and v == "date":
-                        param.name = v
+                        param.name = "date"
                         param.value = self.month + " " + self.year
                         changed = True
                     if unicode(param.name).isdigit() and unicode(param.value):
@@ -176,8 +177,8 @@ class AWBGenFixes():
                                 yearstring = xyear
                             else:
                                 yearstring = self.year
-                            param.value = monthstring + " " + yearstring
                             param.name = "date"
+                            param.value = monthstring + " " + yearstring
                             changed = True
                         else: pass
                     if changed:
@@ -225,7 +226,7 @@ class AWBGenFixes():
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
 
-    def strip_nonalnum(word):
+    def strip_nonalnum(self, word):
         for start, c in enumerate(word):
             if c.isalnum():
                break
