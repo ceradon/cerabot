@@ -180,6 +180,7 @@ class AWBGenFixes():
                                 yearstring = xyear
                             else:
                                 yearstring = self.year
+                            param.showkey = True
                             param.name = "date"
                             param.value = monthstring + " " + yearstring
                             changed = True
