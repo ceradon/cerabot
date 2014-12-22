@@ -150,6 +150,7 @@ class AWBGenFixes():
                     temp.name = new_name
             if (temp.name.lower() in self.date_these) and date:
                 done = False
+                changed = False
                 for param in temp.params:
                     v = self.strip_nonalnum(unicode(param.name).strip())
                     x = self.strip_nonalnum(unicode(param.value).strip())
