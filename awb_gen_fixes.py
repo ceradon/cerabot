@@ -225,13 +225,13 @@ class AWBGenFixes():
         msg = ', '.join('{{%s}} (%s)' % (item, summary[item]) for item in summary.keys())
         return unicode(code), msg
 
-    def strip_nonalnum(self, word):
+    def strip_nonalnum(word):
         for start, c in enumerate(word):
             if c.isalnum():
                break
         for end, c in enumerate(word[::-1]):
             if c.isalnum():
-               break
+                break
         return word[start:len(word) - end]
 
     def all_fixes(self,text):
