@@ -164,7 +164,7 @@ class AWBGenFixes():
                                 monthstring = self.correct_dates[a.group(1).lower()]
                             else:
                                 monthstring = a.group(1)
-                            if not a.group(2) or not group(3):
+                            if not a.group(2) or not a.group(3):
                                 yearstring = self.year
                             else:
                                 yearstring = a.group(2) + a.group(3)
