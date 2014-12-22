@@ -15,10 +15,13 @@ class DateBot():
         self.stop_page = pywikibot.Page(self.site, 'User:Cerabot/Run/Task 1')
         self.summary_end = '. ([[User:Cerabot/Run/Task 1|bot]])'
         
-    def run(self):
+    def run(self, test=False):
         self.AWB.load()
-        for page in list(set(self.gen())):
-            self.do_page(page)
+        if not test:
+            for page in list(set(self.gen())):
+                self.do_page(page)
+        else:
+            self.do_page(pywikibot.page.Page(self.site, "User:Cerabot"))
 
     def check_run_page(self):
         text = self.stop_page.get(force=True)
