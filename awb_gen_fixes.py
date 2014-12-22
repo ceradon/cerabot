@@ -181,6 +181,8 @@ class AWBGenFixes():
                             param.value = monthstring + " " + yearstring
                             changed = True
                         else: pass
+                    if unicode(param.name) == "dated":
+                        param.name = "date"
                     if changed:
                         done = True
                         if temp.name.lower() in summary.keys():
