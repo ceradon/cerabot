@@ -140,6 +140,7 @@ class AWBGenFixes():
         if fixes:
             text = self.all_fixes(text)
         code = mwparserfromhell.parse(text)
+        old_code = mwparserfromhell.parse(text)
         summary = {}
         for temp in code.filter_templates(recursive=True):
             name = temp.name.lower().strip()
@@ -149,17 +150,23 @@ class AWBGenFixes():
                 if new_name.lower() != name: 
                     temp.name = new_name
             if (temp.name.lower() in self.date_these) and date:
+                done = False
                 for param in temp.params:
+                    changed = False
                     val = self.strip_nonalnum(unicode(param.name))
                     if val.lower() == "date" and val.lower() != unicode(param.name).lower():
+                        changed = True
                         param.name = val
                     v = self.strip_nonalnum(unicode(param.name).strip())
                     if not unicode(param.value) and v == "date":
+                        changed = True
                         param.name = v
                         param.value = self.month + " " + self.year
                     if unicode(param.name).isdigit() and unicode(param.value):
                         a = self.date_regex.match(unicode(param.value).strip())
                         if a:
+                            changed = 
+                            old_date = a.group(0)
                             if a.group(1) in self.correct_dates.keys():
                                 monthstring = self.correct_dates[a.group(1).lower()]
                             else:
@@ -169,7 +176,21 @@ class AWBGenFixes():
                             else:
                                 yearstring = a.group(2) + a.group(3)
                             new_date = monthstring + " " + yearstring
+                            if old_date != new_date:
+                                param.value = new_date
+                            else:
+                                param.value = old_date
+                            param.name = "date"
+                            changed = True
                         else: pass
+                    if changed:
+                        done = True
+                        if temp.name.lower() in summary.keys()
+                            summary[temp.name.lower()] += 1
+                        else:
+                            summary[temp.name.lower()] = 1
+                if done:
+                    continue
                 if not temp.has_param('date'):
                     temp.add('date', self.month + " " + self.year)
                     if temp.name.lower() in summary.keys():
@@ -198,8 +219,8 @@ class AWBGenFixes():
                     if 'currentyear' in old_date:
                         yearstring = self.year
                     new_date = monthstring + " " + yearstring
+                    temp.get('date').value = new_date
                     if old_date != new_date.lower():
-                        temp.get('date').value = new_date
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
                         else:
