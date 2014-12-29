@@ -25,7 +25,7 @@ class DateBot():
 
     def check_run_page(self):
         text = self.stop_page.get(force=True)
-        if text.lower() != 'yes':
+        if not 'yes' in text.lower():
             raise Exception("Stop page disabled")
 
     def gen(self):
