@@ -79,7 +79,7 @@ class DYKNotifier():
                             botflag=True
                             )
                     return True
-                if not self._already_handled(talk, stage="notify"):
+                if not self._already_handled(talk, stage="notify", dyk=article.title()):
                     put_text = SUBST.format(dyk.title(), 
                                             article.title(),
                                             "{{",
