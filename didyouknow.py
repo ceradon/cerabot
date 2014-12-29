@@ -22,7 +22,7 @@ class DYKNotifier():
         u"has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
         self.notified_comment = u" ".join((u"\n* {2}BotComment{3} It appears that",
         u"[[User:{0}|{0}]] created this article. They have been notified",
-        u"of this Did you know nomination. ([{1} diff]) <small>(Bot edit: did I",
+        u"of this ''Did you know?'' nomination. ([{1} diff]) <small>(Bot edit: did I",
         u"make an error? [[User talk:Ceradon|Report it to my owner!]])</small>"
         u"—~~~~"))
         self.notified_summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier:",
@@ -73,7 +73,7 @@ class DYKNotifier():
                         reason
                         )
                     dyk_text = dyk_regex.sub("", dyk_text)
-                    dyk_text = dyk_text + dyk_put_text + "\n\n" + dyk_end
+                    dyk_text = dyk_text.strip() + dyk_put_text + "\n\n" + dyk_end
                     dyk.put(newtext=dyk_text,
                             comment=summary,
                             botflag=True
@@ -85,7 +85,7 @@ class DYKNotifier():
                                             "{{",
                                             "}}"
                                             )
-                    talk_text = talk_text + put_text
+                    talk_text = talk_text.strip() + put_text
                     summary = self.summary.format(article.title())
                     talk.put(newtext=talk_text, 
                             comment=summary,
@@ -109,8 +109,8 @@ class DYKNotifier():
                             botflag=True
                         )
                     return True
-                elif not self._already_handled(b, "comment"):
-                    diff = self.diff_add.format(talk_title,
+                elif not self._already_handled(dyk, "comment"):
+                    diff = self.diff_add.format(talk_title.replace(" ", "_")),
                                                 talk.latest_revision_id
                                                 )
                     dyk_put_text = self.notified_comment.format(article_creator,
