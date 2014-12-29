@@ -20,7 +20,7 @@ class DYKNotifier():
         self.dyk_cat = "Category:Pending DYK nominations"
         self.summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier: [[{0}]]",
         u"has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
-        self.notified_comment = u" ".join((u"\n* {2}BotComment{3} It appears that",
+        self.notified_comment = u" ".join((u"* {2}BotComment{3} It appears that",
         u"[[User:{0}|{0}]] created this article. They have been notified",
         u"of this ''Did you know?'' nomination. ([{1} diff]) <small>(Bot edit: did I",
         u"make an error? [[User talk:Ceradon|Report it to my owner!]])</small>"
@@ -32,7 +32,7 @@ class DYKNotifier():
             "blocked":u"has been blocked",
             "ip":u"is an IP address"
         }
-        self.not_notified_comment = u" ".join((u"\n* {3}BotComment{4} {0} was not",
+        self.not_notified_comment = u" ".join((u"* {3}BotComment{4} {0} was not",
         u"notified because {1}.{2} Did I make an error? [[User talk:Ceradon|",
         u"Report it to my owner!]]"))
         self.not_notified_summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier:",
