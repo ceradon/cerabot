@@ -110,7 +110,7 @@ class DYKNotifier():
                         )
                     return True
                 elif not self._already_handled(dyk, "comment"):
-                    diff = self.diff_add.format(talk_title.replace(" ", "_")),
+                    diff = self.diff_add.format(talk_title.replace(" ", "_"),
                                                 talk.latest_revision_id
                                                 )
                     dyk_put_text = self.notified_comment.format(article_creator,
