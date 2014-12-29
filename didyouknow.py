@@ -42,7 +42,7 @@ class DYKNotifier():
     
     def _do_page(self, dyk, article):
         self.check_run_page()
-        dyk_end = " ".join(("}}<!--Please do not write below this line or remove"
+        dyk_end = " ".join(("}}<!--Please do not write below this line or remove",
         u"this line. Place comments above this line.-->"))
         dyk_regex = re.compile(dyk_end, re.IGNORECASE)
         dyk_creator = unicode(dyk.oldest_revision.user)
