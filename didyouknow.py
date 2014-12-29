@@ -145,7 +145,7 @@ class DYKNotifier():
     def deploy_task(self):
         if self.test:
             a = Page(self.site, "User:Cerabot/Sandbox")
-            b = Page(self.site, "User:Cerabot/Sandbox")
+            b = Page(self.site, "User:Cerabot/Sandbox/2")
             self.do_page(a, b)
             return 1
         for dyk, article in self.generator():
