@@ -9,8 +9,8 @@ import mwparserfromhell as parser
 SUBST = u"""
 ==[[{0}|{1}]] nominated for DYK!==
 {2}subst:User:Cerabot/DYK|{1}{3}\n
- —~~~~
- """
+—~~~~
+"""
  
 class DYKNotifier():
     def __init__(self, test=False):
@@ -42,6 +42,9 @@ class DYKNotifier():
     
     def _do_page(self, dyk, article):
         self.check_run_page()
+        dyk_end = " ".join(("}}<!--Please do not write below this line or remove"
+        u"this line. Place comments above this line.-->"))
+        dyk_regex = re.compile(dyk_end, re.IGNORECASE)
         dyk_creator = unicode(dyk.oldest_revision.user)
         article_creator = unicode(article.oldest_revision.user)
         if article_creator != dyk_creator:
@@ -69,7 +72,8 @@ class DYKNotifier():
                         artice_creator,
                         reason
                         )
-                    dyk_text = dyk_text + dyk_put_text
+                    dyk_text = dyk_regex.sub("", dyk_text)
+                    dyk_text = dyk_text + dyk_put_text + "\n\n" + dyk_end
                     dyk.put(newtext=dyk_text,
                             comment=summary,
                             botflag=True
@@ -97,7 +101,8 @@ class DYKNotifier():
                                                                 "{{",
                                                                 "}}"
                                                                 )
-                    dyk_text = dyk_text + dyk_put_text
+                    dyk_text = dyk_regex.sub("", dyk_text)
+                    dyk_text = dyk_text + dyk_put_text + "\n\n" + dyk_end
                     summary = self.notified_summary.format(article_creator)
                     dyk.put(newtext=dyk_text,
                             comment=summary,
@@ -113,7 +118,8 @@ class DYKNotifier():
                                                                 "{{",
                                                                 "}}"
                                                                 )
-                    dyk_text = dyk_text + dyk_put_text
+                    dyk_text = dyk_regex.sub("", dyk_text)
+                    dyk_text = dyk_text + dyk_put_text + "\n\n" + dyk_end
                     summary = self.notified_summary.format(article_creator)
                     dyk.put(newtext=dyk_text,
                             comment=summary,
@@ -163,7 +169,7 @@ class DYKNotifier():
             return True
         return False
 
-    def _already_handled(self, article, stage="notify"):
+    def _already_handled(self, article, stage="notify", dyk=""):
         if stage == "notify":
             text = article.get()
             code = parser.parse(text)
@@ -173,7 +179,7 @@ class DYKNotifier():
                 elif unicode(t.get("bot").value).lower().strip() == "cerabot":
                     a = t.get("text").value
                     link = a.filter_wikilinks()[0]
-                    if unicode(link.title) == unicode(article.title()):
+                    if unicode(link.title).lower() == unicode(dyk).lower():
                         return True
                 else:
                     return False
