@@ -34,6 +34,7 @@ class DYKNotifier():
                         "title={0}&diff={1}"
     
     def do_page(self, dyk, article):
+        self.check_run_page()
         dyk_creator = dyk.getCreator()
         article_creator = article.getCreator()
         if article_creator != dyk_creator:
@@ -70,7 +71,6 @@ class DYKNotifier():
                                              "}}"
                                             )
                 text = text + put_text
-                self.check_run_page()
                 summary = self.summary.format(dyk.title())
                 talk.put(newtext=text, 
                         comment=summary,
@@ -132,6 +132,12 @@ class DYKNotifier():
                 title = title[1]
             article = Page(self.site, title)
             yield (dyk, article)
+
+    def check_run_page(self):
+        stop_page = Page(self.site, "User:Cerabot/Run/Task 2")
+        text = stop_page.get(force=True)
+        if not 'yes' in text.lower().strip():
+            raise Exception("Stop page disabled")
             
     def deploy_task(self):
         for dyk, article in self.generator():
