@@ -14,26 +14,26 @@ class DYKNotifier():
         {2}subst:User:Cerabot/DYK|{1}{3}\n
         —~~~~
         """
-        self.summary = "[[WP:DYK|Did you know]] notifier: [[{0}]] has been " +
-        "nominated! ([[User:Cerabot/Run/Task 2|bot]])"
-        self.notified_comment = "\n* {{BotComment}} It appears that " +
-        "[[User:{0}|{0}]] created this article. They have been notified " +
-        "of this Did you know nomination. ([{1} diff]) Did I make an " +
-        "error? [[User talk:Ceradon|Report it to my owner!]] —~~~~"
-        self.notified_summary = "[[WP:DYK|Did you know]] notifier: " +
-        "notified {0} of DYK nomination. ([[User:Cerabot/Run/Task 2|bot]])"
+        self.summary = " ".join(("[[WP:DYK|Did you know]] notifier: [[{0}]]",
+        "has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
+        self.notified_comment = " ".join(("\n* {{BotComment}} It appears that",
+        "[[User:{0}|{0}]] created this article. They have been notified",
+        "of this Did you know nomination. ([{1} diff]) Did I make an",
+        "error? [[User talk:Ceradon|Report it to my owner!]] —~~~~"))
+        self.notified_summary = .join(("[[WP:DYK|Did you know]] notifier:",
+        "notified {0} of DYK nomination. ([[User:Cerabot/Run/Task 2|bot]])"))
         self.not_notified_details = {
             "inactive":"has not edited in 1 year or more",
             "blocked":"has been blocked",
             "ip":"is an IP address"
         }
-        self.not_notified_comment = "\n* {{BotComment}} {0} was not notified" +
-        " because {1}.{2} Did I make an error? [[User talk:Ceradon|" +
-        "Report it to my owner!]]"
-        self.not_notified_summary = "[[WP:DYK|Did you know]] notifier: {0}" +
-        " was not notified because {1}. ([[User:Cerabot/Run/Task 2|bot]])"
-        self.diff_add = "https://en.wikipedia.org/w/index.php?" +
-                        "title={0}&diff={1}"
+        self.not_notified_comment = " ".join(("\n* {{BotComment}} {0} was not",
+        "notified because {1}.{2} Did I make an error? [[User talk:Ceradon|",
+        "Report it to my owner!]]"))
+        self.not_notified_summary = " ".join(("[[WP:DYK|Did you know]] notifier:",
+        "{0} was not notified because {1}. ([[User:Cerabot/Run/Task 2|bot]])"))
+        self.diff_add = " ".join(("https://en.wikipedia.org/w/index.php?",
+        "title={0}&diff={1}"))
     
     def do_page(self, dyk, article):
         self.check_run_page()
@@ -103,8 +103,8 @@ class DYKNotifier():
             }
         if user_object.isBlocked():
             return_dict["check_bool"] = False
-            block_add = "https://en.wikipedia.org/w/index.php?" +
-            "title=Special/Log&type=block&user={0}".format(user)
+            block_add = " ".join(("https://en.wikipedia.org/w/index.php?",
+            "title=Special/Log&type=block&user={0}".format(user)))
             return_dict["proof"] = " ([" + block_add + " block log])"
             return_dict["type"] = "blocked"
             return return_dict
@@ -143,7 +143,7 @@ class DYKNotifier():
             
     def deploy_task(self):
         for dyk, article in self.generator():
-            print "[[" + article + "]]"
+            print "[[" + article.title + "]]"
             self.do_page(dyk, article)
 
 if __name__ == "__main__":
