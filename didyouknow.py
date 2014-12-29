@@ -22,10 +22,10 @@ class DYKNotifier():
         u"has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
         self.notified_comment = u" ".join((u"\n* {2}BotComment{3} It appears that",
         u"[[User:{0}|{0}]] created this article. They have been notified",
-        u"of this Did you know nomination. ([{1} diff]) <small>(Bot edit: Did I",
+        u"of this Did you know nomination. ([{1} diff]) <small>(Bot edit: did I",
         u"make an error? [[User talk:Ceradon|Report it to my owner!]])</small>"
         u"—~~~~"))
-        self.notified_summary = u" ".join((u"[[WP:DYK|Did you know]] notifier:",
+        self.notified_summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier:",
         u"notified {0} of DYK nomination. ([[User:Cerabot/Run/Task 2|bot]])"))
         self.not_notified_details = {
             "inactive":u"has not edited in 1 year or more",
@@ -35,9 +35,9 @@ class DYKNotifier():
         self.not_notified_comment = u" ".join((u"\n* {3}BotComment{4} {0} was not",
         u"notified because {1}.{2} Did I make an error? [[User talk:Ceradon|",
         u"Report it to my owner!]]"))
-        self.not_notified_summary = u" ".join((u"[[WP:DYK|Did you know]] notifier:",
+        self.not_notified_summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier:",
         u"{0} was not notified because {1}. ([[User:Cerabot/Run/Task 2|bot]])"))
-        self.diff_add = u" ".join((u"https://en.wikipedia.org/w/index.php?",
+        self.diff_add = u"".join((u"https://en.wikipedia.org/w/index.php?",
         u"title={0}&diff={1}"))
     
     def _do_page(self, dyk, article):
@@ -61,7 +61,7 @@ class DYKNotifier():
                     dyk_put_text = self.not_notified_comment.format(
                         article_creator,
                         reason,
-                        proof.
+                        proof,
                         "{{",
                         "}}"
                         )
@@ -83,11 +83,11 @@ class DYKNotifier():
                                             )
                     talk_text = talk_text + put_text
                     summary = self.summary.format(article.title())
-                    talk.put(newtext=text, 
+                    talk.put(newtext=talk_text, 
                             comment=summary,
                             botflag=True
                             )
-                    diff = self.diff_add.format(talk_title,
+                    diff = self.diff_add.format(talk_title.replace(" ", "_"),
                                                 talk.latest_revision_id,
                                                 "{{",
                                                 "}}"
@@ -170,13 +170,13 @@ class DYKNotifier():
             for t in code.filter_templates():
                 if not t.has("bot"):
                     continue
-                elif unicode(t.get("bot").name).lower().strip() == "cerabot":
+                elif unicode(t.get("bot").value).lower().strip() == "cerabot":
                     a = t.get("text").value
                     link = a.filter_wikilinks()[0]
                     if unicode(link.title) == unicode(article.title()):
-                        return False
+                        return True
                 else:
-                    return True
+                    return False
         elif stage == "comment":
             text = article.get()
             regex = re.compile(u"\{\{botcomment\}\}\s*(?:.*)\—\[\[user:(.*)\|(.*)\]\]",
