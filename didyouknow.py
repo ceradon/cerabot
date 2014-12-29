@@ -21,8 +21,8 @@ class DYKNotifier():
         self.summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier: [[{0}]]",
         u"has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
         self.notified_comment = u" ".join((u"\n* {2}BotComment{3} It appears that",
-        u"[[User:{0}|{0}]] created this article. They have been9 notified",
-        u"of this Did you know nomination. ([{1} diff]) <small>Bot edit: Did I",
+        u"[[User:{0}|{0}]] created this article. They have been notified",
+        u"of this Did you know nomination. ([{1} diff]) <small>(Bot edit: Did I",
         u"make an error? [[User talk:Ceradon|Report it to my owner!]])</small>"
         u"—~~~~"))
         self.notified_summary = u" ".join((u"[[WP:DYK|Did you know]] notifier:",
@@ -32,7 +32,7 @@ class DYKNotifier():
             "blocked":u"has been blocked",
             "ip":u"is an IP address"
         }
-        self.not_notified_comment = u" ".join((u"\n* {3}BotComment{4) {0} was not",
+        self.not_notified_comment = u" ".join((u"\n* {3}BotComment{4} {0} was not",
         u"notified because {1}.{2} Did I make an error? [[User talk:Ceradon|",
         u"Report it to my owner!]]"))
         self.not_notified_summary = u" ".join((u"[[WP:DYK|Did you know]] notifier:",
@@ -48,6 +48,9 @@ class DYKNotifier():
             revs_users = dyk.contributingUsers(total=5000)
             if not article_creator in revs_users:
                 dyk_text = dyk.get()
+                talk_title = "User talk:" + article_creator
+                talk = Page(self.site, talk_title)
+                talk_text = talk.get()
                 a = self._creator_checks(article_creator)
                 if not a["check_bool"]:
                     proof = a["proof"]
@@ -58,7 +61,9 @@ class DYKNotifier():
                     dyk_put_text = self.not_notified_comment.format(
                         article_creator,
                         reason,
-                        proof
+                        proof.
+                        "{{",
+                        "}}"
                         )
                     summary = self.not_notified_summary.format(
                         artice_creator,
@@ -70,27 +75,27 @@ class DYKNotifier():
                             botflag=True
                             )
                     return True
-                b = Page(self.site, "User talk:" + article_creator)
-                if not self._already_handled(b, stage="notify"):
-                    talk_title = "User talk:" + article_creator
-                    talk = Page(self.site, talk_title)
-                    text = talk.get()
+                if not self._already_handled(talk, stage="notify"):
                     put_text = SUBST.format(dyk.title(), 
                                             article.title(),
                                             "{{",
                                             "}}"
                                             )
-                    text = text + put_text
+                    talk_text = talk_text + put_text
                     summary = self.summary.format(article.title())
                     talk.put(newtext=text, 
                             comment=summary,
                             botflag=True
                             )
-                    diff = self.diff_add.format(dyk.title(),
-                                                dyk.latest_revision_id
+                    diff = self.diff_add.format(talk_title,
+                                                talk.latest_revision_id,
+                                                "{{",
+                                                "}}"
                                                 )
-                    dyk_put_text = self.notified_comment.format(dyk_creator,
-                                                                diff
+                    dyk_put_text = self.notified_comment.format(article_creator,
+                                                                diff,
+                                                                "{{",
+                                                                "}}"
                                                                 )
                     dyk_text = dyk_text + dyk_put_text
                     summary = self.notified_summary.format(article_creator)
@@ -100,18 +105,20 @@ class DYKNotifier():
                         )
                     return True
                 elif not self._already_handled(b, "comment"):
-                    diff = self.diff_add.format(dyk.title(),
-                                                dyk.latest_revision_id
+                    diff = self.diff_add.format(talk_title,
+                                                talk.latest_revision_id
                                                 )
-                    dyk_put_text = self.notified_comment(dyk_creator,
-                                                         diff
-                                                        )
+                    dyk_put_text = self.notified_comment.format(article_creator,
+                                                                diff,
+                                                                "{{",
+                                                                "}}"
+                                                                )
                     dyk_text = dyk_text + dyk_put_text
                     summary = self.notified_summary.format(article_creator)
                     dyk.put(newtext=dyk_text,
                             comment=summary,
                             botflag=True
-                        )
+                            )
         return True
 
     def _creator_checks(self, user):
@@ -124,7 +131,7 @@ class DYKNotifier():
             }
         if user_object.isBlocked():
             return_dict["check_bool"] = False
-            block_add = u" ".join((u"https://en.wikipedia.org/w/index.php?",
+            block_add = u"".join((u"https://en.wikipedia.org/w/index.php?",
             u"title=Special/Log&type=block&user={0}".format(user)))
             return_dict["proof"] = u" ([" + block_add + " block log])"
             return_dict["type"] = "blocked"
@@ -167,14 +174,16 @@ class DYKNotifier():
                     a = t.get("text").value
                     link = a.filter_wikilinks()[0]
                     if unicode(link.title) == unicode(article.title()):
-                        return True
+                        return False
                 else:
-                    return False
+                    return True
         elif stage == "comment":
             text = article.get()
             regex = re.compile(u"\{\{botcomment\}\}\s*(?:.*)\—\[\[user:(.*)\|(.*)\]\]",
                 re.IGNORECASE)
             result = regex.search(text)
+            if not result:
+                return False
             if result.group(2).lower().strip() == "cerabot":
                 return True
             else:
