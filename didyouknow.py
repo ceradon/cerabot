@@ -10,36 +10,36 @@ class DYKNotifier():
         self.site = Site()
         self.test = test
         self.dyk_cat = "Category:Pending DYK nominations"
-        self.subst = """
+        self.subst = u"""
         ==[[{0}|{1}]] nominated for DYK!==
         {2}subst:User:Cerabot/DYK|{1}{3}\n
         —~~~~
         """
-        self.summary = " ".join(("[[WP:DYK|Did you know]] notifier: [[{0}]]",
-        "has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
-        self.notified_comment = " ".join(("\n* {{BotComment}} It appears that",
-        "[[User:{0}|{0}]] created this article. They have been notified",
-        "of this Did you know nomination. ([{1} diff]) Did I make an",
-        "error? [[User talk:Ceradon|Report it to my owner!]] —~~~~"))
-        self.notified_summary = " ".join(("[[WP:DYK|Did you know]] notifier:",
-        "notified {0} of DYK nomination. ([[User:Cerabot/Run/Task 2|bot]])"))
+        self.summary = u" ".join((u"[[WP:DYK|Did you know]] notifier: [[{0}]]",
+        u"has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
+        self.notified_comment = u" ".join((u"\n* {{BotComment}} It appears that",
+        u"[[User:{0}|{0}]] created this article. They have been notified",
+        u"of this Did you know nomination. ([{1} diff]) Did I make an",
+        u"error? [[User talk:Ceradon|Report it to my owner!]] —~~~~"))
+        self.notified_summary = u" ".join((u"[[WP:DYK|Did you know]] notifier:",
+        u"notified {0} of DYK nomination. ([[User:Cerabot/Run/Task 2|bot]])"))
         self.not_notified_details = {
-            "inactive":"has not edited in 1 year or more",
-            "blocked":"has been blocked",
-            "ip":"is an IP address"
+            "inactive":u"has not edited in 1 year or more",
+            "blocked":u"has been blocked",
+            "ip":u"is an IP address"
         }
-        self.not_notified_comment = " ".join(("\n* {{BotComment}} {0} was not",
-        "notified because {1}.{2} Did I make an error? [[User talk:Ceradon|",
-        "Report it to my owner!]]"))
-        self.not_notified_summary = " ".join(("[[WP:DYK|Did you know]] notifier:",
-        "{0} was not notified because {1}. ([[User:Cerabot/Run/Task 2|bot]])"))
-        self.diff_add = " ".join(("https://en.wikipedia.org/w/index.php?",
-        "title={0}&diff={1}"))
+        self.not_notified_comment = u" ".join((u"\n* {{BotComment}} {0} was not",
+        u"notified because {1}.{2} Did I make an error? [[User talk:Ceradon|",
+        u"Report it to my owner!]]"))
+        self.not_notified_summary = u" ".join((u"[[WP:DYK|Did you know]] notifier:",
+        u"{0} was not notified because {1}. ([[User:Cerabot/Run/Task 2|bot]])"))
+        self.diff_add = u" ".join((u"https://en.wikipedia.org/w/index.php?",
+        u"title={0}&diff={1}"))
     
     def do_page(self, dyk, article):
         self.check_run_page()
-        dyk_creator = dyk.oldest_revision.user
-        article_creator = article.oldest_revision.user
+        dyk_creator = unicode(dyk.oldest_revision.user)
+        article_creator = unicode(article.oldest_revision.user)
         if article_creator != dyk_creator:
             revs_users = dyk.contributingUsers(total=5000)
             if not article_creator in revs_users:
@@ -96,6 +96,7 @@ class DYKNotifier():
         return True
 
     def creator_checks(self, user):
+        user = unicode(user)
         user_object = User(self.site, user)
         return_dict = {
             "check_bool":True,
@@ -104,9 +105,9 @@ class DYKNotifier():
             }
         if user_object.isBlocked():
             return_dict["check_bool"] = False
-            block_add = " ".join(("https://en.wikipedia.org/w/index.php?",
-            "title=Special/Log&type=block&user={0}".format(user)))
-            return_dict["proof"] = " ([" + block_add + " block log])"
+            block_add = u" ".join((u"https://en.wikipedia.org/w/index.php?",
+            u"title=Special/Log&type=block&user={0}".format(user)))
+            return_dict["proof"] = u" ([" + block_add + " block log])"
             return_dict["type"] = "blocked"
             return return_dict
         elif user_object.isAnonymous():
@@ -118,8 +119,8 @@ class DYKNotifier():
         x = year - last_edit[2].year
         if x >= 1:
             return_dict["check_bool"] = False
-            contribs_add = "Special:Contributions/{0}".format(user)
-            return_dict["proof"] = " ([[" + contribs_add + "|contribs]])"
+            contribs_add = u"Special:Contributions/{0}".format(user)
+            return_dict["proof"] = u" ([[" + contribs_add + "|contribs]])"
             return_dict["type"] = "inactive"
             return return_dict
         return return_dict
@@ -139,7 +140,7 @@ class DYKNotifier():
     def check_run_page(self):
         stop_page = Page(self.site, "User:Cerabot/Run/Task 2")
         text = stop_page.get(force=True)
-        if not 'yes' in text.lower().strip():
+        if not u'yes' in text.lower().strip():
             raise Exception("Stop page disabled")
             
     def deploy_task(self):
@@ -149,7 +150,7 @@ class DYKNotifier():
             self.do_page(a, b)
             return 1
         for dyk, article in self.generator():
-            print "[[" + article.title() + "]]"
+            print "[[" + unicode(article.title()) + "]]"
             self.do_page(dyk, article)
 
 if __name__ == "__main__":
