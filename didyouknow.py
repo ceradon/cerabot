@@ -6,8 +6,9 @@ from pywikibot import Page, Site, Category, User
 import mwparserfromhell as parser
 
 class DYKNotifier():
-    def __init__(self):
+    def __init__(self, test=False):
         self.site = Site()
+        self.test = test
         self.dyk_cat = "Category:Pending DYK nominations"
         self.subst = """
         ==[[{0}|{1}]] nominated for DYK!==
@@ -142,6 +143,11 @@ class DYKNotifier():
             raise Exception("Stop page disabled")
             
     def deploy_task(self):
+        if self.test:
+            a = Page(self.site, "User:Cerabot/Sandbox")
+            b = Page(self.site, "User:Cerabot/Sandbox")
+            self.do_page(a, b)
+            return 1
         for dyk, article in self.generator():
             print "[[" + article.title() + "]]"
             self.do_page(dyk, article)
