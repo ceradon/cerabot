@@ -40,7 +40,7 @@ class DYKNotifier():
         self.diff_add = u"".join((u"https://en.wikipedia.org/w/index.php?",
         u"title={0}&diff={1}"))
     
-    def _do_page(self, dyk, article):
+    def _do_page(self, dyk, article, notify_expanders=False):
         self.check_run_page()
         dyk_end = " ".join(("}}<!--Please do not write below this line or remove",
         u"this line. Place comments above this line.-->"))
@@ -125,6 +125,16 @@ class DYKNotifier():
                             comment=summary,
                             botflag=True
                             )
+        if notify_expanders:
+            ranked = {}
+            rev_users = [a.user for a in article.revisions(total=5000)]
+            a = list(set(rev_users))
+            for member in a:
+                ranked[member] = rev_users.count(member)
+            for key, val in ranked:
+                if val > 10:
+                    x = self._creator_checks(self, key)
+                    pass
         return True
 
     def _creator_checks(self, user):
