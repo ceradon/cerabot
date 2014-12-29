@@ -89,9 +89,9 @@ class DYKNotifier():
                     diff = self.diff_add.format(dyk.title(),
                                                 dyk.latest_revision_id
                                                 )
-                    dyk_put_text = self.notified_comment(dyk_creator,
-                                                         diff
-                                                        )
+                    dyk_put_text = self.notified_comment.format(dyk_creator,
+                                                                diff
+                                                                )
                     dyk_text = dyk_text + dyk_put_text
                     summary = self.notified_summary.format(article_creator)
                     dyk.put(newtext=dyk_text,
@@ -179,7 +179,8 @@ class DYKNotifier():
                 return True
             else:
                 return False
-        raise ValueError("variable 'stage' did not have a recognized value.")
+        else:
+            raise ValueError("variable 'stage' did not have a recognized value.")
 
     def _cleanup_log(self):
         pass
