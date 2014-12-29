@@ -20,7 +20,7 @@ class DYKNotifier():
         self.dyk_cat = "Category:Pending DYK nominations"
         self.summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier: [[{0}]]",
         u"has been nominated! ([[User:Cerabot/Run/Task 2|bot]])"))
-        self.notified_comment = u" ".join((u"\n* {{BotComment}} It appears that",
+        self.notified_comment = u" ".join((u"\n* {2}BotComment{3} It appears that",
         u"[[User:{0}|{0}]] created this article. They have been9 notified",
         u"of this Did you know nomination. ([{1} diff]) <small>Bot edit: Did I",
         u"make an error? [[User talk:Ceradon|Report it to my owner!]])</small>"
@@ -32,7 +32,7 @@ class DYKNotifier():
             "blocked":u"has been blocked",
             "ip":u"is an IP address"
         }
-        self.not_notified_comment = u" ".join((u"\n* {{BotComment}} {0} was not",
+        self.not_notified_comment = u" ".join((u"\n* {3}BotComment{4) {0} was not",
         u"notified because {1}.{2} Did I make an error? [[User talk:Ceradon|",
         u"Report it to my owner!]]"))
         self.not_notified_summary = u" ".join((u"[[WP:DYK|Did you know]] notifier:",
@@ -71,7 +71,7 @@ class DYKNotifier():
                             )
                     return True
                 b = Page(self.site, "User talk:" + article_creator)
-                if not self._already_handled(b, "notify"):
+                if not self._already_handled(b, stage="notify"):
                     talk_title = "User talk:" + article_creator
                     talk = Page(self.site, talk_title)
                     text = talk.get()
@@ -156,7 +156,7 @@ class DYKNotifier():
             return True
         return False
 
-    def _already_handled(self, article, stage):
+    def _already_handled(self, article, stage="notify"):
         if stage == "notify":
             text = article.get()
             code = parser.parse(text)
@@ -207,7 +207,7 @@ class DYKNotifier():
         if self.test:
             a = Page(self.site, "User:Cerabot/Sandbox")
             b = Page(self.site, "User:Cerabot/Sandbox/2")
-            self.do_page(a, b)
+            self._do_page(a, b)
             return 1
         for dyk, article in self.generator():
             print "[[" + unicode(article.title()) + "]]"
