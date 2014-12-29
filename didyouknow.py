@@ -9,7 +9,7 @@ class DYKNotifier():
     def __init__(self):
         self.site = Site()
         self.dyk_cat = "Category:Pending DYK nominations"
-        self.subst = """"
+        self.subst = """
         ==[[{0}|{1}]] nominated for DYK!==
         {2}subst:User:Cerabot/DYK|{1}{3}\n
         —~~~~
@@ -20,7 +20,7 @@ class DYKNotifier():
         "[[User:{0}|{0}]] created this article. They have been notified",
         "of this Did you know nomination. ([{1} diff]) Did I make an",
         "error? [[User talk:Ceradon|Report it to my owner!]] —~~~~"))
-        self.notified_summary = .join(("[[WP:DYK|Did you know]] notifier:",
+        self.notified_summary = " ".join(("[[WP:DYK|Did you know]] notifier:",
         "notified {0} of DYK nomination. ([[User:Cerabot/Run/Task 2|bot]])"))
         self.not_notified_details = {
             "inactive":"has not edited in 1 year or more",
@@ -37,8 +37,8 @@ class DYKNotifier():
     
     def do_page(self, dyk, article):
         self.check_run_page()
-        dyk_creator = dyk.getCreator()
-        article_creator = article.getCreator()
+        dyk_creator = dyk.oldest_revision.user
+        article_creator = article.oldest_revision.user
         if article_creator != dyk_creator:
             revs_users = dyk.contributingUsers(total=5000)
             if not article_creator in revs_users:
@@ -92,13 +92,13 @@ class DYKNotifier():
                         botflag=True,
                         minor=True
                         )
-    return True
+        return True
 
     def creator_checks(self, user):
         user_object = User(self.site, user)
         return_dict = {
             "check_bool":True,
-            "type":None
+            "type":None,
             "proof":""
             }
         if user_object.isBlocked():
@@ -127,7 +127,7 @@ class DYKNotifier():
         cat = Category(self.site, self.dyk_cat)
         dyks = [a for a in cat.articles(namespaces=[10])]
         for dyk in dyks:
-            title = article.name.split("/")
+            title = dyk.title().split("/")
             if len(title) > 3:
                 title = title[1:]
             else:
@@ -143,9 +143,9 @@ class DYKNotifier():
             
     def deploy_task(self):
         for dyk, article in self.generator():
-            print "[[" + article.title + "]]"
+            print "[[" + article.title() + "]]"
             self.do_page(dyk, article)
 
 if __name__ == "__main__":
     dykbot = DYKNotifier()
-    dykbot.deploytask()
+    dykbot.deploy_task()
