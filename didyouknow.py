@@ -33,9 +33,9 @@ class DYKNotifier():
             "ip":u"is an IP address"
         }
         self.not_notified_comment = u" ".join((u"\n* {3}BotComment{4} {0}, the creator",
-        u"of the article in question was not notified of this ''Did you know''",
-        u"nomination because {1}.{2} Did I make an error? [[User talk:Ceradon|",
-        u"Report it to my owner!]] —~~~~"))
+        u"of the article in question, was not notified of this ''Did you know''",
+        u"nomination because {1}.{2} <small>(Did I make an error?",
+        u"[[User talk:Ceradon|Report it to my owner!]])</small> —~~~~"))
         self.not_notified_summary = u" ".join((u"[[WP:DYK|Did you know?]] notifier:",
         u"{0} was not notified because {1}. ([[User:Cerabot/Run/Task 2|bot]])"))
         self.diff_add = u"".join((u"https://en.wikipedia.org/w/index.php?",
@@ -47,7 +47,11 @@ class DYKNotifier():
         u"this line. Place comments above this line.-->"))
         dyk_regex = re.compile(dyk_end, re.IGNORECASE)
         dyk_creator = unicode(dyk.oldest_revision.user)
-        article_creator = unicode(article.oldest_revision.user)
+        try:
+            article_creator = unicode(article.oldest_revision.user)
+        except Exception as e:
+            print e
+            return 0
         if article_creator != dyk_creator:
             revs_users = dyk.contributingUsers(total=5000)
             if not article_creator in revs_users:
@@ -56,12 +60,10 @@ class DYKNotifier():
                 talk = Page(self.site, talk_title)
                 talk_text = talk.get()
                 a = self._creator_checks(article_creator)
-                if not a["check_bool"]:
+                if not a["check_bool"] and not self._already_handled(dyk, "comment"):
                     proof = a["proof"]
                     detail = self.not_notified_details[a["type"]]
                     reason = "the user " + detail
-                    if self._already_handled(dyk, "comment"):
-                        return 1
                     dyk_put_text = self.not_notified_comment.format(
                         article_creator,
                         reason,
@@ -70,7 +72,7 @@ class DYKNotifier():
                         "}}"
                         )
                     summary = self.not_notified_summary.format(
-                        artice_creator,
+                        article_creator,
                         reason
                         )
                     dyk_text = dyk_regex.sub("", dyk_text)
@@ -149,7 +151,7 @@ class DYKNotifier():
         if user_object.isBlocked():
             return_dict["check_bool"] = False
             block_add = u"".join((u"https://en.wikipedia.org/w/index.php?",
-            u"title=Special/Log&type=block&user={0}".format(user)))
+            u"title=Special:Log&type=block&page=User:{0}".format(user)))
             return_dict["proof"] = u" ([" + block_add + " block log])"
             return_dict["type"] = "blocked"
             return return_dict
@@ -201,7 +203,7 @@ class DYKNotifier():
             result = regex.search(text)
             if not result:
                 return False
-            if "cerabot" in result.group(2).lower().strip():
+            if "cerabot" in result.group(1).lower().strip():
                 return True
             else:
                 return False
