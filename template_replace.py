@@ -22,7 +22,7 @@
 # SOFTWARE.
 import sys
 from pywikibot import Page
-import mwparserfromhell as parser
+import mwparserfromhell
 
 class TemplateReplacer():
     """
