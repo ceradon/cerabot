@@ -77,7 +77,7 @@ class TemplateReplacer():
         self.include_redirects = include_redirects
         
         # some predefined variables.
-        self.summary = " ".join((u"Replacing templates: replaced {{%s}},
+        self.summary = " ".join((u"Replacing templates: replaced {{%s}}",
             u"with {{%s}}."))
         if runpage:
             self.summary_end = "[[{0}|bot]]".format(runpage)
