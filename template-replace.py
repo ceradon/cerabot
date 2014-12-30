@@ -32,7 +32,7 @@ class TemplateReplacer():
     """
 
     def __init__(self, site, names, target, namespaces=[], test=(), 
-            include_redirects=False, bot="", runpage=""):
+            include_redirects=False, runpage=""):
         """
         Initiates a TemplateReplacer object.
         
@@ -59,10 +59,8 @@ class TemplateReplacer():
         @param include_redirects: If True, will include redirects when
             generating a list of pages to edit.
         @type incluse_redirects: boolean
-        @param bot: name of bot that will be doing the edits.
-        @type bot: string
         @param runpage: path to an onwiki page where the bot can be 
-            shut-off. i.e. "/Run/Task 1"
+            shut-off. i.e. "User:ExampleBot/Run/Task 1"
         @type runpage: string
         """
         # turn the values passed to the template into global vars
@@ -80,7 +78,8 @@ class TemplateReplacer():
         self.summary = " ".join((u"Replacing templates: replaced {{%s}}",
             u"with {{%s}}."))
         if runpage:
-            self.summary_end = "[[{0}|bot]]".format(runpage)
+            self.runpage = runpage
+            self.summary_end = "[[{0}|bot]]".format(self.runpage)
         else:
             self.summary_end = "[[WP:BOT|bot]]"
     
@@ -111,6 +110,12 @@ class TemplateReplacer():
         summary = self.summary + " " + self.summary_end
         page.put(newtext=newtext, comment=summary)
 
+    def check_run_page(self):
+        page = Page(self.site, self.runpage)
+        text = page.get(force=True)
+        if not 'yes' in text.lower():
+            raise ShutoffPageDisabled("Stop page disabled")
+
     def deploy_task(self):
         # deploys the task to replace each occurence of the templates
         # in the transclusions of self.names with self.target
@@ -126,3 +131,6 @@ class TemplateReplacer():
             return True
         for page in self._generator():
             self._do_page(page)
+
+class ShutoffPageDisabled(Exception):
+    """Raised if shutodd page is disabled."""
