@@ -187,6 +187,8 @@ class AWBGenFixes():
                         else: pass
                     if unicode(param.name).strip() == "dated":
                         param.name = "date"
+                    if unicode(param.name) == "Date":
+                        break
                     if changed:
                         done = True
                         if temp.name.lower() in summary.keys():
@@ -226,8 +228,8 @@ class AWBGenFixes():
                     if 'currentyear' in old_date:
                         yearstring = self.year
                     new_date = monthstring + " " + yearstring
-                    temp.get(a).value = new_date
                     if old_date != new_date.lower() and not done:
+                        temp.get(a).value = new_date
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
                         else:
