@@ -228,7 +228,7 @@ class AWBGenFixes():
                     if 'currentyear' in old_date:
                         yearstring = self.year
                     new_date = monthstring + " " + yearstring
-                    if old_date != new_date.lower() and not done:
+                    if old_date.strip() != new_date.lower() and not done:
                         temp.get(a).value = new_date
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
