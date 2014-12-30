@@ -220,7 +220,10 @@ class AWBGenFixes():
                     else:
                         monthstring = self.month
                     if year:
-                        yearstring = str(year)
+                        if year > self.year:
+                            yearstring = self.year
+                        else:
+                            yearstring = str(year)
                     else:
                         yearstring = self.year
                     if 'currentmonthname' in old_date:
