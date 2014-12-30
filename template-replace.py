@@ -31,7 +31,7 @@ class TemplateReplacer():
     with another template.
     """
 
-    def __init__(self, site, names, target, namespaces=[], test=(), 
+    def __init__(self, site, names, target, namespaces=[], test=(False), 
             include_redirects=False, runpage=""):
         """
         Initiates a TemplateReplacer object.
@@ -125,8 +125,8 @@ class TemplateReplacer():
             raise ValueError(e)
         count = 0
         stream_message = "---{0} instances of {1} replaced on this page."
-        if self.test:
-            page = Page(self.site, "User:Cerabot/Sandbox")
+        if self.test[0]:
+            page = Page(self.site, self.test[1])
             self._do_page(page)
             return True
         for page in self._generator():
