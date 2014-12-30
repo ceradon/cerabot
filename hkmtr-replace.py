@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from pywikibot import Site
-from template-replacer import TemplateReplacer
+from template-replace import TemplateReplacer
 
 class HKMTRReplace():
     def __init__(self):
