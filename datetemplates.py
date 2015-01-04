@@ -9,11 +9,12 @@ import pywikibot
 import awb_gen_fixes
 
 class DateBot():
-    def __init__(self):
+    def __init__(self, test=False):
         self.site = pywikibot.Site()
         self.AWB = awb_gen_fixes.AWBGenFixes(self.site)
         self.stop_page = pywikibot.Page(self.site, 'User:Cerabot/Run/Task 1')
         self.summary_end = '. ([[User:Cerabot/Run/Task 1|bot]])'
+        self.test = test
         
     def run(self, test=False):
         self.AWB.load()
@@ -30,9 +31,12 @@ class DateBot():
 
     def gen(self):
         cat = pywikibot.Category(self.site, 'Category:Wikipedia maintenance categories sorted by month')
-        for subcat in cat.subcategories():
-            for page in subcat.articles(content=True, namespaces=[0]):
-                yield page
+        if not self.test:
+            for subcat in cat.subcategories():
+                for page in subcat.articles(content=True, namespaces=[0]):
+                    yield page
+        else:
+            yield pywikibot.Page(self.site, "User:Cerabot/Sandbox")
 
     def is_dormant(self, page):
         """
