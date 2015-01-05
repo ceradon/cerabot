@@ -69,11 +69,13 @@ class AWBGenFixes():
             if key.isdigit():
                 self.dates[int(key)] = value
             else: continue
-        self.date_regex = re.compile('(' + 
-            '|'.join(self.dates.values()) + '|' +
-            '|'.join([x for x in self.correct_dates.keys() if len(x) <= 4 and not x.isdigit()]) +
-            ')' + '\s*' +
-            '(19|20)(\d\d)',
+        self.month_regex = "".join('(' + '|'.join(self.dates.values()),
+            '|' + '|'.join([x for x in self.correct_dates.keys() if \
+                len(x) <= 4 and not x.isdigit()]),
+            ')\s*')
+        self.year_regex = '(19|20)(\d\d)'
+        self.date_regex = re.compile(
+            self.month_regex + self.year_regex,
             re.IGNORECASE
             )
 
@@ -217,21 +219,25 @@ class AWBGenFixes():
                     day = date.day
                     if month:
                         monthstring = self.correct_dates[str(month)]
-                    else:
+                    elif not re.search(self.month_regex, old_date,
+                        re.IGNORECASE):
                         monthstring = self.month
+                        yearstring = self.year
                     if year:
                         if year > self.year:
                             yearstring = self.year
                         else:
                             yearstring = str(year)
-                    else:
+                    elif not re.search(self.year_regex, old_date):
                         yearstring = self.year
+                        monthstring = self.month
                     if 'currentmonthname' in old_date:
                         monthstring = self.month
                     if 'currentyear' in old_date:
                         yearstring = self.year
                     new_date = monthstring + " " + yearstring
-                    if old_date.strip() != new_date.lower() and not done:
+                    if old_date.strip() != new_date.lower().strip() \
+                        and not done:
                         temp.get(a).value = new_date
                         if temp.name.lower() in summary.keys():
                             summary[temp.name.lower()] += 1
