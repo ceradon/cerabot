@@ -69,10 +69,10 @@ class AWBGenFixes():
             if key.isdigit():
                 self.dates[int(key)] = value
             else: continue
-        self.month_regex = "".join('(' + '|'.join(self.dates.values()),
+        self.month_regex = "".join(('(' + '|'.join(self.dates.values()),
             '|' + '|'.join([x for x in self.correct_dates.keys() if \
                 len(x) <= 4 and not x.isdigit()]),
-            ')\s*')
+            ')\s*'))
         self.year_regex = '(19|20)(\d\d)'
         self.date_regex = re.compile(
             self.month_regex + self.year_regex,
